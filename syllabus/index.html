@@ -1,0 +1,856 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>AI & Digital Skills – Course Syllabus | Razeclaw</title>
+  <link rel="icon" type="image/png" href="../assets/favicon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;800;900&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet" />
+  <style>
+    /* ----- RESET & GLOBAL ----- */
+    *, *::before, *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #e8eaf0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      padding: 40px 16px;
+    }
+
+    /* ----- NAVBAR (responsive, no-print) ----- */
+    .navbar {
+      width: 100%;
+      max-width: 210mm;  /* align with A4 width on desktop */
+      margin: 0 auto 24px auto;
+      background: #ffffff;
+      border-radius: 20px;
+      box-shadow: 0 6px 14px rgba(0, 0, 0, 0.05);
+      font-family: 'Inter', sans-serif;
+      position: relative;
+      z-index: 50;
+    }
+
+    .nav-container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 24px;
+      flex-wrap: wrap;
+    }
+
+    .nav-brand {
+      font-weight: 700;
+      font-size: 1.2rem;
+      background: linear-gradient(135deg, #4f46e5, #7c3aed);
+      background-clip: text;
+      -webkit-background-clip: text;
+      color: transparent;
+      letter-spacing: -0.3px;
+    }
+
+    .hamburger {
+      font-size: 28px;
+      cursor: pointer;
+      display: none;
+      user-select: none;
+      color: #1e293b;
+      transition: 0.2s;
+    }
+
+    .hamburger:hover {
+      color: #4f46e5;
+    }
+
+    .nav-menu {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+
+    .nav-menu li {
+      position: relative;
+    }
+
+    .nav-menu a, .dropdown-btn {
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 14px;
+      color: #334155;
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-family: 'Inter', sans-serif;
+      transition: color 0.2s;
+      padding: 6px 0;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .nav-menu a:hover, .dropdown-btn:hover {
+      color: #4f46e5;
+    }
+
+    /* Dropdown styles */
+    .dropdown-content {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      background: white;
+      min-width: 160px;
+      box-shadow: 0 12px 28px rgba(0, 0, 0, 0.1);
+      border-radius: 16px;
+      padding: 8px 0;
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(-8px);
+      transition: all 0.2s ease;
+      z-index: 100;
+      border: 1px solid #eef2ff;
+    }
+
+    .dropdown-content.show {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0);
+    }
+
+    .dropdown-content a {
+      display: block;
+      padding: 8px 20px;
+      font-size: 13px;
+      color: #1e293b;
+      text-decoration: none;
+      transition: background 0.1s;
+    }
+
+    .dropdown-content a:hover {
+      background: #f8fafc;
+      color: #4f46e5;
+    }
+
+    /* A4 CORE PAGE – desktop (fixed dimensions) */
+    .page {
+      width: 210mm;
+      height: 297mm;
+      background: #fff;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.12);
+    }
+
+    .page-inner {
+      position: relative;
+      z-index: 2;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      padding: 36px 48px 28px 48px;
+    }
+
+    /* WATERMARK */
+    .watermark {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) rotate(-35deg);
+      font-family: 'Playfair Display', serif;
+      font-size: 110px;
+      font-weight: 900;
+      color: rgba(0, 0, 0, 0.03);
+      letter-spacing: 12px;
+      text-transform: lowercase;
+      z-index: 1;
+      pointer-events: none;
+      user-select: none;
+      white-space: nowrap;
+    }
+
+    /* TOP META */
+    .top-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 9px;
+      letter-spacing: 2.5px;
+      text-transform: uppercase;
+      color: #94a3b8;
+    }
+
+    .divider {
+      height: 1px;
+      background: linear-gradient(90deg, transparent, #cbd5e1, transparent);
+      margin: 12px 0;
+    }
+
+    /* TITLE SECTION */
+    .title-section {
+      text-align: center;
+      padding: 14px 0 10px 0;
+    }
+
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: #eef2ff;
+      color: #4f46e5;
+      font-size: 9px;
+      font-weight: 600;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      padding: 5px 14px;
+      border-radius: 20px;
+      margin-bottom: 12px;
+    }
+
+    .chip-dot {
+      width: 5px;
+      height: 5px;
+      background: #6366f1;
+      border-radius: 50%;
+    }
+
+    .main-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 42px;
+      font-weight: 900;
+      color: #0f172a;
+      letter-spacing: -0.5px;
+      line-height: 1.15;
+    }
+
+    .subtitle {
+      margin-top: 6px;
+      font-size: 12.5px;
+      color: #64748b;
+      font-weight: 300;
+      max-width: 460px;
+      margin-left: auto;
+      margin-right: auto;
+      line-height: 1.5;
+    }
+
+    /* SESSIONS LIST */
+    .sessions {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 0;
+      padding: 4px 0;
+    }
+
+    .session-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      padding: 5.5px 8px;
+      border-radius: 8px;
+    }
+
+    .badge {
+      width: 30px;
+      height: 30px;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      font-weight: 600;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+
+    .session-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: #1e293b;
+      line-height: 1.3;
+    }
+
+    .session-title span {
+      font-weight: 400;
+      color: #94a3b8;
+    }
+
+    .session-desc {
+      font-size: 12px;
+      color: #64748b;
+      line-height: 1.45;
+      margin-top: 1px;
+    }
+
+    /* FOOTER */
+    .footer {
+      margin-top: auto;
+    }
+
+    .footer-content {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      padding-top: 10px;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .footer-left {
+      font-size: 10px;
+      color: #64748b;
+      line-height: 1.7;
+    }
+
+    .footer-left strong {
+      color: #334155;
+      font-weight: 600;
+    }
+
+    .footer-left a {
+      color: #4f46e5;
+      text-decoration: none;
+    }
+
+    .footer-right {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 8.5px;
+      color: #94a3b8;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      text-align: right;
+      line-height: 1.8;
+    }
+
+    /* PRINT BUTTON (desktop only, hidden on mobile) */
+    .print-btn {
+      position: fixed;
+      top: 24px;
+      right: 24px;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: #4f46e5;
+      color: #fff;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 12px;
+      font-family: 'Inter', sans-serif;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      box-shadow: 0 8px 24px rgba(79,70,229,0.3);
+      transition: background 0.2s, transform 0.15s;
+    }
+
+    .print-btn:hover {
+      background: #4338ca;
+    }
+
+    .print-btn:active {
+      transform: scale(0.96);
+    }
+
+    .print-btn svg {
+      flex-shrink: 0;
+    }
+
+    .hint {
+      margin-top: 20px;
+      font-size: 12px;
+      color: #94a3b8;
+      text-align: center;
+    }
+
+    .hint strong {
+      color: #4f46e5;
+    }
+
+    /* CORNER MARKS */
+    .corners {
+      position: absolute;
+      inset: 20px;
+      pointer-events: none;
+      z-index: 3;
+    }
+
+    .corners::before,
+    .corners::after {
+      content: '';
+      position: absolute;
+      width: 24px;
+      height: 24px;
+      border-color: #c7d2fe;
+      border-style: solid;
+    }
+
+    .corners::before {
+      top: 0;
+      left: 0;
+      border-width: 1.5px 0 0 1.5px;
+    }
+
+    .corners::after {
+      bottom: 0;
+      right: 0;
+      border-width: 0 1.5px 1.5px 0;
+    }
+
+    /* ----- RESPONSIVE (mobile & small devices) ----- */
+    @media screen and (max-width: 768px) {
+      body {
+        padding: 20px 12px;
+        background: #eef2f6;
+      }
+
+      .navbar {
+        max-width: 100%;
+        margin-bottom: 18px;
+      }
+
+      .hamburger {
+        display: block;
+      }
+
+      .nav-menu {
+        position: fixed;
+        left: -100%;
+        top: 70px;
+        flex-direction: column;
+        background: white;
+        width: 80%;
+        max-width: 280px;
+        height: calc(100% - 70px);
+        box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+        transition: 0.3s ease;
+        padding: 24px 20px;
+        gap: 20px;
+        align-items: flex-start;
+        border-radius: 0 24px 24px 0;
+        z-index: 200;
+        overflow-y: auto;
+      }
+
+      .nav-menu.active {
+        left: 0;
+      }
+
+      .nav-menu li {
+        width: 100%;
+      }
+
+      .dropdown-content {
+        position: static;
+        box-shadow: none;
+        background: #f8fafc;
+        margin-top: 8px;
+        border-radius: 14px;
+        opacity: 1;
+        transform: none;
+        visibility: visible;
+        display: none;
+        width: 100%;
+      }
+
+      .dropdown-content.show {
+        display: block;
+      }
+
+      .dropdown-btn {
+        width: 100%;
+        justify-content: space-between;
+      }
+
+      /* make page fluid */
+      .page {
+        width: 100%;
+        height: auto;
+        min-height: auto;
+        overflow: visible;
+        box-shadow: 0 12px 30px rgba(0, 0, 0, 0.1);
+      }
+
+      .page-inner {
+        padding: 24px 20px 28px 20px;
+        height: auto;
+      }
+
+      .watermark {
+        font-size: 70px;
+        letter-spacing: 8px;
+        opacity: 0.6;
+        transform: translate(-50%, -50%) rotate(-30deg);
+      }
+
+      .main-title {
+        font-size: 32px;
+        line-height: 1.2;
+      }
+
+      .subtitle {
+        font-size: 11.5px;
+        max-width: 90%;
+      }
+
+      .chip {
+        font-size: 8px;
+        padding: 4px 12px;
+      }
+
+      .session-row {
+        gap: 10px;
+        padding: 8px 4px;
+      }
+
+      .badge {
+        width: 28px;
+        height: 28px;
+        font-size: 11px;
+      }
+
+      .session-title {
+        font-size: 13px;
+      }
+
+      .session-desc {
+        font-size: 11px;
+      }
+
+      .footer-content {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .footer-right {
+        text-align: left;
+      }
+
+      .corners {
+        inset: 12px;
+      }
+
+      .corners::before,
+      .corners::after {
+        width: 20px;
+        height: 20px;
+      }
+
+      /* HIDE PRINT BUTTON ON MOBILE */
+      .print-btn {
+        display: none !important;
+      }
+
+      /* HIDE hint text on mobile */
+      .hint {
+        display: none !important;
+      }
+    }
+
+    /* extra small devices */
+    @media screen and (max-width: 480px) {
+      .page-inner {
+        padding: 18px 16px 24px 16px;
+      }
+      .main-title {
+        font-size: 28px;
+      }
+      .session-title {
+        font-size: 12px;
+      }
+      .session-desc {
+        font-size: 10.5px;
+      }
+      .badge {
+        width: 26px;
+        height: 26px;
+        font-size: 10px;
+      }
+      .footer-left {
+        font-size: 9px;
+      }
+      .footer-right {
+        font-size: 7.5px;
+      }
+    }
+
+    /* PRINT STYLES */
+    @page {
+      size: A4 portrait;
+      margin: 0;
+    }
+
+    @media print {
+      html, body {
+        width: 210mm;
+        height: 297mm;
+        margin: 0 !important;
+        padding: 0 !important;
+        background: #fff !important;
+        overflow: hidden !important;
+      }
+      .no-print {
+        display: none !important;
+      }
+      .page {
+        box-shadow: none !important;
+        width: 210mm !important;
+        height: 297mm !important;
+        page-break-after: avoid;
+        page-break-inside: avoid;
+        overflow: hidden;
+      }
+      body {
+        display: block;
+        padding: 0;
+      }
+      .session-row {
+        break-inside: avoid;
+        page-break-inside: avoid;
+      }
+      .sessions {
+        overflow: visible;
+      }
+      .watermark {
+        opacity: 0.03;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAVBAR with hamburger & sessions dropdown (no-print) -->
+  <nav class="navbar no-print">
+    <div class="nav-container">
+      <div class="nav-brand">AI and Digital Skills</div>
+      <div class="hamburger" id="hamburger">☰</div>
+      <ul class="nav-menu" id="nav-menu">
+        <li><a href="../">Home</a></li>
+        <li class="dropdown">
+          <button class="dropdown-btn" id="sessionsDropdownBtn">Sessions ▼</button>
+          <div class="dropdown-content" id="sessionsDropdown">
+            <a href="../sessions/session-one/">Session 1</a>
+            <a href="../sessions/session-two/">Session 2</a>
+            <a href="../sessions/session-three/">Session 3</a>
+            <a href="../sessions/session-four/">Session 4</a>
+            <a href="../sessions/session-five/">Session 5</a>
+            <a href="../sessions/session-six/">Session 6</a>
+            <a href="../sessions/session-seven/">Session 7</a>
+            <a href="../sessions/session-eight/">Session 8</a>
+            <a href="../sessions/session-nine/">Session 9</a>
+            <a href="../sessions/session-ten/">Session 10</a>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- PRINT BUTTON (hidden on mobile) -->
+  <button class="print-btn no-print" onclick="window.print()">
+    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <polyline points="6 9 6 2 18 2 18 9"/>
+      <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/>
+      <rect x="6" y="14" width="12" height="8"/>
+    </svg>
+    Print / Save PDF
+  </button>
+
+  <!-- A4 MASTER PAGE -->
+  <div class="page">
+    <div class="watermark">razeclaw</div>
+    <div class="corners"></div>
+    <div class="page-inner">
+      <div class="top-meta">
+        <span>Course Syllabus</span>
+        <span>10 Sessions</span>
+      </div>
+      <div class="divider"></div>
+      <div class="title-section">
+        <div class="chip">
+          <span class="chip-dot"></span>
+          Professional Development Programme
+        </div>
+        <h1 class="main-title">AI &amp; Digital Skills</h1>
+        <p class="subtitle">A comprehensive 10‑session journey from digital literacy fundamentals to practical AI applications and online earning strategies.</p>
+      </div>
+      <div class="divider"></div>
+      <div class="sessions" id="sessions"></div>
+      <div class="footer">
+        <div class="divider"></div>
+        <div class="footer-content">
+          <div class="footer-left">
+            <strong>Prepared by Aman Kunwar</strong><br />
+            <a href="https://razeclaw.vercel.app" target="_blank" rel="noopener noreferrer">razeclaw.vercel.app</a>&nbsp;&nbsp;·&nbsp;&nbsp;+977 9765771612
+          </div>
+          <div class="footer-right">
+            <span id="year"></span>&nbsp;&nbsp;—&nbsp;&nbsp;Page 1 of 1
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Hint (visible only on desktop, hidden on mobile via CSS) -->
+  <p class="hint no-print">Click <strong>Print / Save PDF</strong> to export as a single-page PDF.</p>
+
+  <script>
+    // set current year
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    // sessions data for main content
+    const sessions = [
+      { num: 1,  title: "Presentation", desc: "Course overview, goals, and expectations; introducing digital literacy and what students will build over 10 sessions." },
+      { num: 2,  title: "Google Docs & Google Slides", desc: "Creating, formatting, and sharing documents and presentations using core Google Workspace tools." },
+      { num: 3,  title: "Canva: Design Basics", desc: "Intro to graphic design principles and using Canva to create visual content like posters, flyers, and social media graphics." },
+      { num: 4,  title: "Research, Email & Google Drive", desc: "Effective online research techniques, professional email etiquette, and organizing files with cloud storage." },
+      { num: 5,  title: "What is AI & How Does It Work", desc: "Foundational concepts of artificial intelligence, machine learning, and large language models in accessible terms." },
+      { num: 6,  title: "Prompt Engineering", desc: "Crafting clear, effective prompts to get better results from AI tools like ChatGPT and Claude." },
+      { num: 7,  title: "AI for Studying & Research", desc: "Using AI tools to summarize material, generate study guides, and support academic research." },
+      { num: 8,  title: "AI for Writing & Presentations", desc: "Leveraging AI to draft essays, improve writing, and build presentation content and slides." },
+      { num: 9,  title: "AI Safety & Critical Thinking", desc: "Understanding AI limitations, bias, misinformation, and developing healthy skepticism toward AI outputs." },
+      { num: 10, title: "Earning Online: Tutoring & Freelancing", desc: "Exploring opportunities for online income through tutoring platforms and freelance work using digital skills learned." },
+    ];
+
+    const colors = [
+      { bg: "#eef2ff", text: "#4338ca" },
+      { bg: "#f0fdf4", text: "#15803d" },
+      { bg: "#fefce8", text: "#a16207" },
+      { bg: "#fff1f2", text: "#be123c" },
+      { bg: "#f5f3ff", text: "#7c3aed" },
+      { bg: "#ecfeff", text: "#0e7490" },
+      { bg: "#fdf4ff", text: "#a21caf" },
+      { bg: "#fff7ed", text: "#c2410c" },
+      { bg: "#f0f9ff", text: "#0369a1" },
+      { bg: "#fef2f2", text: "#b91c1c" },
+    ];
+
+    const container = document.getElementById('sessions');
+    if (container) {
+      sessions.forEach((s, idx) => {
+        const colorStyle = colors[idx % colors.length];
+        const rowDiv = document.createElement('div');
+        rowDiv.className = 'session-row';
+        rowDiv.innerHTML = `
+          <div class="badge" style="background: ${colorStyle.bg}; color: ${colorStyle.text};">${String(s.num).padStart(2, '0')}</div>
+          <div>
+            <div class="session-title"><span>Session ${s.num} – </span>${s.title}</div>
+            <div class="session-desc">${s.desc}</div>
+          </div>
+        `;
+        container.appendChild(rowDiv);
+      });
+    }
+
+    // ----- NAVBAR DROPDOWN (Sessions 1-10) -----
+    const dropdownContainer = document.getElementById('sessionsDropdown');
+    if (dropdownContainer) {
+      for (let i = 1; i <= 10; i++) {
+        const sessionLink = document.createElement('a');
+        // href format: /sessions/session-one, /sessions/session-two etc.
+        const sessionName = (() => {
+          const words = {
+            1: 'one', 2: 'two', 3: 'three', 4: 'four', 5: 'five',
+            6: 'six', 7: 'seven', 8: 'eight', 9: 'nine', 10: 'ten'
+          };
+          return words[i];
+        })();
+        sessionLink.href = `/sessions/session-${sessionName}`;
+        sessionLink.textContent = `Session ${i}`;
+        dropdownContainer.appendChild(sessionLink);
+      }
+    }
+
+    // Dropdown toggle logic (click on button)
+    const dropdownBtn = document.getElementById('sessionsDropdownBtn');
+    const dropdownMenu = document.getElementById('sessionsDropdown');
+    
+    function toggleDropdown(e) {
+      e.stopPropagation();
+      dropdownMenu.classList.toggle('show');
+    }
+    
+    if (dropdownBtn && dropdownMenu) {
+      dropdownBtn.addEventListener('click', toggleDropdown);
+      // close dropdown when clicking outside
+      document.addEventListener('click', function(event) {
+        if (!dropdownBtn.contains(event.target) && !dropdownMenu.contains(event.target)) {
+          dropdownMenu.classList.remove('show');
+        }
+      });
+      // prevent closing when clicking inside dropdown content
+      dropdownMenu.addEventListener('click', function(e) {
+        e.stopPropagation();
+      });
+    }
+
+    // ----- HAMBURGER MENU (mobile) -----
+    const hamburger = document.getElementById('hamburger');
+    const navMenu = document.getElementById('nav-menu');
+    
+    if (hamburger && navMenu) {
+      hamburger.addEventListener('click', function(e) {
+        e.stopPropagation();
+        navMenu.classList.toggle('active');
+        // optional: close dropdown when hamburger menu opens
+        if (dropdownMenu) dropdownMenu.classList.remove('show');
+      });
+      
+      // close mobile menu when clicking a link (or any nav item)
+      const navLinks = navMenu.querySelectorAll('a, .dropdown-btn');
+      navLinks.forEach(link => {
+        link.addEventListener('click', function(e) {
+          // if dropdown button inside mobile, don't close menu immediately? but keep menu open for usability
+          // we close only if it's not dropdown-btn? Actually better to keep menu open for session navigation.
+          // but for simplicity, we close on any link except dropdown button? Let's make it close only on 'a' elements (real links)
+          if (e.target.tagName === 'A') {
+            navMenu.classList.remove('active');
+          }
+        });
+      });
+      
+      // close menu if clicked outside on mobile
+      document.addEventListener('click', function(event) {
+        if (window.innerWidth <= 768) {
+          if (!navMenu.contains(event.target) && !hamburger.contains(event.target)) {
+            navMenu.classList.remove('active');
+          }
+        }
+      });
+    }
+    
+    // small adjustment: prevent body scroll when mobile menu open (optional)
+    const menuToggle = () => {
+      if (navMenu && navMenu.classList.contains('active')) {
+        document.body.style.overflow = 'hidden';
+      } else {
+        document.body.style.overflow = '';
+      }
+    };
+    
+    if (navMenu) {
+      const observer = new MutationObserver(menuToggle);
+      observer.observe(navMenu, { attributes: true, attributeFilter: ['class'] });
+      window.addEventListener('resize', () => {
+        if (window.innerWidth > 768) {
+          if (navMenu) navMenu.classList.remove('active');
+          document.body.style.overflow = '';
+        }
+      });
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Digital Skills Crashcourse — Presentation Viewer</title>
+  <link rel="icon" type="image/png" href="../../assets/favicon.png">
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&family=Playfair+Display:ital,wght@0,500;0,600;1,400&display=swap" rel="stylesheet" />
+
+  <style>
+    /* ---------- GLOBAL THEME & RESET ---------- */
+    :root {
+      --bg: #F9F8F6;
+      --text: #1A1A1A;
+      --text-muted: #5A5E66;
+      --line: #E5E2DD;
+      --accent: #2C3E50;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    /* ---------- INTEGRATED NAVBAR (From image_ba72b3.png Architecture) ---------- */
+    .navbar {
+      position: relative;
+      width: 100%;
+      background: var(--bg);
+      border-bottom: 1px solid var(--line);
+      z-index: 50;
+    }
+
+    .nav-container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.85rem 2rem;
+      max-width: 100%;
+      margin: 0 auto;
+    }
+
+    .title-area h1 {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 1.3rem;
+      font-weight: 500;
+      color: var(--text);
+    }
+
+    .title-area p {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    /* Controls right wing alignment */
+    .nav-right {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+    }
+
+    /* Hamburger engine (hidden on desktop) */
+    .hamburger {
+      font-size: 1.75rem;
+      cursor: pointer;
+      display: none;
+      user-select: none;
+      background: none;
+      border: none;
+      color: var(--text);
+      line-height: 1;
+    }
+
+    /* Navigation list menu structure */
+    .nav-menu {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+
+    .nav-menu li {
+      position: relative;
+    }
+
+    /* Navigation Anchors & Dropdown Action Key */
+    .nav-menu a, 
+    .dropdown-btn {
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 0.95rem;
+      color: var(--text-muted);
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-family: 'Inter', sans-serif;
+      transition: color 0.2s;
+      padding: 0.5rem 0;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.25rem;
+    }
+
+    .nav-menu a:hover, 
+    .dropdown-btn:hover {
+      color: var(--text);
+    }
+
+    /* Soft Rounded Dropdown Menu (Matches image_ba72b3.png layout) */
+    .dropdown-content {
+      position: absolute;
+      top: 100%;
+      left: -20px;
+      background: #FFFFFF;
+      min-width: 180px;
+      box-shadow: 0 12px 28px rgba(0, 0, 0, 0.06);
+      border-radius: 1rem;
+      padding: 0.5rem 0;
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(-8px);
+      transition: all 0.2s ease;
+      z-index: 100;
+      border: 1px solid var(--line);
+    }
+
+    .dropdown-content.show {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0);
+    }
+
+    .dropdown-content a {
+      display: block;
+      padding: 0.6rem 1.25rem;
+      font-size: 0.88rem;
+      color: var(--text);
+      text-decoration: none;
+      transition: background 0.15s, color 0.15s;
+    }
+
+    .dropdown-content a:hover {
+      background: var(--bg);
+      color: var(--accent);
+    }
+
+    /* Primary Action Buttons */
+    .btn-primary {
+      background: var(--accent);
+      color: #FFFFFF !important;
+      text-decoration: none;
+      font-size: 0.85rem;
+      font-weight: 500;
+      padding: 0.6rem 1.2rem;
+      border-radius: 6px;
+      transition: opacity 0.2s ease;
+      border: 1px solid var(--accent);
+    }
+    .btn-primary:hover {
+      opacity: 0.9;
+    }
+
+    /* ---------- RECONSTRUCTED WORKPORT TIMELINE VISUALIZER ---------- */
+    .viewer-container {
+      flex: 1;
+      width: 100%;
+      background: #202124;
+      position: relative;
+    }
+
+    iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
+
+    /* ---------- RESPONSIVE MEDIA PIPELINE ---------- */
+    @media screen and (max-width: 768px) {
+      .nav-container {
+        padding: 1rem;
+      }
+      .hamburger {
+        display: block;
+      }
+      .nav-right {
+        gap: 0.75rem;
+      }
+      .nav-menu {
+        position: fixed;
+        left: -100%;
+        top: 68px;
+        flex-direction: column;
+        background: #FFFFFF;
+        width: 75%;
+        max-width: 280px;
+        height: calc(100% - 68px);
+        box-shadow: 0 12px 28px rgba(0, 0, 0, 0.1);
+        transition: left 0.3s ease;
+        padding: 1.5rem 1.25rem;
+        gap: 1.25rem;
+        align-items: flex-start;
+        border-radius: 0 1.5rem 1.5rem 0;
+        z-index: 200;
+        overflow-y: auto;
+      }
+      .nav-menu.active {
+        left: 0;
+      }
+      .nav-menu li {
+        width: 100%;
+      }
+      .dropdown-content {
+        position: static;
+        box-shadow: none;
+        background: var(--bg);
+        margin-top: 0.5rem;
+        border-radius: 0.75rem;
+        opacity: 1;
+        transform: none;
+        visibility: visible;
+        display: none;
+        width: 100%;
+        border: 1px solid var(--line);
+      }
+      .dropdown-content.show {
+        display: block;
+      }
+      .dropdown-btn {
+        width: 100%;
+        justify-content: space-between;
+      }
+    }
+
+    body.menu-open {
+      overflow: hidden;
+    }
+  </style>
+</head>
+<body>
+
+  <nav class="navbar">
+    <div class="nav-container">
+      <div class="title-area">
+        <h1>Session 1 - Presentation</h1>
+      </div>
+      
+      <div class="nav-right">
+        <ul class="nav-menu" id="navMenu">
+          <!-- Root relative HOME button tracking -->
+          <li><a href="../../">Home</a></li>
+          
+          <li class="dropdown">
+            <button class="dropdown-btn" id="sessionsDropdownBtn">Sessions ▼</button>
+            <div class="dropdown-content" id="sessionsDropdown">
+              <!-- Reconfigured automated sessions injected via vanilla scripts here -->
+            </div>
+          </li>
+        </ul>
+        
+        <!-- Global Download Module Link -->
+        <a href="Digital%20Skills%20Crashcourse.pptx" download="Digital Skills Crashcourse.pptx" class="btn-primary">
+          Download PPTX
+        </a>
+
+        <button class="hamburger" id="hamburgerBtn" aria-label="Menu">☰</button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Document Core Frame Canvas -->
+  <main class="viewer-container">
+    <iframe 
+      src="https://view.officeapps.live.com/op/embed.aspx?src=YOUR_DOC_URL_HERE" 
+      width="100%" 
+      height="100%" 
+      allowfullscreen="true">
+    </iframe>
+  </main>
+
+  <script>
+    // ----- Generate Sessions 1 to 10 pointing cleanly to nested index targets -----
+    const dropdownContainer = document.getElementById('sessionsDropdown');
+    if (dropdownContainer) {
+      for (let i = 1; i <= 10; i++) {
+        const sessionLink = document.createElement('a');
+        const sessionSlug = {
+          1: 'one', 2: 'two', 3: 'three', 4: 'four', 5: 'five',
+          6: 'six', 7: 'seven', 8: 'eight', 9: 'nine', 10: 'ten'
+        }[i];
+        
+        // Root relative path structured exactly as requested
+        sessionLink.href = `../session-${sessionSlug}/`;
+        sessionLink.textContent = `Session ${i}`;
+        dropdownContainer.appendChild(sessionLink);
+      }
+    }
+
+    // ----- Dropdown Toggle Engine Engine -----
+    const dropdownBtn = document.getElementById('sessionsDropdownBtn');
+    const dropdownMenu = document.getElementById('sessionsDropdown');
+
+    function toggleDropdown(e) {
+      e.stopPropagation();
+      dropdownMenu.classList.toggle('show');
+    }
+
+    if (dropdownBtn && dropdownMenu) {
+      dropdownBtn.addEventListener('click', toggleDropdown);
+      
+      document.addEventListener('click', function(event) {
+        if (!dropdownBtn.contains(event.target) && !dropdownMenu.contains(event.target)) {
+          dropdownMenu.classList.remove('show');
+        }
+      });
+      dropdownMenu.addEventListener('click', function(e) {
+        e.stopPropagation();
+      });
+    }
+
+    // ----- Responsive Mobile Toggle Engine -----
+    const hamburger = document.getElementById('hamburgerBtn');
+    const navMenu = document.getElementById('navMenu');
+
+    if (hamburger && navMenu) {
+      hamburger.addEventListener('click', function(e) {
+        e.stopPropagation();
+        navMenu.classList.toggle('active');
+        if (navMenu.classList.contains('active')) {
+          document.body.classList.add('menu-open');
+        } else {
+          document.body.classList.remove('menu-open');
+        }
+        if (dropdownMenu) dropdownMenu.classList.remove('show');
+      });
+
+      const navLinks = navMenu.querySelectorAll('a, .dropdown-btn');
+      navLinks.forEach(link => {
+        link.addEventListener('click', function(e) {
+          if (e.target.tagName === 'A') {
+            navMenu.classList.remove('active');
+            document.body.classList.remove('menu-open');
+          }
+        });
+      });
+
+      document.addEventListener('click', function(event) {
+        if (window.innerWidth <= 768) {
+          if (!navMenu.contains(event.target) && !hamburger.contains(event.target)) {
+            navMenu.classList.remove('active');
+            document.body.classList.remove('menu-open');
+          }
+        }
+      });
+
+      window.addEventListener('resize', function() {
+        if (window.innerWidth > 768) {
+          navMenu.classList.remove('active');
+          document.body.classList.remove('menu-open');
+        }
+      });
+    }
+
+    // ----- Office Live Sandbox Environment Fallback Logic -----
+    window.addEventListener('DOMContentLoaded', () => {
+      const iframe = document.querySelector('iframe');
+      const absoluteUrl = window.location.href.substring(0, window.location.href.lastIndexOf('/') + 1) + 'Digital%20Skills%20Crashcourse.pptx';
+      
+      if(!window.location.origin.includes('127.0.0.1') && !window.location.origin.includes('localhost')) {
+        iframe.src = `https://view.officeapps.live.com/op/embed.aspx?src=${encodeURIComponent(absoluteUrl)}`;
+      } else {
+        console.warn("Office Live requires a public deployment domain address. Fallback canvas structural model active.");
+      }
+    });
+  </script>
+</body>
+</html>

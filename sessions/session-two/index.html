@@ -1,0 +1,1127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Docs &amp; Slides | Aman Kunwar</title>
+  <link rel="icon" type="image/png" href="../../assets/favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#F6F2EA;
+    --ink:#23262B;
+    --ink-soft:#6B6F76;
+    --line:#DEd7C8;
+    --docs:#3454D1;
+    --docs-soft:#E7ECFD;
+    --slides:#E2872E;
+    --slides-soft:#FBEEDD;
+    --accent:var(--ink);
+    --accent-soft:var(--line);
+  }
+
+  *{ box-sizing:border-box; }
+  html,body{ margin:0; height:100%; }
+  body{
+    font-family:'Inter',system-ui,-apple-system,sans-serif;
+    color:var(--ink);
+    background:var(--paper);
+    overflow:hidden;
+    -webkit-text-size-adjust:100%;
+  }
+  body[data-app="docs"]{ --accent:var(--docs); --accent-soft:var(--docs-soft); }
+  body[data-app="slides"]{ --accent:var(--slides); --accent-soft:var(--slides-soft); }
+  body[data-app="neutral"]{ --accent:var(--ink); --accent-soft:var(--line); }
+
+  /* ---------- progress bar ---------- */
+  #progress{
+    position:fixed; top:0; left:0; height:3px; width:0%;
+    background:var(--accent); z-index:30;
+    transition: width .12s linear, background .4s ease;
+  }
+
+  /* ---------- deck / sections ---------- */
+  #deck{
+    height:100vh; height:100dvh;
+    overflow-y:auto;
+    -webkit-overflow-scrolling:touch;
+    scroll-snap-type:y mandatory;
+    scroll-behavior:smooth;
+  }
+  @media (prefers-reduced-motion:reduce){
+    #deck{ scroll-behavior:auto; }
+  }
+
+  .slide{
+    height:100vh; height:100dvh;
+    scroll-snap-align:start;
+    scroll-snap-stop:always;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    padding: 6vh 6vw 12vh;
+    position:relative;
+    transition:background .4s ease;
+    overflow-y: auto;
+  }
+
+  /* ---------- typography (ENLARGED) ---------- */
+  h1,h2,h3{
+    font-family:'Fraunces',Georgia,serif;
+    line-height:1.08;
+    margin:0 0 .6rem;
+    font-weight:600;
+  }
+  h1{ font-size:clamp(2.5rem, 11vw, 4rem); }          /* larger */
+  h2{ font-size:clamp(1.9rem, 8vw, 2.8rem); }         /* larger */
+  .eyebrow{
+    font-size:.95rem;                                  /* bigger */
+    letter-spacing:.16em;
+    text-transform:uppercase;
+    font-weight:700;
+    color:var(--accent);
+    margin:0 0 1.2rem;
+  }
+  .lede{
+    font-size:1.25rem;                                 /* bigger */
+    color:var(--ink-soft);
+    max-width:38ch;
+    margin:.6rem 0 2rem;
+  }
+
+  /* ---------- step lists (larger) ---------- */
+  ol.steps{
+    list-style:decimal;
+    padding-left:1.4em;
+    margin:0;
+    max-width:42ch;
+  }
+  ol.steps li{
+    padding:.6rem 0;
+    border-bottom:1px solid var(--line);
+    font-size:1.1rem;                                 /* enlarged */
+    line-height:1.45;
+  }
+  ol.steps li::marker{
+    font-family:'Fraunces',serif;
+    font-weight:700;
+    color:var(--accent);
+    font-size:1.2rem;
+  }
+  ol.steps li:last-child{ border-bottom:none; }
+
+  .tip{
+    margin-top:1.6rem;
+    padding-left:1rem;
+    border-left:4px solid var(--accent);
+    color:var(--ink-soft);
+    font-size:1rem;                                    /* bigger */
+    max-width:38ch;
+  }
+  .tip span{
+    display:block;
+    font-weight:700;
+    color:var(--ink);
+    text-transform:uppercase;
+    font-size:.85rem;
+    letter-spacing:.14em;
+    margin-bottom:.3rem;
+  }
+
+  /* ---------- divider slides ---------- */
+  .slide--divider{ background:var(--accent-soft); }
+  ol.topics{
+    list-style:decimal;
+    padding-left:1.4em;
+    margin:0;
+    max-width:40ch;
+  }
+  ol.topics li{ padding:.45rem 0; font-size:1.08rem; color:var(--ink); }  /* bigger */
+  ol.topics li::marker{
+    color:var(--accent);
+    font-weight:700;
+    font-family:'Fraunces',serif;
+  }
+
+  /* ---------- icons ---------- */
+  .icon{
+    border-radius:10px;
+    margin-bottom:1.6rem;
+    box-shadow:0 10px 24px rgba(0,0,0,.10);
+  }
+  .icon-docs{
+    width:90px; height:100px;
+    background-color:var(--docs);
+    background-image:repeating-linear-gradient(to bottom, transparent 0 15px, rgba(255,255,255,.32) 15px 18px);
+    clip-path: polygon(0 0, 68% 0, 100% 26%, 100% 100%, 0 100%);
+  }
+  .icon-slides{
+    width:120px; aspect-ratio:16/10; height:auto;
+    background:var(--slides);
+    border-radius:12px;
+    display:flex; align-items:center; justify-content:center;
+  }
+  .icon-slides::after{
+    content:'';
+    border-top:18px solid transparent;
+    border-bottom:18px solid transparent;
+    border-left:26px solid rgba(255,255,255,.9);
+    margin-left:6px;
+  }
+
+  /* ---------- title & recap ---------- */
+  .legend{ display:flex; gap:1.6rem; margin-top:.6rem; }
+  .legend-item{
+    display:flex; align-items:center; gap:.5rem;
+    font-size:.95rem; font-weight:600; color:var(--ink-soft);
+  }
+  .legend-item i{
+    width:13px; height:13px; border-radius:50%; display:inline-block;
+  }
+  .dot-docs{ background:var(--docs); }
+  .dot-slides{ background:var(--slides); }
+
+  .recap-grid{
+    display:grid; grid-template-columns:1fr; gap:1.8rem;
+    max-width:52ch; margin-top:1rem;
+  }
+  @media (min-width:640px){
+    .recap-grid{ grid-template-columns:1fr 1fr; }
+  }
+  .recap-grid h3{
+    font-size:1.25rem; margin-bottom:.6rem;
+    display:flex; align-items:center; gap:.5rem;
+  }
+  .recap-grid ul{ list-style:none; margin:0; padding:0; }
+  .recap-grid li{
+    padding:.4rem 0; font-size:1rem; color:var(--ink-soft);
+    padding-left:1.2em; position:relative;
+  }
+  .recap-grid li::before{
+    content:'';
+    position:absolute; left:0; top:.72rem;
+    width:8px; height:8px; border-radius:50%;
+    background:var(--row-accent, var(--ink-soft));
+  }
+  .recap-grid .docs-list li::before{ background:var(--docs); }
+  .recap-grid .slides-list li::before{ background:var(--slides); }
+  .recap-grid h3.docs-title{ color:var(--docs); }
+  .recap-grid h3.slides-title{ color:var(--slides); }
+
+  .callout{
+    margin-top:2.2rem;
+    padding:1.2rem 1.5rem;
+    background:var(--paper);
+    border:1px solid var(--line);
+    border-radius:14px;
+    max-width:44ch;
+    font-size:1rem;                                   /* larger */
+    line-height:1.45;
+  }
+
+  /* ---------- side dot rail ---------- */
+  #rail{
+    position:fixed; right:12px; top:50%;
+    transform:translateY(-50%);
+    display:flex; flex-direction:column; gap:9px;
+    z-index:25;
+  }
+  .dot{
+    width:8px; height:8px; border-radius:50%;
+    background:var(--line);
+    border:none; padding:0; cursor:pointer;
+    transition: all .25s ease;
+  }
+  .dot.active{
+    background:var(--accent);
+    height:26px; border-radius:6px;
+  }
+  .dot:focus-visible{ outline:2px solid var(--accent); outline-offset:2px; }
+
+  /* ---------- next button ---------- */
+  #nextBtn{
+    position:fixed; left:50%; bottom:20px;
+    transform:translateX(-50%);
+    width:52px; height:52px; border-radius:50%;
+    background:var(--ink); color:var(--paper);
+    border:none; font-size:1.3rem;
+    display:flex; align-items:center; justify-content:center;
+    box-shadow:0 6px 20px rgba(0,0,0,.2);
+    cursor:pointer; z-index:25;
+    animation: bob 2.2s ease-in-out infinite;
+  }
+  #nextBtn:focus-visible{ outline:2px solid var(--accent); outline-offset:3px; }
+  @keyframes bob{
+    0%,100%{ transform:translate(-50%,0); }
+    50%{ transform:translate(-50%,-8px); }
+  }
+  @media (prefers-reduced-motion:reduce){
+    #nextBtn{ animation:none; }
+  }
+
+  /* ---------- responsive content layout & IMAGES (ENLARGED) ---------- */
+  .content-wrap{
+    display:flex;
+    flex-direction: column;
+    gap:2rem;
+    align-items:stretch;
+  }
+  .text-side { flex: 1; }
+  
+  .image-panel{
+    position: relative;
+    flex:1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    max-width: 480px;                                 /* larger default */
+    margin: 0 auto;
+  }
+  .image-panel img{
+    width: 100%;
+    height: auto;
+    max-height: 38vh;                                 /* bigger on mobile */
+    object-fit: contain;
+    border-radius:16px;
+    box-shadow:0 12px 28px rgba(0,0,0,.15);
+  }
+
+  /* Fullscreen Zoom Action Button */
+  .zoom-btn {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    width: 40px;
+    height: 40px;
+    border-radius: 12px;
+    background: rgba(35, 38, 43, 0.85);
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    font-size: 1.2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10;
+    transition: background 0.2s;
+  }
+  .zoom-btn:hover { background: rgba(35, 38, 43, 1); }
+
+  /* Multi-image Slider Control overrides */
+  .slider-nav-btn {
+    position: absolute;
+    top: 50%;
+    right: -28px;
+    transform: translateY(-50%);
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: var(--accent);
+    color: var(--paper);
+    border: none;
+    cursor: pointer;
+    font-size: 1.4rem;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+    z-index: 12;
+  }
+
+  @media (min-width:1024px){
+    .content-wrap{
+      flex-direction: row;
+      justify-content:space-between;
+      align-items: center;
+      gap: 4rem;
+    }
+    .image-panel {
+      max-width: 55%;
+      margin: 0;
+    }
+    .image-panel img {
+      max-height: 62vh;                               /* much larger on desktop */
+    }
+    .slider-nav-btn { right: -32px; }
+  }
+
+  .landing-buttons{display:flex;gap:1rem;margin-top:1.8rem;flex-wrap:wrap;}
+  .landing-buttons button{padding:1rem 1.6rem;border:none;border-radius:14px;cursor:pointer;font-weight:600;font-size:1rem;}
+
+  /* ---------- popup modal styles ---------- */
+  #popupModal {
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(23, 24, 26, 0.96);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 100;
+  }
+  #popupModal img {
+    max-width: 92%;
+    max-height: 88%;
+    object-fit: contain;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+  }
+  #closeModal {
+    position: absolute;
+    top: 24px; right: 24px;
+    background: transparent;
+    border: none; color: #fff;
+    font-size: 2.4rem; cursor: pointer;
+  }
+
+  /* minor extra visibility for lists on small devices */
+  @media (max-width: 600px) {
+    .slide {
+      padding: 5vh 5vw 10vh;
+    }
+    .image-panel {
+      max-width: 95%;
+    }
+    .image-panel img {
+      max-height: 40vh;
+    }
+    .slider-nav-btn {
+      width: 38px;
+      height: 38px;
+      right: -16px;
+      font-size: 1.2rem;
+    }
+    .steps li {
+      font-size: 1rem;
+    }
+    .lede {
+      font-size: 1.1rem;
+    }
+  }
+
+  /* ---------- NAVBAR (fixed, responsive, hamburger matches syllabus page) ---------- */
+  .navbar {
+    position: relative;
+    z-index: 45;
+    width: 100%;
+    background: var(--paper);
+    border-bottom: 1px solid var(--line);
+    font-family: 'Inter', sans-serif;
+  }
+
+  .nav-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 24px;
+    max-width: 1400px;
+    margin: 0 auto;
+  }
+
+  /* brand – default color (no gradient) */
+  .nav-brand {
+    font-weight: 700;
+    font-size: 1.25rem;
+    color: var(--ink);
+    letter-spacing: -0.2px;
+  }
+
+  .hamburger {
+    font-size: 28px;
+    cursor: pointer;
+    display: none;
+    user-select: none;
+    color: var(--ink);
+    transition: 0.2s;
+  }
+  .hamburger:hover { color: var(--docs); }
+
+  .nav-menu {
+    display: flex;
+    align-items: center;
+    gap: 28px;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .nav-menu li {
+    position: relative;
+  }
+
+  .nav-menu a, .dropdown-btn {
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 0.95rem;
+    color: var(--ink-soft);
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-family: 'Inter', sans-serif;
+    transition: color 0.2s;
+    padding: 6px 0;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .nav-menu a:hover, .dropdown-btn:hover {
+    color: var(--docs);
+  }
+
+  .dropdown-content {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background: var(--paper);
+    min-width: 160px;
+    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.1);
+    border-radius: 16px;
+    padding: 8px 0;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-8px);
+    transition: all 0.2s ease;
+    z-index: 100;
+    border: 1px solid var(--line);
+  }
+
+  .dropdown-content.show {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+  }
+
+  .dropdown-content a {
+    display: block;
+    padding: 8px 20px;
+    font-size: 0.85rem;
+    color: var(--ink);
+    text-decoration: none;
+    transition: background 0.1s;
+  }
+
+  .dropdown-content a:hover {
+    background: rgba(52, 84, 209, 0.08);
+    color: var(--docs);
+  }
+
+  /* Mobile styles: hamburger + slide-out menu (exactly like syllabus page) */
+  @media screen and (max-width: 768px) {
+    .hamburger {
+      display: block;
+    }
+    .nav-menu {
+      position: fixed;
+      left: -100%;
+      top: 62px;
+      flex-direction: column;
+      background: var(--paper);
+      width: 75%;
+      max-width: 280px;
+      height: calc(100% - 62px);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+      transition: 0.3s ease;
+      padding: 24px 20px;
+      gap: 20px;
+      align-items: flex-start;
+      border-radius: 0 24px 24px 0;
+      z-index: 200;
+      overflow-y: auto;
+    }
+    .nav-menu.active {
+      left: 0;
+    }
+    .nav-menu li {
+      width: 100%;
+    }
+    .dropdown-content {
+      position: static;
+      box-shadow: none;
+      background: rgba(246, 242, 234, 0.96);
+      margin-top: 8px;
+      border-radius: 14px;
+      opacity: 1;
+      transform: none;
+      visibility: visible;
+      display: none;
+      width: 100%;
+    }
+    .dropdown-content.show {
+      display: block;
+    }
+    .dropdown-btn {
+      width: 100%;
+      justify-content: space-between;
+    }
+  }
+
+  @media print {
+    .navbar, .no-print {
+      display: none !important;
+    }
+  }
+</style>
+</head>
+<body data-app="neutral">
+
+  <!-- NAVBAR (home + sessions dropdown, hamburger on mobile) -->
+  <nav class="navbar no-print">
+    <div class="nav-container">
+      <div class="nav-brand">Docs & Slides</div>
+      <div class="hamburger" id="hamburger">☰</div>
+      <ul class="nav-menu" id="nav-menu">
+        <li><a href="../../">Home</a></li>
+        <li class="dropdown">
+          <button class="dropdown-btn" id="sessionsDropdownBtn">Sessions ▼</button>
+          <div class="dropdown-content" id="sessionsDropdown">
+            <a href="../session-one/">Session 1</a>
+            <a href="../session-two/">Session 2</a>
+            <a href="../session-three/">Session 3</a>
+            <a href="../session-four/">Session 4</a>
+            <a href="../session-five/">Session 5</a>
+            <a href="../session-six/">Session 6</a>
+            <a href="../session-seven/">Session 7</a>
+            <a href="../session-eight/">Session 8</a>
+            <a href="../session-nine/">Session 9</a>
+            <a href="../session-ten/">Session 10</a>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </nav>
+
+  <div id="progress"></div>
+  <main id="deck"></main>
+  <nav id="rail" aria-label="Slide navigation"></nav>
+  <button id="nextBtn" aria-label="Next slide">↓</button>
+
+  <div id="popupModal" role="dialog" aria-label="Image Preview">
+    <button id="closeModal" aria-label="Close Preview">&times;</button>
+    <img id="modalImg" src="" alt="Expanded Preview">
+  </div>
+
+  <noscript><p style="padding:2rem;">Please enable JavaScript to view this workshop.</p></noscript>
+
+<script>
+  const slides = [
+    // 0 — Title (1/20)
+    {
+      type:'title',
+      title:'Docs & Slides Basics',
+      subtitle:'A basic detailed walkthrough of the everyday tools in Google Docs and Google Slides.'
+    },
+
+    // 1 — Divider: Part 1 (2/20)
+    {
+      type:'divider', app:'docs', id:'docs-start',
+      title:'Part 1 — Google Docs',
+      subtitle:'7 essentials for writing on your phone',
+      items:[
+        'Create a new document',
+        'Name your file & autosave',
+        'Format your text',
+        'Align text & add lists',
+        'Insert an image',
+        'Insert a table',
+        'Share & set permissions'
+      ]
+    },
+
+    // 2 — New document (3/20 -> image1.png)
+    {
+      type:'content', app:'docs',
+      eyebrow:'Google Docs',
+      title:'Create a new document',
+      steps:[
+        'Open the Google Docs app.',
+        'Tap the + button in the bottom-right corner.',
+        'Choose "New document", or pick a template.',
+        'A blank page opens — start typing.'
+      ],
+      tip:'Your work saves to Google Drive automatically as you type.'
+    },
+
+    // 3 — Naming & autosave (4/20 -> image2.png)
+    {
+      type:'content', app:'docs',
+      eyebrow:'Google Docs',
+      title:'Name your file & autosave',
+      steps:[
+        'Tap "Untitled document" at the top of the screen.',
+        'Type a new name for your file.',
+        'Tap the checkmark, or tap outside the box, to confirm.',
+        'Docs saves this automatically — there is no Save button.'
+      ],
+      tip:'Find renamed files anytime from the Docs home screen.'
+    },
+
+    // 4 — Text formatting (5/20 -> image3.png)
+    {
+      type:'content', app:'docs',
+      eyebrow:'Google Docs',
+      title:'Format your text',
+      steps:[
+        'Double-tap a word, or drag the handles to select more text.',
+        'Tap the "A" formatting icon in the toolbar.',
+        'Choose Bold, Italic, Underline, font, size, or color.',
+        'Tap outside the text to apply your changes.'
+      ]
+    },
+
+    // 5 — Alignment & lists (6/20 -> image4.png)
+    {
+      type:'content', app:'docs',
+      eyebrow:'Google Docs',
+      title:'Align text & add lists',
+      steps:[
+        'Place your cursor in the paragraph you want to change.',
+        'Tap the "A" formatting icon, then the "Paragraph" tab.',
+        'Tap an alignment icon — left, center, right, or justify.',
+        'Tap the bullet or numbered list icon to start a list.'
+      ]
+    },
+
+    // 6 — Insert image (7/20 -> image5.png)
+    {
+      type:'content', app:'docs',
+      eyebrow:'Google Docs',
+      title:'Insert an image',
+      steps:[
+        'Tap the spot where you want the image to appear.',
+        'Tap the + (insert) icon in the toolbar.',
+        'Choose "Image" — from your photos, camera, or a web search.',
+        'Tap the image to drag, resize, or wrap text around it.'
+      ]
+    },
+
+    // 7 — Insert table (8/20 -> image6.png)
+    {
+      type:'content', app:'docs',
+      eyebrow:'Google Docs',
+      title:'Insert a table',
+      steps:[
+        'Tap where the table should go.',
+        'Tap the + (insert) icon, then choose "Table".',
+        'Pick the number of rows and columns you need.',
+        'Tap any cell to start typing.'
+      ],
+      tip:'Tap and hold a row or column for more options, like adding or deleting it.'
+    },
+    
+    // 8 — Share & permissions (9/20 -> image7.png and image7.1.png)
+    {
+      type:'content', app:'docs',
+      eyebrow:'Google Docs',
+      title:'Share & set permissions',
+      steps:[
+        'Tap the share icon in the top-right corner.',
+        'Enter an email address, or tap "Copy link".',
+        'Tap the role menu to choose Viewer, Commenter, or Editor.',
+        'Tap "Send" or "Done" to confirm.'
+      ],
+      images: ['image7.png', 'image7.1.png']
+    },
+    
+    // 9 — Divider: Part 2 (10/20)
+    {
+      type:'divider', app:'slides', id:'slides-start',
+      title:'Part 2 — Google Slides',
+      subtitle:'9 essentials for building a deck on your phone',
+      items:[
+        'Create a new presentation',
+        'Add, duplicate & delete slides',
+        'Reorder slides',
+        'Layouts & themes',
+        'Text boxes & formatting',
+        'Insert images',
+        'Insert shapes',
+        'Present your slideshow',
+        'Share & collaborate'
+      ]
+    },
+
+    // 10 — New presentation (11/20 -> slide11.png)
+    {
+      type:'content', app:'slides',
+      eyebrow:'Google Slides',
+      title:'Create a new presentation',
+      steps:[
+        'Open the Google Slides app.',
+        'Tap the + button in the bottom-right corner.',
+        'Pick "New presentation", choose a theme, or start blank.',
+        'Your first slide opens, ready to edit.'
+      ],
+      customImage: 'slide11.png'
+    },
+
+    // 11 — Add/duplicate/delete (12/20 -> slide12.png)
+    {
+      type:'content', app:'slides',
+      eyebrow:'Google Slides',
+      title:'Add, duplicate & delete slides',
+      steps:[
+        'Tap the + icon at the bottom to add a new slide.',
+        'In the slide filmstrip, tap and hold a slide thumbnail.',
+        'Choose Duplicate, Delete, or Skip slide from the menu.',
+        'Tap any thumbnail to jump to that slide.'
+      ],
+      customImage: 'slide12.png'
+    },
+
+    // 12 — Reorder slides (13/20 -> slide13.png)
+    {
+      type:'content', app:'slides',
+      eyebrow:'Google Slides',
+      title:'Reorder slides',
+      steps:[
+        'Open the slide filmstrip at the bottom of the screen.',
+        'Tap and hold the slide you want to move.',
+        'Drag it up or down to its new position.',
+        'Lift your finger to drop it in place.'
+      ],
+      customImage: 'slide13.png'
+    },
+
+    // 13 — Layouts & themes (14/20 -> slide14.png & slide14.1.png)
+    {
+      type:'content', app:'slides',
+      eyebrow:'Google Slides',
+      title:'Layouts & themes',
+      steps:[
+        'Tap the slide you want to change.',
+        'Tap the layout icon to pick a different arrangement.',
+        'Tap the theme (paint roller) icon to change the whole deck.',
+        'Tap a theme to apply it instantly.'
+      ],
+      images: ['slide14.png', 'slide14.1.png']
+    },
+
+    // 14 — Text boxes & formatting (15/20 -> slide15.png)
+    {
+      type:'content', app:'slides',
+      eyebrow:'Google Slides',
+      title:'Text boxes & formatting',
+      steps:[
+        'Tap a placeholder like "Click to add title" and start typing.',
+        'To add text anywhere else, tap + then "Text box".',
+        'Select the text and tap the "A" icon to change font, size, or color.',
+        'Tap outside the box when finished.'
+      ],
+      customImage: 'slide15.png'
+    },
+
+    // 15 — Insert images (16/20 -> slide16.png)
+    {
+      type:'content', app:'slides',
+      eyebrow:'Google Slides',
+      title:'Insert images',
+      steps:[
+        'Tap the + (insert) icon.',
+        'Choose "Image" — from photos, camera, or a web search.',
+        'Drag the corners to resize the image.',
+        'Drag the image itself to reposition it.'
+      ],
+      customImage: 'slide16.png'
+    },
+
+    // 16 — Insert shapes (17/20 -> slide17.png)
+    {
+      type:'content', app:'slides',
+      eyebrow:'Google Slides',
+      title:'Insert shapes & lines',
+      steps:[
+        'Tap the + (insert) icon, then choose "Shape" or "Line".',
+        'Pick the shape or line style you want.',
+        'Tap on the slide to place it, then drag to resize or move.',
+        'Tap the shape and use the fill-color icon to change its color.'
+      ],
+      customImage: 'slide17.png'
+    },
+
+    // 17 — Present (18/20 -> slide18.png)
+    {
+      type:'content', app:'slides',
+      eyebrow:'Google Slides',
+      title:'Present your slideshow',
+      steps:[
+        'Tap the play (▶) icon in the top-right corner.',
+        'Choose "Present" to start from the beginning.',
+        'Swipe left or right to move between slides.',
+        'Tap the X to exit and return to editing.'
+      ],
+      customImage: 'slide18.png'
+    },
+
+    // 18 — Share & collaborate (19/20 -> slide19.png & slide19.1.png)
+    {
+      type:'content', app:'slides',
+      eyebrow:'Google Slides',
+      title:'Share & collaborate',
+      steps:[
+        'Tap the share icon in the top-right corner.',
+        'Enter email addresses, or tap "Copy link".',
+        'Choose Viewer, Commenter, or Editor permission.',
+        'Tap "Send" — collaborators can now view or edit live.'
+      ],
+      images: ['slide19.png', 'slide19.1.png']
+    },
+
+    // 19 — Recap (20/20)
+    {
+      type:'recap',
+      title:'You\'ve got the basics',
+      subtitle:'Everything below works on your phone, right now.',
+      docsItems:[
+        'New document','Naming & autosave','Text formatting',
+        'Alignment & lists','Insert image','Insert table',
+        'Voice typing','Sharing','Offline access'
+      ],
+      slidesItems:[
+        'New presentation','Add/duplicate/delete slides','Reorder slides',
+        'Layouts & themes','Text boxes','Insert images',
+        'Insert shapes','Presenting','Sharing'
+      ],
+      callout:'Try it now — open Docs or Slides on your phone and follow along with one step from today.'
+    }
+  ];
+
+  let docsImageCounter = 0;
+
+  function renderSlide(d, i, total){
+    if(d.type === 'title'){
+      return `<section class="slide slide--title" data-app="neutral">
+        <h1>${d.title}</h1>
+        <p class="lede">${d.subtitle}</p>
+        <div class="legend">
+          <span class="legend-item"><i class="dot-docs"></i>Google Docs</span>
+          <span class="legend-item"><i class="dot-slides"></i>Google Slides</span>
+        </div>
+        <div class="landing-buttons">
+          <button onclick="document.getElementById('docs-start').scrollIntoView({behavior:'smooth'})">Google Docs</button>
+          <button onclick="document.getElementById('slides-start').scrollIntoView({behavior:'smooth'})">Google Slides</button>
+        </div>
+      </section>`;
+    }
+    if(d.type === 'divider'){
+      const items = d.items.map(t => `<li>${t}</li>`).join('');
+      return `<section id="${d.id||""}" class="slide slide--divider" data-app="${d.app}">
+        <div class="icon icon-${d.app}"></div>
+        <h2>${d.title}</h2>
+        <p class="lede">${d.subtitle}</p>
+        <ol class="topics">${items}</ol>
+      </section>`;
+    }
+    if(d.type === 'content'){
+      const steps = d.steps.map(s => `<li>${s}</li>`).join('');
+      const tip = d.tip ? `<p class="tip"><span>Tip</span>${d.tip}</p>` : '';
+      
+      let imagePanelHTML = '';
+      
+      if (d.images && d.images.length > 1) {
+        imagePanelHTML = `
+          <div class="image-panel multi-slider" data-img-array='${JSON.stringify(d.images)}' data-current-idx="0">
+            <button class="zoom-btn" title="Open Fullscreen" onclick="zoomImage(this)">⛶</button>
+            <img src="${d.images[0]}" alt="Step screenshot layout">
+            <button class="slider-nav-btn" onclick="toggleSlideImage(this)">&gt;</button>
+          </div>`;
+      } else {
+        let currentImgSrc = '';
+        if (d.customImage) {
+          currentImgSrc = d.customImage;
+        } else {
+          docsImageCounter++;
+          currentImgSrc = `image${docsImageCounter}.png`;
+        }
+        
+        imagePanelHTML = `
+          <div class="image-panel">
+            <button class="zoom-btn" title="Open Fullscreen" onclick="zoomImage(this)">⛶</button>
+            <img src="${currentImgSrc}" alt="Step screenshot">
+          </div>`;
+      }
+
+      return `<section class="slide slide--content" data-app="${d.app}">
+      <div class="content-wrap">
+        <div class="text-side">
+          <p class="eyebrow">${d.eyebrow} · ${i+1} / ${total}</p>
+          <h2>${d.title}</h2>
+          <ol class="steps">${steps}</ol>
+          ${tip}
+        </div>
+        ${imagePanelHTML}
+      </div>
+      </section>`;
+    }
+    if(d.type === 'recap'){
+      const docsLi = d.docsItems.map(t => `<li>${t}</li>`).join('');
+      const slidesLi = d.slidesItems.map(t => `<li>${t}</li>`).join('');
+      return `<section class="slide slide--recap" data-app="neutral">
+        <h2>${d.title}</h2>
+        <p class="lede">${d.subtitle}</p>
+        <div class="recap-grid">
+          <div>
+            <h3 class="docs-title">Google Docs</h3>
+            <ul class="docs-list">${docsLi}</ul>
+          </div>
+          <div>
+            <h3 class="slides-title">Google Slides</h3>
+            <ul class="slides-list">${slidesLi}</ul>
+          </div>
+        </div>
+        <div class="callout">${d.callout}</div>
+      </section>`;
+    }
+    return '';
+  }
+
+  const deck = document.getElementById('deck');
+  deck.innerHTML = slides.map((d,i) => renderSlide(d,i,slides.length)).join('');
+
+  function toggleSlideImage(btn) {
+    const panel = btn.parentElement;
+    const images = JSON.parse(panel.getAttribute('data-img-array'));
+    let currentIdx = parseInt(panel.getAttribute('data-current-idx'), 10);
+    
+    currentIdx = (currentIdx + 1) % images.length;
+    panel.setAttribute('data-current-idx', currentIdx);
+    panel.querySelector('img').src = images[currentIdx];
+  }
+
+  const modal = document.getElementById('popupModal');
+  const modalImg = document.getElementById('modalImg');
+  
+  function zoomImage(btn) {
+    const parentPanel = btn.parentElement;
+    const activeImgSrc = parentPanel.querySelector('img').src;
+    modalImg.src = activeImgSrc;
+    modal.style.display = 'flex';
+  }
+
+  document.getElementById('closeModal').addEventListener('click', () => {
+    modal.style.display = 'none';
+  });
+  modal.addEventListener('click', (e) => {
+    if(e.target === modal) modal.style.display = 'none';
+  });
+
+  const sections = Array.from(deck.querySelectorAll('.slide'));
+  const rail = document.getElementById('rail');
+  const nextBtn = document.getElementById('nextBtn');
+  const progress = document.getElementById('progress');
+  let currentIndex = 0;
+
+  const dots = sections.map((sec, i) => {
+    const dot = document.createElement('button');
+    dot.className = 'dot';
+    dot.setAttribute('aria-label', `Go to slide ${i+1} of ${sections.length}`);
+    dot.addEventListener('click', () => sec.scrollIntoView({behavior:'smooth'}));
+    rail.appendChild(dot);
+    return dot;
+  });
+  dots[0].classList.add('active');
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if(entry.isIntersecting){
+        const idx = sections.indexOf(entry.target);
+        currentIndex = idx;
+        dots.forEach(d => d.classList.remove('active'));
+        dots[idx].classList.add('active');
+        document.body.dataset.app = entry.target.dataset.app;
+        nextBtn.style.opacity = (idx === sections.length - 1) ? '0' : '1';
+        nextBtn.style.pointerEvents = (idx === sections.length - 1) ? 'none' : 'auto';
+      }
+    });
+  }, { threshold: 0.5 });
+
+  sections.forEach(sec => observer.observe(sec));
+
+  nextBtn.addEventListener('click', () => {
+    const next = sections[currentIndex + 1];
+    if(next) next.scrollIntoView({behavior:'smooth'});
+  });
+
+  deck.addEventListener('scroll', () => {
+    const max = deck.scrollHeight - deck.clientHeight;
+    const pct = max > 0 ? (deck.scrollTop / max) * 100 : 0;
+    progress.style.width = pct + '%';
+  });
+
+  // ----- NAVBAR SESSIONS DROPDOWN (session 1 to 10) -----
+  const dropdownContainer = document.getElementById('sessionsDropdown');
+  if (dropdownContainer) {
+    for (let i = 1; i <= 10; i++) {
+      const sessionLink = document.createElement('a');
+      const sessionName = {
+        1: 'one', 2: 'two', 3: 'three', 4: 'four', 5: 'five',
+        6: 'six', 7: 'seven', 8: 'eight', 9: 'nine', 10: 'ten'
+      }[i];
+      sessionLink.href = `/sessions/session-${sessionName}`;
+      sessionLink.textContent = `Session ${i}`;
+      dropdownContainer.appendChild(sessionLink);
+    }
+  }
+
+  // Dropdown toggle logic
+  const dropdownBtn = document.getElementById('sessionsDropdownBtn');
+  const dropdownMenu = document.getElementById('sessionsDropdown');
+  function toggleDropdown(e) {
+    e.stopPropagation();
+    dropdownMenu.classList.toggle('show');
+  }
+  if (dropdownBtn && dropdownMenu) {
+    dropdownBtn.addEventListener('click', toggleDropdown);
+    document.addEventListener('click', function(event) {
+      if (!dropdownBtn.contains(event.target) && !dropdownMenu.contains(event.target)) {
+        dropdownMenu.classList.remove('show');
+      }
+    });
+    dropdownMenu.addEventListener('click', function(e) { e.stopPropagation(); });
+  }
+
+  // Hamburger menu (mobile) – exact pattern from syllabus page
+  const hamburger = document.getElementById('hamburger');
+  const navMenu = document.getElementById('nav-menu');
+  if (hamburger && navMenu) {
+    hamburger.addEventListener('click', function(e) {
+      e.stopPropagation();
+      navMenu.classList.toggle('active');
+      if (dropdownMenu) dropdownMenu.classList.remove('show');
+    });
+    const navLinks = navMenu.querySelectorAll('a, .dropdown-btn');
+    navLinks.forEach(link => {
+      link.addEventListener('click', function(e) {
+        if (e.target.tagName === 'A') {
+          navMenu.classList.remove('active');
+        }
+      });
+    });
+    document.addEventListener('click', function(event) {
+      if (window.innerWidth <= 768) {
+        if (!navMenu.contains(event.target) && !hamburger.contains(event.target)) {
+          navMenu.classList.remove('active');
+        }
+      }
+    });
+    // prevent body scroll when mobile menu open
+    const observerMenu = new MutationObserver(() => {
+      if (navMenu.classList.contains('active')) {
+        document.body.style.overflow = 'hidden';
+      } else {
+        document.body.style.overflow = '';
+      }
+    });
+    observerMenu.observe(navMenu, { attributes: true, attributeFilter: ['class'] });
+    window.addEventListener('resize', () => {
+      if (window.innerWidth > 768) {
+        navMenu.classList.remove('active');
+        document.body.style.overflow = '';
+      }
+    });
+  }
+</script>
+</body>
+</html>
