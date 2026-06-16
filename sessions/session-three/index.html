@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Canva Basics | Aman Kunwar</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#F6F2EA;
+    --ink:#23262B;
+    --ink-soft:#6B6F76;
+    --line:#DEd7C8;
+    --canva:#00C4CC;
+    --canva-soft:#D6F5F5;
+    --accent:var(--ink);
+    --accent-soft:var(--line);
+  }
+
+  *{ box-sizing:border-box; }
+  html,body{ margin:0; height:100%; }
+  body{
+    font-family:'Inter',system-ui,-apple-system,sans-serif;
+    color:var(--ink);
+    background:var(--paper);
+    overflow:hidden;
+    -webkit-text-size-adjust:100%;
+  }
+  body[data-app="canva"]{ --accent:var(--canva); --accent-soft:var(--canva-soft); }
+  body[data-app="neutral"]{ --accent:var(--ink); --accent-soft:var(--line); }
+
+  #progress{
+    position:fixed; top:0; left:0; height:3px; width:0%;
+    background:var(--accent); z-index:30;
+    transition: width .12s linear, background .4s ease;
+  }
+
+  #deck{
+    height:100vh; height:100dvh;
+    overflow-y:auto;
+    -webkit-overflow-scrolling:touch;
+    scroll-snap-type:y mandatory;
+    scroll-behavior:smooth;
+  }
+  @media (prefers-reduced-motion:reduce){
+    #deck{ scroll-behavior:auto; }
+  }
+
+  .slide{
+    height:100vh; height:100dvh;
+    scroll-snap-align:start;
+    scroll-snap-stop:always;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    padding: 6vh 6vw 12vh;
+    position:relative;
+    transition:background .4s ease;
+    overflow-y: auto;
+  }
+
+  h1,h2,h3{
+    font-family:'Fraunces',Georgia,serif;
+    line-height:1.08;
+    margin:0 0 .6rem;
+    font-weight:600;
+  }
+  h1{ font-size:clamp(2.5rem, 11vw, 4rem); }
+  h2{ font-size:clamp(1.9rem, 8vw, 2.8rem); }
+  .eyebrow{
+    font-size:.95rem;
+    letter-spacing:.16em;
+    text-transform:uppercase;
+    font-weight:700;
+    color:var(--accent);
+    margin:0 0 1.2rem;
+  }
+  .lede{
+    font-size:1.25rem;
+    color:var(--ink-soft);
+    max-width:38ch;
+    margin:.6rem 0 2rem;
+  }
+
+  ol.steps{
+    list-style:decimal;
+    padding-left:1.4em;
+    margin:0;
+    max-width:42ch;
+  }
+  ol.steps li{
+    padding:.6rem 0;
+    border-bottom:1px solid var(--line);
+    font-size:1.1rem;
+    line-height:1.45;
+  }
+  ol.steps li::marker{
+    font-family:'Fraunces',serif;
+    font-weight:700;
+    color:var(--accent);
+    font-size:1.2rem;
+  }
+  ol.steps li:last-child{ border-bottom:none; }
+
+  .tip{
+    margin-top:1.6rem;
+    padding-left:1rem;
+    border-left:4px solid var(--accent);
+    color:var(--ink-soft);
+    font-size:1rem;
+    max-width:38ch;
+  }
+  .tip span{
+    display:block;
+    font-weight:700;
+    color:var(--ink);
+    text-transform:uppercase;
+    font-size:.85rem;
+    letter-spacing:.14em;
+    margin-bottom:.3rem;
+  }
+
+  .slide--divider{ background:var(--accent-soft); }
+  ol.topics{
+    list-style:decimal;
+    padding-left:1.4em;
+    margin:0;
+    max-width:40ch;
+  }
+  ol.topics li{ padding:.45rem 0; font-size:1.08rem; color:var(--ink); }
+  ol.topics li::marker{
+    color:var(--accent);
+    font-weight:700;
+    font-family:'Fraunces',serif;
+  }
+
+  .icon{
+    border-radius:10px;
+    margin-bottom:1.6rem;
+    box-shadow:0 10px 24px rgba(0,0,0,.10);
+  }
+  .icon-canva{
+    width:100px; height:100px;
+    background-color:var(--canva);
+    border-radius:20px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-family:'Fraunces',serif;
+    font-weight:700;
+    font-size:2rem;
+    color:white;
+  }
+  .icon-canva::before{
+    content:"C";
+  }
+
+  .legend{ display:flex; gap:1.6rem; margin-top:.6rem; }
+  .legend-item{
+    display:flex; align-items:center; gap:.5rem;
+    font-size:.95rem; font-weight:600; color:var(--ink-soft);
+  }
+  .legend-item i{
+    width:13px; height:13px; border-radius:50%; display:inline-block;
+  }
+  .dot-canva{ background:var(--canva); }
+
+  .recap-grid{
+    display:grid; grid-template-columns:1fr; gap:1.8rem;
+    max-width:52ch; margin-top:1rem;
+  }
+  @media (min-width:640px){
+    .recap-grid{ grid-template-columns:1fr; }
+  }
+  .recap-grid h3{
+    font-size:1.25rem; margin-bottom:.6rem;
+    display:flex; align-items:center; gap:.5rem;
+  }
+  .recap-grid ul{ list-style:none; margin:0; padding:0; }
+  .recap-grid li{
+    padding:.4rem 0; font-size:1rem; color:var(--ink-soft);
+    padding-left:1.2em; position:relative;
+  }
+  .recap-grid li::before{
+    content:'';
+    position:absolute; left:0; top:.72rem;
+    width:8px; height:8px; border-radius:50%;
+    background:var(--canva);
+  }
+
+  .callout{
+    margin-top:2.2rem;
+    padding:1.2rem 1.5rem;
+    background:var(--paper);
+    border:1px solid var(--line);
+    border-radius:14px;
+    max-width:44ch;
+    font-size:1rem;
+    line-height:1.45;
+  }
+
+  #rail{
+    position:fixed; right:12px; top:50%;
+    transform:translateY(-50%);
+    display:flex; flex-direction:column; gap:9px;
+    z-index:25;
+  }
+  .dot{
+    width:8px; height:8px; border-radius:50%;
+    background:var(--line);
+    border:none; padding:0; cursor:pointer;
+    transition: all .25s ease;
+  }
+  .dot.active{
+    background:var(--accent);
+    height:26px; border-radius:6px;
+  }
+
+  #nextBtn{
+    position:fixed; left:50%; bottom:20px;
+    transform:translateX(-50%);
+    width:52px; height:52px; border-radius:50%;
+    background:var(--ink); color:var(--paper);
+    border:none; font-size:1.3rem;
+    display:flex; align-items:center; justify-content:center;
+    box-shadow:0 6px 20px rgba(0,0,0,.2);
+    cursor:pointer; z-index:25;
+    animation: bob 2.2s ease-in-out infinite;
+  }
+  @keyframes bob{
+    0%,100%{ transform:translate(-50%,0); }
+    50%{ transform:translate(-50%,-8px); }
+  }
+
+  .content-wrap{
+    display:flex;
+    flex-direction: column;
+    gap:2rem;
+    align-items:stretch;
+  }
+  .text-side { flex: 1; }
+  
+  .image-panel{
+    position: relative;
+    flex:1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    max-width: 480px;
+    margin: 0 auto;
+  }
+  .image-panel img{
+    width: 100%;
+    height: auto;
+    max-height: 38vh;
+    object-fit: contain;
+    border-radius:16px;
+    box-shadow:0 12px 28px rgba(0,0,0,.15);
+  }
+
+  .zoom-btn {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    width: 40px;
+    height: 40px;
+    border-radius: 12px;
+    background: rgba(35, 38, 43, 0.85);
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    font-size: 1.2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10;
+  }
+  .zoom-btn:hover { background: rgba(35, 38, 43, 1); }
+
+  @media (min-width:1024px){
+    .content-wrap{
+      flex-direction: row;
+      justify-content:space-between;
+      align-items: center;
+      gap: 4rem;
+    }
+    .image-panel {
+      max-width: 55%;
+      margin: 0;
+    }
+    .image-panel img {
+      max-height: 62vh;
+    }
+  }
+
+  .landing-buttons{display:flex;gap:1rem;margin-top:1.8rem;flex-wrap:wrap;}
+  .landing-buttons button{padding:1rem 1.6rem;border:none;border-radius:14px;cursor:pointer;font-weight:600;font-size:1rem;}
+
+  #popupModal {
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(23, 24, 26, 0.96);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 100;
+  }
+  #popupModal img {
+    max-width: 92%;
+    max-height: 88%;
+    object-fit: contain;
+    border-radius: 12px;
+  }
+  #closeModal {
+    position: absolute;
+    top: 24px; right: 24px;
+    background: transparent;
+    border: none; color: #fff;
+    font-size: 2.4rem; cursor: pointer;
+  }
+
+  @media (max-width: 600px) {
+    .slide { padding: 5vh 5vw 10vh; }
+    .image-panel { max-width: 95%; }
+    .image-panel img { max-height: 40vh; }
+    .steps li { font-size: 1rem; }
+    .lede { font-size: 1.1rem; }
+  }
+
+  .navbar {
+    position: relative;
+    z-index: 45;
+    width: 100%;
+    background: var(--paper);
+    border-bottom: 1px solid var(--line);
+    font-family: 'Inter', sans-serif;
+  }
+  .nav-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 24px;
+    max-width: 1400px;
+    margin: 0 auto;
+  }
+  .nav-brand {
+    font-weight: 700;
+    font-size: 1.25rem;
+    color: var(--ink);
+    letter-spacing: -0.2px;
+  }
+  .hamburger {
+    font-size: 28px;
+    cursor: pointer;
+    display: none;
+    user-select: none;
+    color: var(--ink);
+    transition: 0.2s;
+  }
+  .hamburger:hover { color: var(--canva); }
+  .nav-menu {
+    display: flex;
+    align-items: center;
+    gap: 28px;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .nav-menu li { position: relative; }
+  .nav-menu a, .dropdown-btn {
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 0.95rem;
+    color: var(--ink-soft);
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-family: 'Inter', sans-serif;
+    transition: color 0.2s;
+    padding: 6px 0;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .nav-menu a:hover, .dropdown-btn:hover { color: var(--canva); }
+  .dropdown-content {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background: var(--paper);
+    min-width: 160px;
+    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.1);
+    border-radius: 16px;
+    padding: 8px 0;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-8px);
+    transition: all 0.2s ease;
+    z-index: 100;
+    border: 1px solid var(--line);
+  }
+  .dropdown-content.show {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+  }
+  .dropdown-content a {
+    display: block;
+    padding: 8px 20px;
+    font-size: 0.85rem;
+    color: var(--ink);
+    text-decoration: none;
+    transition: background 0.1s;
+  }
+  .dropdown-content a:hover {
+    background: rgba(0,196,204,0.08);
+    color: var(--canva);
+  }
+
+  @media screen and (max-width: 768px) {
+    .hamburger { display: block; }
+    .nav-menu {
+      position: fixed;
+      left: -100%;
+      top: 62px;
+      flex-direction: column;
+      background: var(--paper);
+      width: 75%;
+      max-width: 280px;
+      height: calc(100% - 62px);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+      transition: 0.3s ease;
+      padding: 24px 20px;
+      gap: 20px;
+      align-items: flex-start;
+      border-radius: 0 24px 24px 0;
+      z-index: 200;
+      overflow-y: auto;
+    }
+    .nav-menu.active { left: 0; }
+    .nav-menu li { width: 100%; }
+    .dropdown-content {
+      position: static;
+      box-shadow: none;
+      background: rgba(246,242,234,0.96);
+      margin-top: 8px;
+      border-radius: 14px;
+      opacity: 1;
+      transform: none;
+      visibility: visible;
+      display: none;
+      width: 100%;
+    }
+    .dropdown-content.show { display: block; }
+    .dropdown-btn { width: 100%; justify-content: space-between; }
+  }
+
+  @media print { .navbar, .no-print { display: none !important; } }
+</style>
+</head>
+<body data-app="neutral">
+
+  <nav class="navbar no-print">
+    <div class="nav-container">
+      <div class="nav-brand">Canva Basics</div>
+      <div class="hamburger" id="hamburger">☰</div>
+      <ul class="nav-menu" id="nav-menu">
+        <li><a href="../../">Home</a></li>
+        <li class="dropdown">
+          <button class="dropdown-btn" id="sessionsDropdownBtn">Sessions ▼</button>
+          <div class="dropdown-content" id="sessionsDropdown"></div>
+        </li>
+      </ul>
+    </div>
+  </nav>
+
+  <div id="progress"></div>
+  <main id="deck"></main>
+  <nav id="rail" aria-label="Slide navigation"></nav>
+  <button id="nextBtn" aria-label="Next slide">↓</button>
+
+  <div id="popupModal">
+    <button id="closeModal">&times;</button>
+    <img id="modalImg" src="" alt="Expanded Preview">
+  </div>
+
+<script>
+  // Exactly 8 lesson slides, each with one sequential image (image1.png to image8.png)
+  // No slide has multiple images. Divider and recap have none.
+  const slides = [
+    { type:'title', title:'Canva Basics', subtitle:'Learn to design stunning graphics: text, shapes, images, templates.' },
+    { type:'divider', app:'canva', id:'canva-start', title:'Part 1 — Canva Essentials', subtitle:'8 core actions to master Canva', items:['Use templates to create a design','Create a blank design','Add & edit text','Insert shapes & graphics','Upload & manage images','Download & share','Collaborate in real time','QR code generator'] },
+    { type:'content', app:'canva', eyebrow:'Canva', title:'Using templates to create a design', steps:['Open Canva app or website.','Browse the "Templates" section or search for a category (Instagram, Poster, Resume).','Tap any template to open it — it will be fully editable.','Change text, colors, images, and layout to make it your own.'], tip:'Templates save hours of work. Start with one that matches your idea, then tweak it.', customImage:'image1.png' },
+    { type:'content', app:'canva', eyebrow:'Canva', title:'Create a blank design', steps:['Tap the + (Create a design) button from the home screen.','Choose a custom size or pick from presets (Presentation, Social Media, etc.).','A completely blank canvas opens.','Add text, elements, images from scratch.'], tip:'Blank designs give you total creative freedom. Use them when you have a clear vision.', customImage:'image2.png' },
+    { type:'content', app:'canva', eyebrow:'Canva', title:'Add & edit text', steps:['Tap the Text button at the bottom.','Choose "Add a heading", "Subheading", or "Body text".','Double-tap the text box to edit.','Use the toolbar to change font, size, alignment, and color.'], tip:'Swipe through font options — Canva has hundreds of free fonts.', customImage:'image3.png' },
+    { type:'content', app:'canva', eyebrow:'Canva', title:'Insert shapes & graphics', steps:['Tap the Elements button (dotted square).','Scroll to "Shapes" or "Lines".','Tap a shape — it appears on your design.','Drag corners to resize, drag to move, use color picker to change fill.'], customImage:'image4.png' },
+    { type:'content', app:'canva', eyebrow:'Canva', title:'Upload & manage images', steps:['Tap the Upload button (cloud icon).','Tap "Upload media" and select a photo from your device.','Drag the uploaded image into your design.','Tap it to crop, adjust transparency, or add filters.'], tip:'You can also use Canva’s built-in photo library (Photos tab).', customImage:'image5.png' },
+    { type:'content', app:'canva', eyebrow:'Canva', title:'Download & share', steps:['Tap the Share button (top-right).','Choose "Download" to save as PNG, JPG, or PDF.','Or tap "Share" to send a link for viewing/editing.','Select file type and quality, then tap Download.'], customImage:'image6.png' },
+    { type:'content', app:'canva', eyebrow:'Canva', title:'Collaborate in real time', steps:['Tap Share → "Share a link to edit".','Set permissions: Can edit, Can comment, or Can view.','Send the link to teammates.','Multiple people can edit the same design simultaneously.'], customImage:'image7.png' },
+    { type:'content', app:'canva', eyebrow:'Canva', title:'QR code generator', steps:['Tap Apps → "QR Code".','Enter a URL (website, linktree, etc.).','Customize colors and style.','Place the QR code in your design.'], customImage:'image8.png' },
+    { type:'recap', title:'You’re ready to create', subtitle:'Everything you need — all free, all inside Canva.', docsItems:['Using templates','Blank designs','Text editing','Shapes & graphics','Upload images','Download & share','Collaboration','QR codes'], slidesItems:[], callout:'This was the basic guide/tutorial made for Canva.' }
+  ];
+
+  function renderSlide(d, i, total){
+    if(d.type === 'title'){
+      return `<section class="slide slide--title" data-app="neutral">
+        <h1>${d.title}</h1>
+        <p class="lede">${d.subtitle}</p>
+        <div class="legend">
+          <span class="legend-item"><i class="dot-canva"></i>Canva</span>
+        </div>
+        <div class="landing-buttons">
+          <button onclick="document.getElementById('canva-start').scrollIntoView({behavior:'smooth'})">Start Canva Basics</button>
+        </div>
+      </section>`;
+    }
+    if(d.type === 'divider'){
+      const items = d.items.map(t => `<li>${t}</li>`).join('');
+      return `<section id="${d.id||""}" class="slide slide--divider" data-app="canva">
+        <div class="icon icon-canva"></div>
+        <h2>${d.title}</h2>
+        <p class="lede">${d.subtitle}</p>
+        <ol class="topics">${items}</ol>
+      </section>`;
+    }
+    if(d.type === 'content'){
+      const steps = d.steps.map(s => `<li>${s}</li>`).join('');
+      const tip = d.tip ? `<p class="tip"><span>Tip</span>${d.tip}</p>` : '';
+      // Single image panel with zoom button
+      const imagePanelHTML = d.customImage ? `<div class="image-panel"><button class="zoom-btn" onclick="zoomImage(this)">⛶</button><img src="${d.customImage}" alt="Step screenshot"></div>` : '';
+      return `<section class="slide slide--content" data-app="canva">
+        <div class="content-wrap">
+          <div class="text-side">
+            <p class="eyebrow">Canva · ${i+1} / ${total}</p>
+            <h2>${d.title}</h2>
+            <ol class="steps">${steps}</ol>
+            ${tip}
+          </div>
+          ${imagePanelHTML}
+        </div>
+      </section>`;
+    }
+    if(d.type === 'recap'){
+      const items = d.docsItems.map(t => `<li>${t}</li>`).join('');
+      return `<section class="slide slide--recap" data-app="neutral">
+        <h2>${d.title}</h2>
+        <p class="lede">${d.subtitle}</p>
+        <div class="recap-grid">
+          <div><h3 style="color:var(--canva)">Canva Toolkit</h3><ul>${items}</ul></div>
+        </div>
+        <div class="callout">${d.callout}</div>
+      </section>`;
+    }
+    return '';
+  }
+
+  const deck = document.getElementById('deck');
+  deck.innerHTML = slides.map((d,i) => renderSlide(d,i,slides.length)).join('');
+
+  const modal = document.getElementById('popupModal');
+  const modalImg = document.getElementById('modalImg');
+  window.zoomImage = (btn) => {
+    const src = btn.parentElement.querySelector('img').src;
+    modalImg.src = src;
+    modal.style.display = 'flex';
+  };
+  document.getElementById('closeModal').addEventListener('click',()=>modal.style.display='none');
+  modal.addEventListener('click',(e)=>{if(e.target===modal) modal.style.display='none';});
+
+  const sections = Array.from(deck.querySelectorAll('.slide'));
+  const rail = document.getElementById('rail');
+  const nextBtn = document.getElementById('nextBtn');
+  const progress = document.getElementById('progress');
+  let currentIndex = 0;
+  const dots = sections.map((sec,i)=>{
+    const dot=document.createElement('button');
+    dot.className='dot';
+    dot.addEventListener('click',()=>sec.scrollIntoView({behavior:'smooth'}));
+    rail.appendChild(dot);
+    return dot;
+  });
+  dots[0].classList.add('active');
+
+  const observer = new IntersectionObserver((entries)=>{
+    entries.forEach(entry=>{
+      if(entry.isIntersecting){
+        const idx=sections.indexOf(entry.target);
+        currentIndex=idx;
+        dots.forEach(d=>d.classList.remove('active'));
+        dots[idx].classList.add('active');
+        document.body.dataset.app=entry.target.dataset.app||'neutral';
+        nextBtn.style.opacity = (idx===sections.length-1)?'0':'1';
+        nextBtn.style.pointerEvents = (idx===sections.length-1)?'none':'auto';
+      }
+    });
+  },{threshold:0.5});
+  sections.forEach(sec=>observer.observe(sec));
+  nextBtn.addEventListener('click',()=>{const next=sections[currentIndex+1];if(next) next.scrollIntoView({behavior:'smooth'});});
+  deck.addEventListener('scroll',()=>{
+    const max=deck.scrollHeight-deck.clientHeight;
+    const pct = max>0?(deck.scrollTop/max)*100:0;
+    progress.style.width = pct+'%';
+  });
+
+  const dropdownContainer = document.getElementById('sessionsDropdown');
+  for(let i=1;i<=10;i++){
+    const link=document.createElement('a');
+    const name={1:'one',2:'two',3:'three',4:'four',5:'five',6:'six',7:'seven',8:'eight',9:'nine',10:'ten'}[i];
+    link.href=`/sessions/session-${name}`;
+    link.textContent=`Session ${i}`;
+    dropdownContainer.appendChild(link);
+  }
+  const dropdownBtn=document.getElementById('sessionsDropdownBtn');
+  const dropdownMenu=document.getElementById('sessionsDropdown');
+  function toggleDropdown(e){e.stopPropagation();dropdownMenu.classList.toggle('show');}
+  dropdownBtn.addEventListener('click',toggleDropdown);
+  document.addEventListener('click',(e)=>{if(!dropdownBtn.contains(e.target)&&!dropdownMenu.contains(e.target)) dropdownMenu.classList.remove('show');});
+  dropdownMenu.addEventListener('click',e=>e.stopPropagation());
+
+  const hamburger=document.getElementById('hamburger');
+  const navMenu=document.getElementById('nav-menu');
+  hamburger.addEventListener('click',e=>{e.stopPropagation();navMenu.classList.toggle('active');dropdownMenu.classList.remove('show');});
+  document.querySelectorAll('.nav-menu a, .dropdown-btn').forEach(link=>{
+    link.addEventListener('click',function(e){if(e.target.tagName==='A') navMenu.classList.remove('active');});
+  });
+  document.addEventListener('click',(e)=>{if(window.innerWidth<=768 && !navMenu.contains(e.target)&&!hamburger.contains(e.target)) navMenu.classList.remove('active');});
+  window.addEventListener('resize',()=>{if(window.innerWidth>768) navMenu.classList.remove('active');});
+</script>
+</body>
+</html>
