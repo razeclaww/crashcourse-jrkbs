@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <base target="_self">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Digital Skills Guide for Teachers</title>
+    <meta name="description" content="A comprehensive guide to digital skills for educators including Google search, email, and collaboration tools">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: "#1a1a1a",     /* Dark charcoal from image */
+                        secondary: "#333333",   /* Muted dark gray */
+                        accent: "#666666",      /* Muted text gray */
+                        light: "#fcfcfc",       /* Crisp background tint */
+                        dark: "#111111",        /* Heavy black for headers */
+                        borderLine: "#e5e5e5"   /* Soft border line color */
+                    },
+                    fontFamily: {
+                        'sans': ['Inter', 'system-ui', 'sans-serif'],
+                        'serif': ['Playfair Display', 'Georgia', 'serif'],
+                        'mono': ['Fira Code', 'monospace']
+                    }
+                }
+            }
+        }
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,600;1,400&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+</head>
+<body class="min-h-screen bg-[#fcfcfc] font-sans text-primary">
+
+    <!-- Main Content Area -->
+    <main class="container mx-auto px-4 py-12">
+        <div class="max-w-5xl mx-auto">
+            
+            <!-- Guide Sections Container (Original Layout) -->
+            <div id="guide-sections" class="space-y-12"></div>
+
+            <!-- Essential Tools Section (Original Layout) -->
+            <section class="mt-16 p-8 bg-white rounded-xl border border-borderLine shadow-sm">
+                <h2 class="text-2xl font-serif italic font-semibold text-dark mb-8 text-center">Essential Digital Tools for Teachers</h2>
+                <div id="tools-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+            </section>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="border-t border-borderLine bg-white py-12 mt-20">
+        <div class="container mx-auto px-4">
+            <div class="flex flex-col md:flex-row justify-between items-center max-w-5xl mx-auto">
+                <div class="mb-6 md:mb-0">
+                    <div class="flex items-center space-x-3 mb-2">
+                        <h3 class="text-lg font-serif font-bold italic text-dark">Digital Skills Guide</h3>
+                    </div>
+                    <p class="text-accent text-sm max-w-md">Empowering educators with practical digital skills for the modern classroom.</p>
+                </div>
+                <div class="text-center md:text-right text-xs text-accent space-y-1">
+                    <p>Created for educators worldwide</p>
+                    <p>© 2026 All rights reserved</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Restored Original Data Layer
+        const guideSections = [
+            {
+                "id": "search",
+                "title": "Part 1: Advanced Google Search",
+                "icon": "fas fa-search",
+                "color": "bg-neutral-100 text-neutral-800",
+                "content": [
+                    {
+                        "type": "comparison",
+                        "title": "Search Methods",
+                        "bad": {
+                            "label": "Most people search like this:",
+                            "example": "climate change",
+                            "description": "Generic search with billions of noisy results"
+                        },
+                        "good": {
+                            "label": "Professionals search like this:",
+                            "example": "\"climate change\" site:edu filetype:pdf",
+                            "description": "Targeted search with precise operators"
+                        }
+                    },
+                    {
+                        "type": "example",
+                        "title": "Real-life example for teachers",
+                        "scenario": "Imagine a teacher wants material for a science project.",
+                        "badSearch": {
+                            "query": "science project climate change",
+                            "results": ["Blogs", "Ads", "Random websites", "YouTube videos"]
+                        },
+                        "goodSearch": {
+                            "query": "\"climate change\" site:edu",
+                            "results": ["University research", "Educational resources", "Academic publications"]
+                        }
+                    },
+                    {
+                        "type": "tip",
+                        "title": "Pro Tip",
+                        "tip": "Search PDFs directly:",
+                        "example": "\"artificial intelligence\" filetype:pdf",
+                        "description": "This finds reports, research papers, manuals, and ebooks."
+                    },
+                    {
+                        "type": "analogy",
+                        "title": "Teacher analogy",
+                        "analogy": "Google is a giant library. Search operators are instructions to the librarian.",
+                        "without": "\"Find me something about history.\"",
+                        "with": "\"Find me an exact book about Nepal's history from universities only.\"",
+                        "conclusion": "Huge difference"
+                    }
+                ]
+            },
+            {
+                "id": "scholar",
+                "title": "Part 2: Google Scholar",
+                "icon": "fas fa-graduation-cap",
+                "color": "bg-neutral-100 text-neutral-800",
+                "content": [
+                    {
+                        "type": "comparison",
+                        "title": "Google Search vs Google Scholar",
+                        "search": {
+                            "label": "Google Search:",
+                            "items": ["Blogs", "News", "Websites"]
+                        },
+                        "scholar": {
+                            "label": "Google Scholar:",
+                            "items": ["Research papers", "Journals", "Academic studies"]
+                        }
+                    },
+                    {
+                        "type": "example",
+                        "title": "Real-life example",
+                        "scenario": "A student says: \"Social media causes depression.\"",
+                        "question": "Teacher asks: \"Where is your evidence?\"",
+                        "searchResult": "Google Search: Finds opinions",
+                        "scholarResult": "Google Scholar: Finds actual studies",
+                        "conclusion": "That's the difference between an opinion and evidence."
+                    },
+                    {
+                        "type": "trick",
+                        "title": "Hidden trick: Citation count",
+                        "description": "Suppose a paper has:",
+                        "low": "Cited by 10",
+                        "high": "Cited by 5,000",
+                        "explanation": "Usually the second had much larger impact. Not always better, but usually more influential."
+                    },
+                    {
+                        "type": "trick",
+                        "title": "Hidden trick: Date filter",
+                        "warning": "Many teachers miss this.",
+                        "context": "For AI, technology, medicine, law, etc.",
+                        "rule": "Don't use a paper from 2010 if you can find one from 2025.",
+                        "advice": "Always check publication date."
+                    }
+                ]
+            },
+            {
+                "id": "organization",
+                "title": "Part 3: Organizing Research Files",
+                "icon": "fas fa-folder",
+                "color": "bg-neutral-100 text-neutral-800",
+                "content": [
+                    {
+                        "type": "comparison",
+                        "title": "File Organization",
+                        "bad": {
+                            "label": "Bad organization",
+                            "structure": "Desktop:",
+                            "files": ["paper.pdf", "paper2.pdf", "final.pdf", "finalfinal.pdf", "latestfinal.pdf"],
+                            "problem": "Nobody knows what's what."
+                        },
+                        "good": {
+                            "label": "Good organization",
+                            "structure": "Research Project",
+                            "folders": ["PDFs", "Notes", "Images", "Drafts"]
+                        }
+                    },
+                    {
+                        "type": "example",
+                        "title": "Real-life example",
+                        "scenario": "A teacher working on a thesis may collect 100 papers.",
+                        "without": "Without organization: wastes 30 minutes finding files",
+                        "with": "With organization: finds files in seconds"
+                    },
+                    {
+                        "type": "tip",
+                        "title": "Pro trick",
+                        "tip": "Add version numbers.",
+                        "badExample": "Instead of: lessonplan_final.pdf, lessonplan_final_final.pdf",
+                        "goodExample": "Use: lessonplan_v1, lessonplan_v2, lessonplan_v3",
+                        "note": "Used in companies worldwide."
+                    }
+                ]
+            },
+            {
+                "id": "email",
+                "title": "Part 4: Professional Email",
+                "icon": "fas fa-envelope",
+                "color": "bg-neutral-100 text-neutral-800",
+                "content": [
+                    {
+                        "type": "comparison",
+                        "title": "Email Writing",
+                        "bad": {
+                            "label": "Bad email",
+                            "content": "Hello Sir,\n\nI hope you are doing well.\nI wanted to ask about something.\nYou may remember that...",
+                            "result": "Gets ignored."
+                        },
+                        "good": {
+                            "label": "Better email",
+                            "subject": "Subject: Request for Meeting on Science Fair",
+                            "content": "Dear Sir,\n\nCould we schedule a 15-minute meeting this week regarding science fair planning?\n\nThank you.\n\nBest regards,\nAman",
+                            "result": "People understand instantly."
+                        }
+                    },
+                    {
+                        "type": "analogy",
+                        "title": "Teacher analogy",
+                        "analogy": "Email is not a novel. It's a business memo.",
+                        "requirements": "The receiver should understand:",
+                        "points": ["Why are you writing?", "What do you need?", "When do you need it?"],
+                        "timeframe": "Within 10 seconds."
+                    }
+                ]
+            },
+            {
+                "id": "cc-bcc",
+                "title": "Part 5: CC and BCC",
+                "icon": "fas fa-users",
+                "color": "bg-neutral-100 text-neutral-800",
+                "content": [
+                    {
+                        "type": "example",
+                        "title": "CC Example",
+                        "scenario": "School principal emails:",
+                        "to": "To: Vice Principal",
+                        "cc": "CC: Department Heads",
+                        "meaning": "\"Vice Principal must act. Department Heads should be informed.\""
+                    },
+                    {
+                        "type": "example",
+                        "title": "BCC Example",
+                        "scenario": "Sending announcement to 500 parents.",
+                        "problem": "If everyone is in To: Everyone sees everyone else's email. Privacy issue.",
+                        "solution": "Use BCC. Now nobody sees other addresses."
+                    },
+                    {
+                        "type": "rule",
+                        "title": "Professional rule",
+                        "rule": "Every extra CC creates more inbox noise.",
+                        "question": "Ask: \"Does this person actually need this?\"",
+                        "advice": "If not, don't CC them."
+                    }
+                ]
+            },
+            {
+                "id": "drive",
+                "title": "Part 6: Google Drive",
+                "icon": "fas fa-hdd",
+                "color": "bg-neutral-100 text-neutral-800",
+                "content": [
+                    {
+                        "type": "analogy",
+                        "title": "Google Drive Concept",
+                        "analogy": "Think of Google Drive as: A hard disk on the internet.",
+                        "benefits": ["Accessible anywhere", "Phone", "Laptop", "School computer", "All synced."]
+                    },
+                    {
+                        "type": "example",
+                        "title": "Real-life example",
+                        "scenario": "Teacher's laptop crashes.",
+                        "local": "If files are only on laptop: ❌ Gone",
+                        "cloud": "If stored in Drive: ✅ Open Drive and continue working"
+                    },
+                    {
+                        "type": "tip",
+                        "title": "Pro trick",
+                        "tip": "Star important files.",
+                        "note": "Most people never use this.",
+                        "examples": ["Attendance sheet", "Lesson plan", "Exam schedule"],
+                        "advice": "Star them. One click access."
+                    }
+                ]
+            },
+            {
+                "id": "permissions",
+                "title": "Part 7: Sharing Permissions",
+                "icon": "fas fa-shield-alt",
+                "color": "bg-neutral-100 text-neutral-800",
+                "content": [
+                    {
+                        "type": "permission",
+                        "title": "Viewer",
+                        "description": "Can see. Cannot change.",
+                        "example": "Student receives assignment instructions."
+                    },
+                    {
+                        "type": "permission",
+                        "title": "Commenter",
+                        "description": "Can give feedback. Cannot edit.",
+                        "example": "Teacher reviews a student's draft."
+                    },
+                    {
+                        "type": "permission",
+                        "title": "Editor",
+                        "description": "Can change everything.",
+                        "example": "Two teachers creating exam papers together."
+                    },
+                    {
+                        "type": "warning",
+                        "title": "Common mistake",
+                        "problem": "Giving everyone Editor access.",
+                        "consequence": "Then someone accidentally deletes something.",
+                        "rule": "Always use the lowest permission needed."
+                    }
+                ]
+            },
+            {
+                "id": "collaboration",
+                "title": "Part 8: Real-Time Collaboration",
+                "icon": "fas fa-sync-alt",
+                "color": "bg-neutral-100 text-neutral-800",
+                "content": [
+                    {
+                        "type": "comparison",
+                        "title": "Collaboration Methods",
+                        "traditional": {
+                            "label": "Traditional method",
+                            "steps": [
+                                "Teacher A: Report.docx",
+                                "Sends to Teacher B.",
+                                "Teacher B edits. Creates: Report_Final.docx",
+                                "Teacher C edits. Creates: Report_Final_Updated.docx",
+                                "Chaos."
+                            ]
+                        },
+                        "modern": {
+                            "label": "Google Docs method",
+                            "steps": [
+                                "Everyone edits ONE file.",
+                                "One version.",
+                                "No confusion."
+                            ]
+                        }
+                    }
+                ]
+            }
+        ];
+
+        const tools = [
+            { "name": "Search operator", "purpose": "Find reliable sources", "icon": "fas fa-search-plus" },
+            { "name": "Google Scholar", "purpose": "Verify scientific evidence", "icon": "fas fa-graduation-cap" },
+            { "name": "Google Drive", "purpose": "Store files", "icon": "fas fa-hdd" },
+            { "name": "Email", "purpose": "Communicate efficiently", "icon": "fas fa-envelope" },
+            { "name": "Shared Folder", "purpose": "Share materials", "icon": "fas fa-folder-open" },
+            { "name": "Google Docs", "purpose": "Collaborate on reports", "icon": "fas fa-file-alt" }
+        ];
+
+        // Original Dynamic Render Logic with updated high-contrast monochrome styles
+        function renderGuideSection(section) {
+            return `
+                <section id="${section.id}" class="bg-white rounded-xl border border-borderLine p-6 md:p-8">
+                    <div class="flex items-center space-x-4 mb-6 pb-4 border-b border-borderLine">
+                        <div class="w-10 h-10 rounded-lg bg-neutral-100 flex items-center justify-center text-primary">
+                            <i class="${section.icon} text-lg"></i>
+                        </div>
+                        <h2 class="text-xl md:text-2xl font-serif font-bold text-dark">${section.title}</h2>
+                    </div>
+                    <div class="space-y-8">
+                        ${section.content.map(renderContentItem).join("")}
+                    </div>
+                </section>
+            `;
+        }
+
+        function renderContentItem(item) {
+            switch(item.type) {
+                case "comparison": return renderComparison(item);
+                case "example": return renderExample(item);
+                case "tip": return renderTip(item);
+                case "analogy": return renderAnalogy(item);
+                case "trick": return renderTrick(item);
+                case "rule": return renderRule(item);
+                case "permission": return renderPermission(item);
+                case "warning": return renderWarning(item);
+                default: return "";
+            }
+        }
+
+        function renderComparison(item) {
+            return `
+                <div class="comparison-item">
+                    <h3 class="text-base font-semibold text-dark mb-3">${item.title}</h3>
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                        ${item.bad ? `
+                            <div class="bg-neutral-50 p-5 rounded-lg border border-borderLine">
+                                <div class="flex items-center space-x-2 mb-2">
+                                    <i class="fas fa-times-circle text-neutral-400"></i>
+                                    <h4 class="font-bold text-sm uppercase tracking-wider text-accent">${item.bad.label}</h4>
+                                </div>
+                                ${item.bad.example ? `<div class="font-mono text-xs bg-white p-2.5 rounded border border-borderLine mb-2">${item.bad.example}</div>` : ""}
+                                ${item.bad.description ? `<p class="text-sm text-accent">${item.bad.description}</p>` : ""}
+                                ${item.bad.files ? `<ul class="space-y-1 text-sm text-accent">${item.bad.files.map(file => `<li>${file}</li>`).join("")}</ul>` : ""}
+                                ${item.bad.result ? `<p class="font-medium text-xs text-dark mt-2">${item.bad.result}</p>` : ""}
+                            </div>
+                        ` : ""}
+                        ${item.good ? `
+                            <div class="bg-neutral-50 p-5 rounded-lg border border-neutral-400">
+                                <div class="flex items-center space-x-2 mb-2">
+                                    <i class="fas fa-check-circle text-primary"></i>
+                                    <h4 class="font-bold text-sm uppercase tracking-wider text-primary">${item.good.label}</h4>
+                                </div>
+                                ${item.good.example ? `<div class="font-mono text-xs bg-white p-2.5 rounded border border-neutral-300 mb-2 font-semibold">${item.good.example}</div>` : ""}
+                                ${item.good.description ? `<p class="text-sm text-primary">${item.good.description}</p>` : ""}
+                                ${item.good.folders ? `
+                                    <div class="font-mono text-xs">
+                                        <div class="text-primary font-semibold">${item.good.structure}</div>
+                                        <ul class="ml-2 mt-1 space-y-0.5 text-accent">
+                                            ${item.good.folders.map(folder => `<li>├── ${folder}</li>`).join("")}
+                                        </ul>
+                                    </div>
+                                ` : ""}
+                                ${item.good.result ? `<p class="font-semibold text-xs text-primary mt-2">${item.good.result}</p>` : ""}
+                            </div>
+                        ` : ""}
+                        ${item.search && item.scholar ? `
+                            <div class="bg-neutral-50 p-5 rounded-lg border border-borderLine col-span-2">
+                                <h4 class="font-bold text-xs uppercase tracking-wider text-accent mb-1">${item.search.label}</h4>
+                                <ul class="list-disc list-inside text-sm text-accent mb-4">${item.search.items.map(i => `<li>${i}</li>`).join("")}</ul>
+                                <h4 class="font-bold text-xs uppercase tracking-wider text-primary mb-1">${item.scholar.label}</h4>
+                                <ul class="list-disc list-inside text-sm text-primary font-medium">${item.scholar.items.map(i => `<li>${i}</li>`).join("")}</ul>
+                            </div>
+                        ` : ""}
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderExample(item) {
+            return `
+                <div class="example-item bg-neutral-50 p-5 rounded-lg border border-borderLine">
+                    <h3 class="text-sm font-bold uppercase tracking-wider text-accent mb-2">${item.title}</h3>
+                    ${item.scenario ? `<p class="text-sm text-primary mb-3">${item.scenario}</p>` : ""}
+                    ${item.question ? `<p class="font-medium text-sm text-dark mb-3">${item.question}</p>` : ""}
+                    ${item.badSearch && item.goodSearch ? `
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div class="bg-white p-3 rounded border border-borderLine text-xs">
+                                <span class="block font-bold text-accent mb-1">Standard:</span>
+                                <div class="font-mono bg-neutral-50 p-2 rounded mb-2">${item.badSearch.query}</div>
+                                <p class="text-accent">${item.badSearch.results.join(", ")}</p>
+                            </div>
+                            <div class="bg-white p-3 rounded border border-neutral-400 text-xs">
+                                <span class="block font-bold text-primary mb-1">Refined:</span>
+                                <div class="font-mono bg-neutral-50 p-2 rounded mb-2 font-semibold">${item.goodSearch.query}</div>
+                                <p class="text-primary">${item.goodSearch.results.join(", ")}</p>
+                            </div>
+                        </div>
+                    ` : ""}
+                    ${item.searchResult && item.scholarResult ? `
+                        <div class="space-y-1 text-sm">
+                            <p class="text-accent">${item.searchResult}</p>
+                            <p class="text-primary font-medium">${item.scholarResult}</p>
+                        </div>
+                    ` : ""}
+                    ${item.without && item.with ? `
+                        <p class="text-sm text-accent">${item.without} → <span class="text-primary font-semibold">${item.with}</span></p>
+                    ` : ""}
+                </div>
+            `;
+        }
+
+        function renderTip(item) {
+            return `
+                <div class="border-l-2 border-primary pl-4 py-1">
+                    <h4 class="text-sm font-bold text-dark uppercase tracking-wider mb-1">${item.title}</h4>
+                    <p class="text-sm text-primary mb-1"><span class="font-medium">${item.tip}</span> <code>${item.example}</code></p>
+                    <p class="text-xs text-accent">${item.description}</p>
+                </div>
+            `;
+        }
+
+        function renderAnalogy(item) {
+            return `
+                <div class="bg-neutral-50/60 p-4 rounded-lg border border-borderLine text-sm">
+                    <span class="text-xs uppercase font-bold tracking-wider text-accent block mb-1">${item.title}</span>
+                    <p class="italic text-primary mb-2">"${item.analogy}"</p>
+                    ${item.without ? `<p class="text-xs text-accent">Without strategy: ${item.without}</p>` : ""}
+                    ${item.with ? `<p class="text-xs text-primary font-medium">With strategy: ${item.with}</p>` : ""}
+                </div>
+            `;
+        }
+
+        function renderTrick(item) {
+            return `
+                <div class="bg-white p-4 rounded-lg border border-borderLine shadow-sm">
+                    <h4 class="text-sm font-semibold text-dark mb-1">${item.title}</h4>
+                    <p class="text-sm text-accent">${item.description || item.warning || ""}</p>
+                    <p class="text-xs text-primary font-medium mt-1">${item.explanation || item.rule || ""}</p>
+                </div>
+            `;
+        }
+
+        function renderRule(item) {
+            return `
+                <div class="border border-dashed border-neutral-300 p-4 rounded-lg text-sm bg-neutral-50/40">
+                    <span class="text-xs uppercase font-bold tracking-wider text-primary block mb-1">${item.title}</span>
+                    <p class="text-primary font-medium">${item.rule}</p>
+                    <p class="text-xs text-accent mt-1">${item.advice}</p>
+                </div>
+            `;
+        }
+
+        function renderPermission(item) {
+            return `
+                <div class="flex items-start space-x-3 text-sm py-1">
+                    <div class="w-1.5 h-1.5 rounded-full bg-primary mt-2"></div>
+                    <div>
+                        <strong class="text-dark font-semibold">${item.title}:</strong> 
+                        <span class="text-primary">${item.description}</span>
+                        <span class="block text-xs text-accent italic mt-0.5">Example: ${item.example}</span>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderWarning(item) {
+            return `
+                <div class="bg-neutral-900 text-white p-5 rounded-lg text-sm">
+                    <div class="flex items-center space-x-2 mb-2">
+                        <i class="fas fa-exclamation-triangle text-xs"></i>
+                        <h4 class="font-bold uppercase text-xs tracking-wider">${item.title}</h4>
+                    </div>
+                    <p class="text-neutral-300 mb-1">${item.problem} ${item.consequence}</p>
+                    <p class="text-white font-medium text-xs uppercase tracking-wide">Rule: ${item.rule}</p>
+                </div>
+            `;
+        }
+
+        // Execution logic
+        document.getElementById("guide-sections").innerHTML = guideSections.map(renderGuideSection).join("");
+        document.getElementById("tools-grid").innerHTML = tools.map(t => `
+            <div class="p-5 bg-neutral-50 rounded-lg border border-borderLine flex items-start space-x-4">
+                <div class="text-primary mt-1"><i class="${t.icon}"></i></div>
+                <div>
+                    <h3 class="font-semibold text-sm text-dark">${t.name}</h3>
+                    <p class="text-xs text-accent mt-0.5">${t.purpose}</p>
+                </div>
+            </div>
+        `).join("");
+    </script>
+</body>
+</html>
