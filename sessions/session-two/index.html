@@ -581,12 +581,6 @@
             <a href="../session-two/">Session 2</a>
             <a href="../session-three/">Session 3</a>
             <a href="../session-four/">Session 4</a>
-            <a href="../session-five/">Session 5</a>
-            <a href="../session-six/">Session 6</a>
-            <a href="../session-seven/">Session 7</a>
-            <a href="../session-eight/">Session 8</a>
-            <a href="../session-nine/">Session 9</a>
-            <a href="../session-ten/">Session 10</a>
           </div>
         </li>
       </ul>
@@ -1050,20 +1044,7 @@
     progress.style.width = pct + '%';
   });
 
-  // ----- NAVBAR SESSIONS DROPDOWN (session 1 to 10) -----
-  const dropdownContainer = document.getElementById('sessionsDropdown');
-  if (dropdownContainer) {
-    for (let i = 1; i <= 10; i++) {
-      const sessionLink = document.createElement('a');
-      const sessionName = {
-        1: 'one', 2: 'two', 3: 'three', 4: 'four', 5: 'five',
-        6: 'six', 7: 'seven', 8: 'eight', 9: 'nine', 10: 'ten'
-      }[i];
-      sessionLink.href = `/sessions/session-${sessionName}`;
-      sessionLink.textContent = `Session ${i}`;
-      dropdownContainer.appendChild(sessionLink);
-    }
-  }
+
 
   // Dropdown toggle logic
   const dropdownBtn = document.getElementById('sessionsDropdownBtn');
