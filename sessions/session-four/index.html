@@ -861,103 +861,89 @@
                     </div>
                     <div class="callout">${d.callout}</div>
                     <div class="guide-btn-wrap">
-                        <a href="/simple-guide/">Simple Detailed Guide</a>
+                        <a href="simple-guide/index.html">Simple Detailed Guide</a>
                     </div>
                 </section>`;
             }
             return '';
         }
 
+        // Render slides into deck
         const deck = document.getElementById('deck');
-        deck.innerHTML = slides.map((d, i) => renderSlide(d, i, slides.length)).join('');
+        deck.innerHTML = slides.map((slide, index) => renderSlide(slide, index, slides.length)).join('');
 
-        const modal = document.getElementById('popupModal');
-        const modalImg = document.getElementById('modalImg');
-        window.zoomImage = (btn) => {
-            const src = btn.parentElement.querySelector('img').src;
-            modalImg.src = src;
-            modal.style.display = 'flex';
-        };
-        document.getElementById('closeModal').addEventListener('click', () => modal.style.display = 'none');
-        modal.addEventListener('click', (e) => { if (e.target === modal) modal.style.display = 'none'; });
-
-        const sections = Array.from(deck.querySelectorAll('.slide'));
+        // Handle navigation dots and rail
         const rail = document.getElementById('rail');
-        const nextBtn = document.getElementById('nextBtn');
-        const progress = document.getElementById('progress');
-        let currentIndex = 0;
-        const dots = sections.map((sec, i) => {
-            const dot = document.createElement('button');
-            dot.className = 'dot';
-            dot.addEventListener('click', () => sec.scrollIntoView({ behavior: 'smooth' }));
-            rail.appendChild(dot);
-            return dot;
+        slides.forEach((_, idx) => {
+            const btn = document.createElement('button');
+            btn.className = `dot ${idx === 0 ? 'active' : ''}`;
+            btn.setAttribute('aria-label', `Go to slide ${idx + 1}`);
+            btn.onclick = () => {
+                deck.children[idx].scrollIntoView({ behavior: 'smooth' });
+            };
+            rail.appendChild(btn);
         });
-        dots[0].classList.add('active');
 
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    const idx = sections.indexOf(entry.target);
-                    currentIndex = idx;
-                    dots.forEach(d => d.classList.remove('active'));
-                    dots[idx].classList.add('active');
-                    document.body.dataset.app = entry.target.dataset.app || 'neutral';
-                    nextBtn.style.opacity = (idx === sections.length - 1) ? '0' : '1';
-                    nextBtn.style.pointerEvents = (idx === sections.length - 1) ? 'none' : 'auto';
-                }
-            });
-        }, { threshold: 0.5 });
-        sections.forEach(sec => observer.observe(sec));
-        nextBtn.addEventListener('click', () => { const next = sections[currentIndex + 1]; if (next) next.scrollIntoView({
-                behavior: 'smooth' }); });
+        // Track Scroll for Themes, Dots, and Progress Bar
         deck.addEventListener('scroll', () => {
-            const max = deck.scrollHeight - deck.clientHeight;
-            const pct = max > 0 ? (deck.scrollTop / max) * 100 : 0;
-            progress.style.width = pct + '%';
+            const currentScroll = deck.scrollTop;
+            const totalHeight = deck.scrollHeight - deck.clientHeight;
+            
+            // Progress bar update
+            const progress = totalHeight > 0 ? (currentScroll / totalHeight) * 100 : 0;
+            document.getElementById('progress').style.width = `${progress}%`;
+
+            // Active Slide Calculations
+            const slideHeight = deck.clientHeight;
+            const activeIndex = Math.round(currentScroll / slideHeight);
+
+            // Update Dot navigation active status
+            const dots = document.querySelectorAll('#rail .dot');
+            dots.forEach((dot, idx) => {
+                if(idx === activeIndex) dot.classList.add('active');
+                else dot.classList.remove('active');
+            });
+
+            // Update Theme Attribute dynamically based on active slide layout rules
+            const activeSlide = deck.children[activeIndex];
+            if (activeSlide) {
+                const appTheme = activeSlide.getAttribute('data-app');
+                document.body.setAttribute('data-app', appTheme);
+            }
         });
 
-        const dropdownContainer = document.getElementById('sessionsDropdown');
-        const numberWords = {
-            1: 'one',
-            2: 'two',
-            3: 'three',
-            4: 'four',
-            5: 'five',
-            6: 'six',
-            7: 'seven',
-            8: 'eight',
-            9: 'nine',
-            10: 'ten'
+        // Next slide button click handler
+        document.getElementById('nextBtn').onclick = () => {
+            const slideHeight = deck.clientHeight;
+            const activeIndex = Math.round(deck.scrollTop / slideHeight);
+            if (activeIndex < slides.length - 1) {
+                deck.children[activeIndex + 1].scrollIntoView({ behavior: 'smooth' });
+            }
         };
-        for (let i = 1; i <= 10; i++) {
-            const link = document.createElement('a');
-            const name = numberWords[i];
-            link.href = `../session-${name}/`;
-            link.textContent = `Session ${i}`;
-            dropdownContainer.appendChild(link);
+
+        // Modal Zoom Functionality
+        function zoomImage(btn) {
+            const img = btn.nextElementSibling;
+            const modal = document.getElementById('popupModal');
+            const modalImg = document.getElementById('modalImg');
+            if (img && modal && modalImg) {
+                modalImg.src = img.src;
+                modal.style.display = 'flex';
+            }
         }
-        const dropdownBtn = document.getElementById('sessionsDropdownBtn');
-        const dropdownMenu = document.getElementById('sessionsDropdown');
 
-        function toggleDropdown(e) { e.stopPropagation();
-            dropdownMenu.classList.toggle('show'); }
-        dropdownBtn.addEventListener('click', toggleDropdown);
-        document.addEventListener('click', (e) => { if (!dropdownBtn.contains(e.target) && !dropdownMenu.contains(e.target))
-                dropdownMenu.classList.remove('show'); });
-        dropdownMenu.addEventListener('click', e => e.stopPropagation());
+        document.getElementById('closeModal').onclick = () => {
+            document.getElementById('popupModal').style.display = 'none';
+        };
 
+        // Hamburger Menu Toggle
         const hamburger = document.getElementById('hamburger');
         const navMenu = document.getElementById('nav-menu');
-        hamburger.addEventListener('click', e => { e.stopPropagation();
-            navMenu.classList.toggle('active');
-            dropdownMenu.classList.remove('show'); });
-        document.querySelectorAll('.nav-menu a, .dropdown-btn').forEach(link => {
-            link.addEventListener('click', function(e) { if (e.target.tagName === 'A') navMenu.classList.remove('active'); });
-        });
-        document.addEventListener('click', (e) => { if (window.innerWidth <= 768 && !navMenu.contains(e.target) && !hamburger
-                .contains(e.target)) navMenu.classList.remove('active'); });
-        window.addEventListener('resize', () => { if (window.innerWidth > 768) navMenu.classList.remove('active'); });
+        if (hamburger && navMenu) {
+            hamburger.onclick = () => {
+                navMenu.classList.toggle('active');
+            };
+        }
     </script>
 </body>
 </html>
