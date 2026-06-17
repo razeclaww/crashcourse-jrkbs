@@ -6,7 +6,6 @@
   <title>Digital Skills Crashcourse — Presentation Viewer</title>
   <link rel="icon" type="image/png" href="../../assets/favicon.png">
   
-  <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&family=Playfair+Display:ital,wght@0,500;0,600;1,400&display=swap" rel="stylesheet" />
@@ -37,7 +36,7 @@
       overflow: hidden;
     }
 
-    /* ---------- INTEGRATED NAVBAR (From image_ba72b3.png Architecture) ---------- */
+    /* ---------- INTEGRATED NAVBAR ---------- */
     .navbar {
       position: relative;
       width: 100%;
@@ -69,14 +68,12 @@
       letter-spacing: 0.05em;
     }
 
-    /* Controls right wing alignment */
     .nav-right {
       display: flex;
       align-items: center;
       gap: 1.5rem;
     }
 
-    /* Hamburger engine (hidden on desktop) */
     .hamburger {
       font-size: 1.75rem;
       cursor: pointer;
@@ -88,7 +85,6 @@
       line-height: 1;
     }
 
-    /* Navigation list menu structure */
     .nav-menu {
       display: flex;
       align-items: center;
@@ -102,7 +98,6 @@
       position: relative;
     }
 
-    /* Navigation Anchors & Dropdown Action Key */
     .nav-menu a, 
     .dropdown-btn {
       text-decoration: none;
@@ -125,13 +120,15 @@
       color: var(--text);
     }
 
-    /* Soft Rounded Dropdown Menu (Matches image_ba72b3.png layout) */
+    /* Soft Rounded Dropdown Menu (No scrollbar, fully expanded) */
     .dropdown-content {
       position: absolute;
       top: 100%;
       left: -20px;
       background: #FFFFFF;
       min-width: 180px;
+      max-height: none;   /* Removed limit so it displays fully */
+      overflow: visible;  /* Removed scroll tracking */
       box-shadow: 0 12px 28px rgba(0, 0, 0, 0.06);
       border-radius: 1rem;
       padding: 0.5rem 0;
@@ -163,7 +160,6 @@
       color: var(--accent);
     }
 
-    /* Primary Action Buttons */
     .btn-primary {
       background: var(--accent);
       color: #FFFFFF !important;
@@ -179,7 +175,7 @@
       opacity: 0.9;
     }
 
-    /* ---------- RECONSTRUCTED WORKPORT TIMELINE VISUALIZER ---------- */
+    /* ---------- TIMELINE VISUALIZER CANVAS ---------- */
     .viewer-container {
       flex: 1;
       width: 100%;
@@ -265,18 +261,15 @@
       
       <div class="nav-right">
         <ul class="nav-menu" id="navMenu">
-          <!-- Root relative HOME button tracking -->
           <li><a href="../../">Home</a></li>
           
           <li class="dropdown">
             <button class="dropdown-btn" id="sessionsDropdownBtn">Sessions ▼</button>
             <div class="dropdown-content" id="sessionsDropdown">
-              <!-- Reconfigured automated sessions injected via vanilla scripts here -->
-            </div>
+              </div>
           </li>
         </ul>
         
-        <!-- Global Download Module Link -->
         <a href="Digital%20Skills%20Crashcourse.pptx" download="Digital Skills Crashcourse.pptx" class="btn-primary">
           Download PPTX
         </a>
@@ -286,7 +279,6 @@
     </div>
   </nav>
 
-  <!-- Document Core Frame Canvas -->
   <main class="viewer-container">
     <iframe 
       src="https://view.officeapps.live.com/op/embed.aspx?src=YOUR_DOC_URL_HERE" 
@@ -297,24 +289,24 @@
   </main>
 
   <script>
-    // ----- Generate Sessions 1 to 10 pointing cleanly to nested index targets -----
+    // ----- Generate Sessions 1 to 10 pointing cleanly to targets -----
     const dropdownContainer = document.getElementById('sessionsDropdown');
     if (dropdownContainer) {
-      for (let i = 1; i <= 4; i++) {
+      for (let i = 1; i <= 10; i++) {
         const sessionLink = document.createElement('a');
+        
         const sessionSlug = {
           1: 'one', 2: 'two', 3: 'three', 4: 'four', 5: 'five',
           6: 'six', 7: 'seven', 8: 'eight', 9: 'nine', 10: 'ten'
         }[i];
         
-        // Root relative path structured exactly as requested
         sessionLink.href = `../session-${sessionSlug}/`;
         sessionLink.textContent = `Session ${i}`;
         dropdownContainer.appendChild(sessionLink);
       }
     }
 
-    // ----- Dropdown Toggle Engine Engine -----
+    // ----- Dropdown Toggle Engine -----
     const dropdownBtn = document.getElementById('sessionsDropdownBtn');
     const dropdownMenu = document.getElementById('sessionsDropdown');
 
