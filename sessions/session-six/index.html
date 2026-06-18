@@ -3,94 +3,1930 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Upcoming Session | AI and Digital Skills</title>
-  <link rel="icon" type="image/png" href="../../assets/favicon.png">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,500;0,600;1,400&display=swap" rel="stylesheet">
+  <title>Prompt Engineering</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
   <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
     :root {
-      --bg: #F9F8F6;
-      --text: #1A1A1A;
-      --text-muted: #666666;
-      --line: #E5E2DD;
-      --accent: #2C3E50;
+      --sidebar-w: 220px;
+      --bg: #ffffff;
+      --bg2: #f8f8f8;
+      --bg3: #f0f0f0;
+      --border: #e5e5e5;
+      --border2: #d0d0d0;
+      --text: #111111;
+      --text2: #555555;
+      --text3: #888888;
+      --accent: #111111;
+      --accent-light: #f0f0f0;
+      --green: #16a34a;
+      --blue: #2563eb;
+      --orange: #d97706;
+      --red: #dc2626;
+      --badge-bg: #f5f5f5;
+      --shadow: 0 1px 3px rgba(0,0,0,0.08);
+      --shadow-md: 0 4px 12px rgba(0,0,0,0.1);
     }
-    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    [data-theme="dark"] {
+      --bg: #0f0f0f;
+      --bg2: #1a1a1a;
+      --bg3: #222222;
+      --border: #2a2a2a;
+      --border2: #333333;
+      --text: #f5f5f5;
+      --text2: #aaaaaa;
+      --text3: #666666;
+      --accent: #f5f5f5;
+      --accent-light: #222222;
+      --badge-bg: #1e1e1e;
+      --shadow: 0 1px 3px rgba(0,0,0,0.4);
+      --shadow-md: 0 4px 12px rgba(0,0,0,0.5);
+    }
+
+    html { scroll-behavior: smooth; }
     body {
       font-family: 'Inter', sans-serif;
-      background-color: var(--bg);
+      background: var(--bg);
       color: var(--text);
       display: flex;
+      min-height: 100vh;
+      line-height: 1.6;
+      transition: background 0.3s, color 0.3s;
+    }
+
+    /* ===== SIDEBAR ===== */
+    .sidebar {
+      width: var(--sidebar-w);
+      min-width: var(--sidebar-w);
+      background: var(--bg);
+      border-right: 1px solid var(--border);
+      height: 100vh;
+      position: fixed;
+      top: 0;
+      left: 0;
+      overflow-y: auto;
+      z-index: 100;
+      display: flex;
       flex-direction: column;
+    }
+
+    .sidebar::-webkit-scrollbar { width: 4px; }
+    .sidebar::-webkit-scrollbar-track { background: transparent; }
+    .sidebar::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+
+    .sidebar-top {
+      padding: 20px 16px 12px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .sidebar-title {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 4px;
+    }
+
+    .sidebar-subtitle {
+      font-size: 0.75rem;
+      color: var(--text3);
+      line-height: 1.4;
+    }
+
+    .sidebar-nav {
+      flex: 1;
+      padding: 12px 0 24px;
+    }
+
+    .nav-group {
+      margin-bottom: 2px;
+    }
+
+    .nav-group-header {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 16px;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .nav-group-header:hover {
+      background: var(--bg2);
+    }
+
+    .nav-group-chevron {
+      width: 14px;
+      height: 14px;
+      transition: transform 0.2s;
+      color: var(--text3);
+      flex-shrink: 0;
+    }
+
+    .nav-group-chevron.open {
+      transform: rotate(90deg);
+    }
+
+    .nav-group-label {
+      font-size: 0.68rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--text2);
+    }
+
+    .nav-group-items {
+      overflow: hidden;
+      transition: max-height 0.25s ease;
+    }
+
+    .nav-group-items.collapsed {
+      max-height: 0 !important;
+    }
+
+    .nav-item {
+      display: block;
+      padding: 5px 16px 5px 28px;
+      font-size: 0.8rem;
+      color: var(--text2);
+      text-decoration: none;
+      transition: all 0.15s;
+      border-radius: 0;
+      cursor: pointer;
+    }
+
+    .nav-item:hover {
+      color: var(--text);
+      background: var(--bg2);
+    }
+
+    .nav-item.active {
+      color: var(--text);
+      font-weight: 600;
+      background: var(--bg2);
+    }
+
+    .sidebar-footer {
+      padding: 12px 16px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .theme-btn {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: var(--bg2);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.9rem;
+      color: var(--text);
+      transition: all 0.2s;
+    }
+
+    .theme-btn:hover { border-color: var(--border2); }
+
+    .mobile-sidebar-btn {
+      display: none;
+      position: fixed;
+      top: 12px;
+      left: 12px;
+      z-index: 200;
+      width: 36px;
+      height: 36px;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      cursor: pointer;
+      align-items: center;
+      justify-content: center;
+      font-size: 1rem;
+    }
+
+    /* ===== MAIN ===== */
+    .main {
+      margin-left: var(--sidebar-w);
+      flex: 1;
       min-height: 100vh;
     }
-    .navbar {
-      width: 100%;
-      background: var(--bg);
-      border-bottom: 1px solid var(--line);
-      padding: 1rem 2rem;
+
+    /* ===== PAGES ===== */
+    .page {
+      display: none;
+      min-height: 100vh;
     }
-    .nav-container {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      max-width: 1200px;
-      margin: 0 auto;
+
+    .page.active {
+      display: block;
     }
-    .nav-brand {
-      font-family: 'Playfair Display', serif;
-      font-size: 1.25rem;
-      font-weight: 500;
-    }
-    .nav-menu {
-      display: flex;
-      gap: 1.5rem;
-      list-style: none;
-    }
-    .nav-menu a {
-      text-decoration: none;
-      color: var(--text-muted);
-      font-weight: 500;
-      font-size: 0.9rem;
-      transition: color 0.2s;
-    }
-    .nav-menu a:hover { color: var(--text); }
-    .main-content {
-      flex: 1;
+
+    /* Hero Page */
+    .hero-page {
       display: flex;
       flex-direction: column;
-      justify-content: center;
       align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      padding: 60px 40px;
       text-align: center;
-      padding: 2rem;
     }
-    h1 {
-      font-family: 'Playfair Display', serif;
-      font-size: 3rem;
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 14px;
+      background: var(--badge-bg);
+      border: 1px solid var(--border);
+      border-radius: 50px;
+      font-size: 0.8rem;
+      font-weight: 500;
+      color: var(--text2);
+      margin-bottom: 32px;
+    }
+
+    .hero-h1 {
+      font-size: clamp(2rem, 5vw, 3.5rem);
+      font-weight: 800;
+      line-height: 1.1;
+      color: var(--text);
+      max-width: 700px;
+      margin-bottom: 20px;
+    }
+
+    .hero-desc {
+      font-size: 1rem;
+      color: var(--text2);
+      max-width: 520px;
+      margin-bottom: 36px;
+      line-height: 1.7;
+    }
+
+    .hero-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 14px 28px;
+      background: var(--text);
+      color: var(--bg);
+      border: none;
+      border-radius: 50px;
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: opacity 0.2s, transform 0.2s;
+      text-decoration: none;
+    }
+
+    .hero-btn:hover { opacity: 0.85; transform: translateY(-1px); }
+
+    .hero-divider {
+      width: 100%;
+      max-width: 600px;
+      border: none;
+      border-top: 1px solid var(--border);
+      margin: 48px 0;
+    }
+
+    .hero-stats {
+      display: flex;
+      gap: 60px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .stat-item {
+      text-align: center;
+    }
+
+    .stat-num {
+      font-size: 2rem;
+      font-weight: 800;
+      color: var(--text);
+      display: block;
+    }
+
+    .stat-label {
+      font-size: 0.7rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--text3);
+      margin-top: 4px;
+    }
+
+    /* Content Page */
+    .content-page {
+      max-width: 760px;
+      margin: 0 auto;
+      padding: 64px 40px 120px;
+    }
+
+    .content-page h1 {
+      font-size: 2rem;
+      font-weight: 800;
+      margin-bottom: 12px;
+      color: var(--text);
+      line-height: 1.2;
+    }
+
+    .content-page .page-desc {
+      font-size: 1rem;
+      color: var(--text2);
+      margin-bottom: 40px;
+      line-height: 1.7;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 32px;
+    }
+
+    .content-page h2 {
+      font-size: 1.35rem;
+      font-weight: 700;
+      margin: 40px 0 16px;
+      color: var(--text);
+    }
+
+    .content-page h3 {
+      font-size: 1.05rem;
+      font-weight: 600;
+      margin: 28px 0 12px;
+      color: var(--text);
+    }
+
+    .content-page p {
+      font-size: 0.95rem;
+      color: var(--text2);
+      margin-bottom: 14px;
+      line-height: 1.75;
+    }
+
+    .content-page ul, .content-page ol {
+      margin: 0 0 16px 20px;
+    }
+
+    .content-page li {
+      font-size: 0.95rem;
+      color: var(--text2);
+      margin-bottom: 6px;
+      line-height: 1.6;
+    }
+
+    .callout {
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 16px 20px;
+      margin: 20px 0;
+      background: var(--bg2);
+    }
+
+    .callout.info { border-left: 3px solid var(--blue); }
+    .callout.tip { border-left: 3px solid var(--green); }
+    .callout.warn { border-left: 3px solid var(--orange); }
+
+    .callout-label {
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-bottom: 6px;
+    }
+
+    .callout.info .callout-label { color: var(--blue); }
+    .callout.tip .callout-label { color: var(--green); }
+    .callout.warn .callout-label { color: var(--orange); }
+
+    .callout p { margin: 0; color: var(--text2); font-size: 0.9rem; }
+
+    .example-pair {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin: 20px 0;
+    }
+
+    .ex-card {
+      padding: 14px 16px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+    }
+
+    .ex-card.bad { background: rgba(220,38,38,0.04); border-color: rgba(220,38,38,0.2); }
+    .ex-card.good { background: rgba(22,163,74,0.04); border-color: rgba(22,163,74,0.2); }
+
+    .ex-label {
+      font-size: 0.7rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 8px;
+    }
+
+    .ex-card.bad .ex-label { color: var(--red); }
+    .ex-card.good .ex-label { color: var(--green); }
+
+    .ex-card p { font-size: 0.875rem; color: var(--text); margin: 0; font-family: 'JetBrains Mono', monospace; line-height: 1.5; }
+
+    .formula-box {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 24px;
+      margin: 24px 0;
+      text-align: center;
+    }
+
+    .formula-box .formula-title {
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--text3);
+      margin-bottom: 12px;
+    }
+
+    .formula-box code {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.9rem;
+      color: var(--text);
+      line-height: 1.9;
+      display: block;
+    }
+
+    blockquote {
+      border-left: 3px solid var(--border2);
+      margin: 24px 0;
+      padding: 12px 20px;
+    }
+
+    blockquote p {
       font-style: italic;
-      margin-bottom: 1rem;
+      font-size: 1.05rem;
+      color: var(--text);
     }
-    p {
-      color: var(--text-muted);
-      font-size: 1.1rem;
-      max-width: 500px;
+
+    /* ===== PROMPTS PAGE ===== */
+    .prompts-page {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 64px 40px 120px;
     }
+
+    .prompts-page h1 {
+      font-size: 2rem;
+      font-weight: 800;
+      margin-bottom: 8px;
+    }
+
+    .prompts-page .page-desc {
+      color: var(--text2);
+      font-size: 0.95rem;
+      margin-bottom: 32px;
+      line-height: 1.6;
+    }
+
+    .prompts-controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 32px;
+      align-items: center;
+    }
+
+    .level-toggle {
+      display: flex;
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      overflow: hidden;
+      flex-shrink: 0;
+    }
+
+    .level-btn {
+      padding: 8px 16px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      border: none;
+      background: transparent;
+      color: var(--text3);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .level-btn.active.basic { background: #dcfce7; color: #16a34a; }
+    .level-btn.active.intermediate { background: #fef3c7; color: #d97706; }
+    .level-btn.active.advanced { background: #fee2e2; color: #dc2626; }
+    .level-btn.active.all { background: var(--text); color: var(--bg); }
+
+    [data-theme="dark"] .level-btn.active.basic { background: rgba(22,163,74,0.2); }
+    [data-theme="dark"] .level-btn.active.intermediate { background: rgba(217,119,6,0.2); }
+    [data-theme="dark"] .level-btn.active.advanced { background: rgba(220,38,38,0.2); }
+
+    .cat-filter {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 28px;
+    }
+
+    .cat-btn {
+      padding: 6px 14px;
+      font-size: 0.78rem;
+      font-weight: 500;
+      border: 1px solid var(--border);
+      border-radius: 50px;
+      background: transparent;
+      color: var(--text2);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .cat-btn:hover { border-color: var(--text); color: var(--text); }
+    .cat-btn.active { background: var(--text); color: var(--bg); border-color: var(--text); }
+
+    .search-bar {
+      width: 100%;
+      padding: 10px 16px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: var(--bg2);
+      color: var(--text);
+      font-size: 0.875rem;
+      font-family: 'Inter', sans-serif;
+      outline: none;
+      transition: border-color 0.2s;
+      margin-bottom: 24px;
+    }
+
+    .search-bar:focus { border-color: var(--border2); }
+
+    .prompts-section {
+      margin-bottom: 40px;
+    }
+
+    .prompts-section-title {
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      color: var(--text3);
+      margin-bottom: 14px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .prompts-section-title::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+
+    .prompts-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+      gap: 12px;
+    }
+
+    .prompt-card {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 16px;
+      transition: all 0.2s;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .prompt-card:hover {
+      border-color: var(--border2);
+      box-shadow: var(--shadow-md);
+      transform: translateY(-1px);
+    }
+
+    .prompt-card-top {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .level-badge {
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-size: 0.65rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      flex-shrink: 0;
+    }
+
+    .level-badge.basic { background: #dcfce7; color: #16a34a; }
+    .level-badge.intermediate { background: #fef3c7; color: #d97706; }
+    .level-badge.advanced { background: #fee2e2; color: #dc2626; }
+
+    [data-theme="dark"] .level-badge.basic { background: rgba(22,163,74,0.2); color: #4ade80; }
+    [data-theme="dark"] .level-badge.intermediate { background: rgba(217,119,6,0.2); color: #fbbf24; }
+    [data-theme="dark"] .level-badge.advanced { background: rgba(220,38,38,0.2); color: #f87171; }
+
+    .prompt-cat-tag {
+      font-size: 0.7rem;
+      color: var(--text3);
+      font-weight: 500;
+    }
+
+    .prompt-text {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.8rem;
+      color: var(--text);
+      line-height: 1.6;
+      flex: 1;
+    }
+
+    .prompt-card-footer {
+      display: flex;
+      justify-content: flex-end;
+    }
+
+    .copy-btn {
+      padding: 5px 12px;
+      font-size: 0.72rem;
+      font-weight: 600;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      background: transparent;
+      color: var(--text2);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .copy-btn:hover { border-color: var(--border2); color: var(--text); }
+    .copy-btn.done { background: #dcfce7; border-color: #16a34a; color: #16a34a; }
+
+    [data-theme="dark"] .copy-btn.done { background: rgba(22,163,74,0.2); border-color: #4ade80; color: #4ade80; }
+
+    .prompt-count-bar {
+      font-size: 0.8rem;
+      color: var(--text3);
+      margin-bottom: 20px;
+    }
+
+    .no-results {
+      text-align: center;
+      padding: 60px 20px;
+      color: var(--text3);
+      font-size: 0.9rem;
+    }
+
+    /* ===== TOOLS PAGE ===== */
+    .tools-page {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 64px 40px 120px;
+    }
+
+    .tools-page h1 {
+      font-size: 2rem;
+      font-weight: 800;
+      margin-bottom: 8px;
+    }
+
+    .tools-page .page-desc {
+      color: var(--text2);
+      margin-bottom: 32px;
+      font-size: 0.95rem;
+    }
+
+    .tools-filter-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 28px;
+    }
+
+    .tf-btn {
+      padding: 7px 14px;
+      font-size: 0.78rem;
+      font-weight: 500;
+      border: 1px solid var(--border);
+      border-radius: 50px;
+      background: transparent;
+      color: var(--text2);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .tf-btn:hover { border-color: var(--text); color: var(--text); }
+    .tf-btn.active { background: var(--text); color: var(--bg); border-color: var(--text); }
+
+    .tools-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 16px;
+    }
+
+    .tool-card {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 20px;
+      transition: all 0.25s;
+    }
+
+    .tool-card:hover {
+      border-color: var(--border2);
+      box-shadow: var(--shadow-md);
+      transform: translateY(-2px);
+    }
+
+    .tool-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 10px;
+    }
+
+    .tool-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+      flex-shrink: 0;
+    }
+
+    .tool-info h3 { font-size: 0.95rem; font-weight: 700; color: var(--text); }
+    .tool-info .cat { font-size: 0.72rem; color: var(--text3); }
+
+    .tool-desc { font-size: 0.82rem; color: var(--text2); margin-bottom: 12px; line-height: 1.5; }
+
+    .platforms {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 5px;
+      margin-bottom: 12px;
+    }
+
+    .plat {
+      padding: 2px 7px;
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      font-size: 0.65rem;
+      color: var(--text3);
+    }
+
+    .feat-cols {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+
+    .feat-col h5 {
+      font-size: 0.65rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 6px;
+    }
+
+    .feat-col h5.f { color: var(--green); }
+    .feat-col h5.p { color: var(--orange); }
+
+    .feat-col ul { list-style: none; padding: 0; }
+    .feat-col li { font-size: 0.78rem; color: var(--text2); padding: 2px 0; display: flex; gap: 5px; }
+    .feat-col li::before { content: "·"; color: var(--border2); }
+
+    .tool-footer {
+      border-top: 1px solid var(--border);
+      padding-top: 12px;
+      display: flex;
+      gap: 8px;
+    }
+
+    .t-btn {
+      flex: 1;
+      padding: 7px;
+      border-radius: 7px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      text-align: center;
+      text-decoration: none;
+      cursor: pointer;
+      border: none;
+      transition: all 0.2s;
+    }
+
+    .t-btn.prim { background: var(--text); color: var(--bg); }
+    .t-btn.prim:hover { opacity: 0.8; }
+    .t-btn.sec { background: var(--bg2); color: var(--text); border: 1px solid var(--border); }
+    .t-btn.sec:hover { border-color: var(--border2); }
+
+    /* ===== RESPONSIVE ===== */
+    @media (max-width: 768px) {
+      .sidebar {
+        transform: translateX(-100%);
+        transition: transform 0.3s;
+      }
+
+      .sidebar.open { transform: translateX(0); }
+
+      .main { margin-left: 0; }
+
+      .mobile-sidebar-btn { display: flex; }
+
+      .content-page, .prompts-page, .tools-page {
+        padding: 48px 20px 80px;
+      }
+
+      .content-page { padding-top: 64px; }
+
+      .example-pair { grid-template-columns: 1fr; }
+      .prompts-grid { grid-template-columns: 1fr; }
+      .tools-grid { grid-template-columns: 1fr; }
+      .feat-cols { grid-template-columns: 1fr; }
+    }
+
+    .sidebar-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.4);
+      z-index: 99;
+    }
+
+    .sidebar-overlay.show { display: block; }
+
+    /* Tool icon colors */
+    .ic-chatgpt { background: linear-gradient(135deg,#10a37f,#1a7f5a); color:#fff; }
+    .ic-claude { background: linear-gradient(135deg,#d97706,#92400e); color:#fff; }
+    .ic-gemini { background: linear-gradient(135deg,#4285f4,#ea4335); color:#fff; }
+    .ic-perplexity { background: linear-gradient(135deg,#20b2aa,#008b8b); color:#fff; }
+    .ic-copilot { background: linear-gradient(135deg,#0078d4,#00bcf2); color:#fff; }
+    .ic-cursor { background: linear-gradient(135deg,#1a1a2e,#4a4a6a); color:#fff; }
+    .ic-midjourney { background: linear-gradient(135deg,#2d2d2d,#555); color:#fff; }
+    .ic-dalle { background: linear-gradient(135deg,#ec4899,#f43f5e); color:#fff; }
+    .ic-stable { background: linear-gradient(135deg,#9333ea,#c026d8); color:#fff; }
+    .ic-sora { background: linear-gradient(135deg,#7c3aed,#a855f7); color:#fff; }
+    .ic-runway { background: linear-gradient(135deg,#0066ff,#00ccff); color:#fff; }
+    .ic-heygen { background: linear-gradient(135deg,#f97316,#dc2626); color:#fff; }
+    .ic-elevenlabs { background: #111; color:#fff; }
+    .ic-copilot2 { background: linear-gradient(135deg,#0078d4,#00bcf2); color:#fff; }
+    .ic-grammarly { background: linear-gradient(135deg,#15c391,#0f7b5f); color:#fff; }
+    .ic-jasper { background: linear-gradient(135deg,#ff6b35,#f7931e); color:#fff; }
+    .ic-lovable { background: linear-gradient(135deg,#f43f5e,#ec4899); color:#fff; }
+    .ic-bolt { background: linear-gradient(135deg,#f59e0b,#f97316); color:#fff; }
+    .ic-manus { background: linear-gradient(135deg,#6366f1,#8b5cf6); color:#fff; }
+    .ic-trae { background: linear-gradient(135deg,#06b6d4,#0284c7); color:#fff; }
+    .ic-replit { background: linear-gradient(135deg,#f26207,#f99e1a); color:#fff; }
+    .ic-suno { background: linear-gradient(135deg,#ec4899,#8b5cf6); color:#fff; }
+    .ic-default { background: linear-gradient(135deg,#64748b,#94a3b8); color:#fff; }
   </style>
+  <meta property="og:image" content="https://bolt.new/static/og_default.png">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:image" content="https://bolt.new/static/og_default.png">
 </head>
-<body>
-  <nav class="navbar">
-    <div class="nav-container">
-      <div class="nav-brand">Upcoming Session</div>
-      <ul class="nav-menu">
-        <li><a href="../../">Home</a></li>
-        <li><a href="../../syllabus/">Syllabus</a></li>
-      </ul>
+<body data-theme="light">
+
+  <button class="mobile-sidebar-btn" id="mobBtn">☰</button>
+  <div class="sidebar-overlay" id="overlay"></div>
+
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-top">
+      <div class="sidebar-title">AI Study Guide</div>
+      <div class="sidebar-subtitle" id="sidebarSubtitle">Prompt Engineering</div>
     </div>
-  </nav>
-  <main class="main-content">
-    <h1>Upcoming Session</h1>
-    <p>This session content is currently being prepared and will be available soon. Please check back later.</p>
+
+    <nav class="sidebar-nav" id="sidebarNav">
+
+      <div class="nav-group">
+        <div class="nav-group-header" onclick="toggleGroup(this)">
+          <svg class="nav-group-chevron open" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"/></svg>
+          <span class="nav-group-label">Introduction</span>
+        </div>
+        <div class="nav-group-items">
+          <a class="nav-item active" onclick="showPage('home')">Start Here</a>
+          <a class="nav-item" onclick="showPage('ch1')">Chapter 1: What is a Prompt?</a>
+        </div>
+      </div>
+
+      <div class="nav-group">
+        <div class="nav-group-header" onclick="toggleGroup(this)">
+          <svg class="nav-group-chevron open" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"/></svg>
+          <span class="nav-group-label">Core Concepts</span>
+        </div>
+        <div class="nav-group-items">
+          <a class="nav-item" onclick="showPage('ch2')">Chapter 2: How AI Thinks</a>
+          <a class="nav-item" onclick="showPage('ch3')">Chapter 3: The Formula</a>
+          <a class="nav-item" onclick="showPage('ch4')">Chapter 4: Techniques</a>
+        </div>
+      </div>
+
+      <div class="nav-group">
+        <div class="nav-group-header" onclick="toggleGroup(this)">
+          <svg class="nav-group-chevron open" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"/></svg>
+          <span class="nav-group-label">Applications</span>
+        </div>
+        <div class="nav-group-items">
+          <a class="nav-item" onclick="showPage('ch5')">Chapter 5: Learning with AI</a>
+          <a class="nav-item" onclick="showPage('ch6')">Chapter 6: Writing with AI</a>
+          <a class="nav-item" onclick="showPage('ch7')">Chapter 7: Research with AI</a>
+        </div>
+      </div>
+
+      <div class="nav-group">
+        <div class="nav-group-header" onclick="toggleGroup(this)">
+          <svg class="nav-group-chevron open" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"/></svg>
+          <span class="nav-group-label">Mastery</span>
+        </div>
+        <div class="nav-group-items">
+          <a class="nav-item" onclick="showPage('ch8')">Chapter 8: AI Tools Overview</a>
+          <a class="nav-item" onclick="showPage('ch9')">Chapter 9: Common Mistakes</a>
+        </div>
+      </div>
+
+      <div class="nav-group">
+        <div class="nav-group-header" onclick="toggleGroup(this)">
+          <svg class="nav-group-chevron open" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"/></svg>
+          <span class="nav-group-label">Prompt Library</span>
+        </div>
+        <div class="nav-group-items">
+          <a class="nav-item" onclick="showPage('prompts')">100+ Prompts</a>
+        </div>
+      </div>
+
+      <div class="nav-group">
+        <div class="nav-group-header" onclick="toggleGroup(this)">
+          <svg class="nav-group-chevron open" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"/></svg>
+          <span class="nav-group-label">AI Tools</span>
+        </div>
+        <div class="nav-group-items">
+          <a class="nav-item" onclick="showPage('tools')">80+ AI Tools Directory</a>
+        </div>
+      </div>
+
+    </nav>
+
+    <div class="sidebar-footer">
+      <span style="font-size:0.72rem;color:var(--text3);">Prompt Engineering Guide</span>
+      <button class="theme-btn" id="themeBtn" title="Toggle theme">🌙</button>
+    </div>
+  </aside>
+
+  <main class="main">
+
+    <!-- HOME PAGE -->
+    <div id="page-home" class="page active">
+      <div class="hero-page">
+        <div class="hero-badge">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+          Complete Study Guide
+        </div>
+        <h1 class="hero-h1">Prompt Engineering: How to Talk to AI Effectively</h1>
+        <p class="hero-desc">A comprehensive, interactive guide to mastering AI communication. 10 chapters, 100+ prompts, and a complete directory of 80+ AI tools.</p>
+        <a class="hero-btn" onclick="showPage('ch1')">Start Learning &darr;</a>
+        <hr class="hero-divider">
+        <div class="hero-stats">
+          <div class="stat-item">
+            <span class="stat-num">10</span>
+            <div class="stat-label">Chapters</div>
+          </div>
+          <div class="stat-item">
+            <span class="stat-num">100+</span>
+            <div class="stat-label">Prompts</div>
+          </div>
+          <div class="stat-item">
+            <span class="stat-num">80+</span>
+            <div class="stat-label">AI Tools</div>
+          </div>
+          <div class="stat-item">
+            <span class="stat-num">3</span>
+            <div class="stat-label">Skill Levels</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CHAPTER 1 -->
+    <div id="page-ch1" class="page">
+      <div class="content-page">
+        <h1>Chapter 1 — What Is a Prompt?</h1>
+        <p class="page-desc">Understand the fundamental building block of AI communication and why learning to write better prompts changes everything.</p>
+
+        <h2>What is a Prompt?</h2>
+        <p>A prompt is any instruction or input you give to an AI model. Every interaction you have with an AI starts with a prompt — whether you type a single word or a full paragraph.</p>
+        <ul>
+          <li>Explain gravity.</li>
+          <li>Write an email to my boss.</li>
+          <li>Summarize this 10-page article.</li>
+          <li>Teach me Python in 30 days.</li>
+        </ul>
+
+        <h2>What is Prompt Engineering?</h2>
+        <p>Prompt Engineering is the skill of designing instructions for AI systems that consistently produce useful, accurate, and high-quality outputs.</p>
+
+        <div class="callout info">
+          <div class="callout-label">Core Principle</div>
+          <p>Better instructions always lead to better outputs. The AI doesn't improve — <em>you</em> improve.</p>
+        </div>
+
+        <h2>Why Does It Matter?</h2>
+        <p>The same AI model will give dramatically different answers depending on how you ask. One poorly written prompt can waste hours. One well-crafted prompt can save days.</p>
+
+        <div class="example-pair">
+          <div class="ex-card bad">
+            <div class="ex-label">✕ Weak Prompt</div>
+            <p>Tell me about exercise.</p>
+          </div>
+          <div class="ex-card good">
+            <div class="ex-label">✓ Strong Prompt</div>
+            <p>Design a 4-week muscle-building workout plan for a 17-year-old beginner with access only to resistance bands and bodyweight exercises.</p>
+          </div>
+        </div>
+
+        <h2>Myth vs Reality</h2>
+        <div class="example-pair">
+          <div class="ex-card bad">
+            <div class="ex-label">Myth</div>
+            <p>There are secret magic prompts that unlock AI's full power.</p>
+          </div>
+          <div class="ex-card good">
+            <div class="ex-label">Reality</div>
+            <p>Clarity, specificity, and context beat any trick. Clear thinking produces clear prompts.</p>
+          </div>
+        </div>
+
+        <blockquote><p>Prompt Engineering is really just clear thinking made visible.</p></blockquote>
+      </div>
+    </div>
+
+    <!-- CHAPTER 2 -->
+    <div id="page-ch2" class="page">
+      <div class="content-page">
+        <h1>Chapter 2 — How AI Understands Your Prompt</h1>
+        <p class="page-desc">Understand what happens inside the model when it reads your prompt — and why vague inputs always produce vague outputs.</p>
+
+        <h2>AI Has No Mind-Reading Ability</h2>
+        <p>The model works exclusively with what you provide. It has no access to your intentions, background knowledge, or unstated goals. Everything it needs to answer you well must be in the prompt.</p>
+
+        <div class="callout warn">
+          <div class="callout-label">The Golden Rule</div>
+          <p>If it's not in the prompt, the AI doesn't know it.</p>
+        </div>
+
+        <h2>Garbage In, Garbage Out</h2>
+        <div class="example-pair">
+          <div class="ex-card bad">
+            <div class="ex-label">Vague</div>
+            <p>Help me.</p>
+          </div>
+          <div class="ex-card good">
+            <div class="ex-label">Specific</div>
+            <p>Help me create a 7-day study plan for my biology exam covering chapters 3-7, with 2-hour daily sessions and built-in review periods.</p>
+          </div>
+        </div>
+
+        <h2>Specific Beats General</h2>
+        <div class="example-pair">
+          <div class="ex-card bad">
+            <div class="ex-label">Too broad</div>
+            <p>Tell me about history.</p>
+          </div>
+          <div class="ex-card good">
+            <div class="ex-label">Focused</div>
+            <p>Explain the 3 main causes of World War I to a 10th-grader using analogies and bullet points.</p>
+          </div>
+        </div>
+
+        <h2>Prompting is a Conversation</h2>
+        <p>You rarely need a perfect prompt on the first try. The most effective approach is iterative:</p>
+        <ol>
+          <li>Ask an initial question</li>
+          <li>Evaluate what's missing or off</li>
+          <li>Add more context or constraints</li>
+          <li>Refine until the output is what you need</li>
+        </ol>
+
+        <div class="callout tip">
+          <div class="callout-label">Pro Tip</div>
+          <p>After any AI response, you can say "That's good, but make it shorter," or "Add more examples," or "Rewrite this for a 12-year-old." Follow-up prompts are just as powerful as first prompts.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- CHAPTER 3 -->
+    <div id="page-ch3" class="page">
+      <div class="content-page">
+        <h1>Chapter 3 — The Formula of Great Prompts</h1>
+        <p class="page-desc">Every consistently great prompt contains five ingredients. Learn the formula and you'll never write a bad prompt again.</p>
+
+        <div class="formula-box">
+          <div class="formula-title">The Golden Formula</div>
+          <code>
+            Task<br>
+            + Context<br>
+            + Constraints<br>
+            + Format<br>
+            + Tone<br>
+            ─────────<br>
+            = Consistent Results
+          </code>
+        </div>
+
+        <h2>1. Task — What Do You Want?</h2>
+        <p>The action you want the AI to perform. Start with a strong verb.</p>
+        <ul>
+          <li>Write / Create / Draft</li>
+          <li>Explain / Teach / Summarize</li>
+          <li>Analyze / Compare / Evaluate</li>
+          <li>Generate / List / Brainstorm</li>
+        </ul>
+
+        <h2>2. Context — Why Do You Need It?</h2>
+        <p>Background information that helps the AI produce the right answer for <em>your</em> specific situation.</p>
+        <div class="callout info">
+          <div class="callout-label">Example</div>
+          <p>"I'm a junior developer at a SaaS startup. We use React and TypeScript. Our codebase follows atomic design principles."</p>
+        </div>
+
+        <h2>3. Constraints — What Are the Limits?</h2>
+        <ul>
+          <li>Word count: "Under 150 words"</li>
+          <li>Audience: "For a non-technical CEO"</li>
+          <li>Time: "Achievable in 30 days"</li>
+          <li>Scope: "Only about organic SEO, not paid ads"</li>
+        </ul>
+
+        <h2>4. Format — How Should It Look?</h2>
+        <ul>
+          <li>Bullet points / Numbered list</li>
+          <li>Table / Comparison chart</li>
+          <li>Step-by-step guide</li>
+          <li>JSON / Code block / Markdown</li>
+          <li>Essay / Report / Email</li>
+        </ul>
+
+        <h2>5. Tone — What Voice?</h2>
+        <ul>
+          <li>Professional / Formal</li>
+          <li>Casual / Conversational</li>
+          <li>Simple / Child-friendly</li>
+          <li>Technical / Academic</li>
+          <li>Persuasive / Marketing</li>
+        </ul>
+
+        <div class="callout tip">
+          <div class="callout-label">Example — All Five Elements</div>
+          <p><strong>Task:</strong> Write a product description. <strong>Context:</strong> For an eco-friendly reusable water bottle targeting Gen Z. <strong>Constraints:</strong> Under 100 words, no clichés. <strong>Format:</strong> 2 paragraphs. <strong>Tone:</strong> Authentic and slightly edgy.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- CHAPTER 4 -->
+    <div id="page-ch4" class="page">
+      <div class="content-page">
+        <h1>Chapter 4 — Practical Prompting Techniques</h1>
+        <p class="page-desc">Master these proven techniques to unlock dramatically better outputs from any AI model.</p>
+
+        <h2>Role Prompting</h2>
+        <p>Assigning a persona or role to the AI radically improves the quality of its responses in that domain.</p>
+        <div class="callout info">
+          <div class="callout-label">Examples</div>
+          <p>"Act as a senior software engineer with 10 years of Python experience reviewing my code."<br><br>
+          "You are a Harvard-trained nutritionist. A client asks you..."</p>
+        </div>
+
+        <h2>Chain of Thought (CoT)</h2>
+        <p>Asking the AI to think step-by-step dramatically improves accuracy on complex reasoning tasks.</p>
+        <div class="example-pair">
+          <div class="ex-card bad">
+            <div class="ex-label">Without CoT</div>
+            <p>What is 17% of 340?</p>
+          </div>
+          <div class="ex-card good">
+            <div class="ex-label">With CoT</div>
+            <p>What is 17% of 340? Think step-by-step and show your reasoning.</p>
+          </div>
+        </div>
+
+        <h2>Few-Shot Prompting</h2>
+        <p>Giving the AI 2–3 examples of what you want before asking for the real output.</p>
+        <div class="callout info">
+          <div class="callout-label">Template</div>
+          <p>"Here are two examples of how I want the output formatted: [Example 1] [Example 2]. Now do the same for: [Your actual request]"</p>
+        </div>
+
+        <h2>Step-by-Step Prompting</h2>
+        <div class="example-pair">
+          <div class="ex-card bad">
+            <div class="ex-label">One shot</div>
+            <p>Teach me how to invest in stocks.</p>
+          </div>
+          <div class="ex-card good">
+            <div class="ex-label">Progressive</div>
+            <p>Teach me stock market investing step-by-step, starting from "what is a stock" and building up to portfolio construction. I'm a complete beginner.</p>
+          </div>
+        </div>
+
+        <h2>Follow-Up Prompts</h2>
+        <p>After any response, you can refine with:</p>
+        <ul>
+          <li>"Make this 50% shorter."</li>
+          <li>"Add 3 concrete examples."</li>
+          <li>"Rewrite this for a 12-year-old."</li>
+          <li>"Now make it more persuasive."</li>
+          <li>"What are the counterarguments?"</li>
+          <li>"Format this as a table."</li>
+        </ul>
+
+        <h2>Breaking Big Tasks</h2>
+        <p>Instead of one huge prompt, break complex projects into atomic steps. This reduces errors and keeps responses focused.</p>
+        <div class="callout tip">
+          <div class="callout-label">Strategy</div>
+          <p>Step 1: "Outline the structure of a business plan for a coffee shop." → Step 2: "Now write section 1: Executive Summary." → Step 3: "Now write section 2: Market Analysis."</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- CHAPTER 5 -->
+    <div id="page-ch5" class="page">
+      <div class="content-page">
+        <h1>Chapter 5 — Learning With AI</h1>
+        <p class="page-desc">Transform AI into your personal tutor, study partner, quiz master, and language coach.</p>
+
+        <h2>AI as a Personal Tutor</h2>
+        <p>AI can adapt explanations to any knowledge level, any style, and any pace. Unlike YouTube videos or textbooks, it responds to your specific confusion.</p>
+
+        <h2>Use Cases</h2>
+        <ul>
+          <li><strong>Concept explanation:</strong> "Explain photosynthesis using a cooking analogy."</li>
+          <li><strong>Quiz generation:</strong> "Create 10 multiple-choice questions on Chapter 4 of my biology textbook."</li>
+          <li><strong>Spaced repetition:</strong> "Quiz me on Spanish vocabulary. After each answer, tell me if I was right and why."</li>
+          <li><strong>Simplification:</strong> "Explain quantum entanglement as if I'm 10 years old."</li>
+          <li><strong>Deep dive:</strong> "I understand X. Now take me one level deeper."</li>
+        </ul>
+
+        <div class="callout tip">
+          <div class="callout-label">Best Practice</div>
+          <p>Tell the AI your current knowledge level at the start: "I know basic algebra but have never studied calculus."</p>
+        </div>
+
+        <h2>Language Learning</h2>
+        <ul>
+          <li>"Talk to me in French. Correct my grammar mistakes in brackets."</li>
+          <li>"Translate this sentence to Japanese and explain the grammar structure."</li>
+          <li>"Give me 20 common Spanish phrases for traveling. Include pronunciation guides."</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- CHAPTER 6 -->
+    <div id="page-ch6" class="page">
+      <div class="content-page">
+        <h1>Chapter 6 — Writing With AI</h1>
+        <p class="page-desc">Use AI to draft, rewrite, summarize, and brainstorm across every type of written content.</p>
+
+        <h2>Writing From Scratch</h2>
+        <ul>
+          <li>Emails (professional, cold outreach, apology, follow-up)</li>
+          <li>Essays and academic papers</li>
+          <li>Blog posts and articles</li>
+          <li>Social media captions</li>
+          <li>Presentation scripts</li>
+        </ul>
+
+        <h2>Rewriting & Improving</h2>
+        <p>Paste your text and ask AI to improve it in specific ways:</p>
+        <ul>
+          <li>"Fix grammar and spelling without changing the tone."</li>
+          <li>"Make this more concise — cut it by 40%."</li>
+          <li>"Make this sound more professional."</li>
+          <li>"Add more emotional impact to this paragraph."</li>
+        </ul>
+
+        <h2>Summarizing</h2>
+        <ul>
+          <li>Long research papers → 5 key bullet points</li>
+          <li>Meeting notes → action items</li>
+          <li>Books → chapter summaries</li>
+          <li>YouTube transcripts → key takeaways</li>
+        </ul>
+
+        <h2>Brainstorming</h2>
+        <ul>
+          <li>"Give me 20 blog post ideas about productivity for remote workers."</li>
+          <li>"Generate 10 creative names for a sustainable clothing brand."</li>
+          <li>"What are 15 angles I could write about cryptocurrency that haven't been done to death?"</li>
+        </ul>
+
+        <div class="callout warn">
+          <div class="callout-label">Important</div>
+          <p>Always review AI-written content. Verify facts, add your personal voice, and ensure it represents your actual views.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- CHAPTER 7 -->
+    <div id="page-ch7" class="page">
+      <div class="content-page">
+        <h1>Chapter 7 — Research With AI</h1>
+        <p class="page-desc">Accelerate research without sacrificing accuracy. Learn when to trust AI and when to verify.</p>
+
+        <h2>What AI Is Good At for Research</h2>
+        <ul>
+          <li>Explaining concepts and background knowledge quickly</li>
+          <li>Identifying key questions to research</li>
+          <li>Summarizing articles you paste in</li>
+          <li>Comparing multiple perspectives on a topic</li>
+          <li>Structuring research into an outline</li>
+        </ul>
+
+        <h2>Best Research Tools</h2>
+        <ul>
+          <li><strong>Perplexity AI:</strong> Best for finding sources and citations</li>
+          <li><strong>ChatGPT:</strong> Best for understanding concepts</li>
+          <li><strong>Google Scholar + Claude:</strong> Paste papers, ask questions</li>
+          <li><strong>Elicit / Consensus:</strong> AI-powered academic paper search</li>
+        </ul>
+
+        <div class="callout warn">
+          <div class="callout-label">Critical Rule</div>
+          <p>AI can hallucinate facts, statistics, and citations. NEVER cite AI-generated statistics in academic or professional work without independent verification.</p>
+        </div>
+
+        <h2>The Research Workflow</h2>
+        <ol>
+          <li>Use AI to get background understanding</li>
+          <li>Use Perplexity or Scholar for sourced facts</li>
+          <li>Paste real papers into Claude for analysis</li>
+          <li>Use AI to help structure your findings</li>
+          <li>Write your own conclusions based on verified sources</li>
+        </ol>
+      </div>
+    </div>
+
+    <!-- CHAPTER 8 -->
+    <div id="page-ch8" class="page">
+      <div class="content-page">
+        <h1>Chapter 8 — AI Tools Overview</h1>
+        <p class="page-desc">The AI tools landscape is vast and growing fast. Here's how to think about it.</p>
+
+        <h2>Categories of AI Tools</h2>
+
+        <h3>Chatbots & LLMs</h3>
+        <p>General-purpose AI assistants. Best for: writing, coding, analysis, Q&A.</p>
+        <ul>
+          <li><strong>ChatGPT (OpenAI):</strong> Most versatile, largest plugin ecosystem</li>
+          <li><strong>Claude (Anthropic):</strong> Best for long documents and nuanced writing</li>
+          <li><strong>Gemini (Google):</strong> Best integrated with Google products</li>
+          <li><strong>DeepSeek:</strong> Strong coding, available free</li>
+        </ul>
+
+        <h3>Coding Tools</h3>
+        <ul>
+          <li><strong>Cursor / Windsurf:</strong> AI-native code editors</li>
+          <li><strong>GitHub Copilot:</strong> Best IDE integration</li>
+          <li><strong>Lovable / Bolt.new:</strong> Build full apps from prompts</li>
+        </ul>
+
+        <h3>Image Generation</h3>
+        <ul>
+          <li><strong>Midjourney:</strong> Highest quality artistic images</li>
+          <li><strong>DALL-E 3:</strong> Best at following text instructions</li>
+          <li><strong>Stable Diffusion:</strong> Free, open-source, runs locally</li>
+        </ul>
+
+        <h3>Video Generation</h3>
+        <ul>
+          <li><strong>Runway Gen-3:</strong> Professional video editing + generation</li>
+          <li><strong>Sora:</strong> OpenAI's text-to-video</li>
+          <li><strong>Pika / Kling:</strong> Fast video generation</li>
+        </ul>
+
+        <div class="callout info">
+          <div class="callout-label">Key Insight</div>
+          <p>No single AI tool is best at everything. Build a personal stack of 3-4 tools that cover your main use cases.</p>
+        </div>
+
+        <p><strong>Explore the full directory →</strong> <a onclick="showPage('tools')" style="color:var(--blue);cursor:pointer;text-decoration:underline;">80+ AI Tools</a></p>
+      </div>
+    </div>
+
+    <!-- CHAPTER 9 -->
+    <div id="page-ch9" class="page">
+      <div class="content-page">
+        <h1>Chapter 9 — Common Mistakes</h1>
+        <p class="page-desc">Avoid these 8 mistakes that beginner and intermediate prompters make constantly.</p>
+
+        <h2>1. Being Too Vague</h2>
+        <div class="example-pair">
+          <div class="ex-card bad"><div class="ex-label">Mistake</div><p>Tell me about business.</p></div>
+          <div class="ex-card good"><div class="ex-label">Fix</div><p>Explain the 5 most common reasons startups fail in their first year, with one real-world example each.</p></div>
+        </div>
+
+        <h2>2. Asking Too Much at Once</h2>
+        <p>Break large tasks into steps. Asking AI to "write a complete business plan, financial model, and marketing strategy" in one prompt produces shallow results for all three.</p>
+
+        <h2>3. Providing No Context</h2>
+        <p>The AI doesn't know your age, profession, knowledge level, goals, or constraints unless you say so. Always add relevant context.</p>
+
+        <h2>4. Blind Trust in Outputs</h2>
+        <p>AI is confidently wrong sometimes. Always verify important facts, statistics, and technical details from primary sources.</p>
+
+        <h2>5. Quitting After One Prompt</h2>
+        <p>The first response is a starting point. Expert prompters iterate 3-5 times on average.</p>
+
+        <h2>6. Ignoring the Tone Mismatch</h2>
+        <p>AI's default tone is academic and generic. Always specify the tone you need.</p>
+
+        <h2>7. Not Using Constraints</h2>
+        <p>Without limits, AI writes to fill space. Specify length, format, and scope.</p>
+
+        <h2>8. Over-Complicating Prompts</h2>
+        <p>More words ≠ better results. Focus on clarity, not length. One clear sentence often beats five rambling ones.</p>
+
+        <blockquote><p>The goal is not to outsmart the AI. The goal is to communicate with it clearly.</p></blockquote>
+      </div>
+    </div>
+
+    <!-- PROMPTS PAGE -->
+    <div id="page-prompts" class="page">
+      <div class="prompts-page">
+        <h1>Prompt Library</h1>
+        <p class="page-desc">100+ ready-to-use prompts for every topic, organized by category and skill level. Toggle between Basic, Intermediate, and Advanced.</p>
+
+        <div class="prompts-controls">
+          <div class="level-toggle">
+            <button class="level-btn active all" data-level="all" onclick="setLevel('all',this)">All</button>
+            <button class="level-btn basic" data-level="basic" onclick="setLevel('basic',this)">Basic</button>
+            <button class="level-btn intermediate" data-level="intermediate" onclick="setLevel('intermediate',this)">Intermediate</button>
+            <button class="level-btn advanced" data-level="advanced" onclick="setLevel('advanced',this)">Advanced</button>
+          </div>
+        </div>
+
+        <input class="search-bar" id="promptSearch" placeholder="Search prompts..." oninput="filterPrompts()">
+
+        <div class="cat-filter" id="catFilter"></div>
+
+        <div class="prompt-count-bar" id="promptCount"></div>
+
+        <div id="promptsContainer"></div>
+      </div>
+    </div>
+
+    <!-- TOOLS PAGE -->
+    <div id="page-tools" class="page">
+      <div class="tools-page">
+        <h1>AI Tools Directory</h1>
+        <p class="page-desc">80+ AI tools organized by category with platform availability and free vs. paid features.</p>
+
+        <div class="tools-filter-bar" id="toolsFilterBar"></div>
+
+        <div class="tools-grid" id="toolsGrid"></div>
+      </div>
+    </div>
+
   </main>
+
+  <script>
+  // ===== NAVIGATION =====
+  const pageNames = {
+    home: 'Prompt Engineering',
+    ch1: 'Chapter 1: What is a Prompt?',
+    ch2: 'Chapter 2: How AI Thinks',
+    ch3: 'Chapter 3: The Formula',
+    ch4: 'Chapter 4: Techniques',
+    ch5: 'Chapter 5: Learning with AI',
+    ch6: 'Chapter 6: Writing with AI',
+    ch7: 'Chapter 7: Research with AI',
+    ch8: 'Chapter 8: AI Tools Overview',
+    ch9: 'Chapter 9: Common Mistakes',
+    prompts: 'Prompt Library',
+    tools: 'AI Tools Directory'
+  };
+
+  function showPage(id) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+    const pg = document.getElementById('page-' + id);
+    if (pg) pg.classList.add('active');
+    const navItems = document.querySelectorAll('.nav-item');
+    navItems.forEach(n => {
+      if (n.getAttribute('onclick') && n.getAttribute('onclick').includes("'" + id + "'")) {
+        n.classList.add('active');
+      }
+    });
+    document.getElementById('sidebarSubtitle').textContent = pageNames[id] || id;
+    window.scrollTo(0, 0);
+    document.getElementById('sidebar').classList.remove('open');
+    document.getElementById('overlay').classList.remove('show');
+  }
+
+  function toggleGroup(header) {
+    const chevron = header.querySelector('.nav-group-chevron');
+    const items = header.nextElementSibling;
+    chevron.classList.toggle('open');
+    if (chevron.classList.contains('open')) {
+      items.style.maxHeight = items.scrollHeight + 'px';
+      items.classList.remove('collapsed');
+    } else {
+      items.style.maxHeight = items.scrollHeight + 'px';
+      requestAnimationFrame(() => { items.style.maxHeight = '0px'; });
+      items.classList.add('collapsed');
+    }
+  }
+
+  // Init all groups open
+  document.querySelectorAll('.nav-group-items').forEach(el => {
+    el.style.maxHeight = 'none';
+  });
+
+  // Mobile sidebar
+  document.getElementById('mobBtn').addEventListener('click', () => {
+    document.getElementById('sidebar').classList.toggle('open');
+    document.getElementById('overlay').classList.toggle('show');
+  });
+  document.getElementById('overlay').addEventListener('click', () => {
+    document.getElementById('sidebar').classList.remove('open');
+    document.getElementById('overlay').classList.remove('show');
+  });
+
+  // Theme
+  document.getElementById('themeBtn').addEventListener('click', () => {
+    const curr = document.body.getAttribute('data-theme');
+    const next = curr === 'dark' ? 'light' : 'dark';
+    document.body.setAttribute('data-theme', next);
+    document.getElementById('themeBtn').textContent = next === 'dark' ? '☀️' : '🌙';
+    localStorage.setItem('pe-theme', next);
+  });
+  const savedTheme = localStorage.getItem('pe-theme') || 'light';
+  document.body.setAttribute('data-theme', savedTheme);
+  document.getElementById('themeBtn').textContent = savedTheme === 'dark' ? '☀️' : '🌙';
+
+  // ===== PROMPTS DATA =====
+  const promptsData = [
+    // --- LEARNING ---
+    { cat: 'Learning', level: 'basic', text: 'Explain [topic] to me like I\'m 12 years old.' },
+    { cat: 'Learning', level: 'basic', text: 'What are the 5 most important things I need to know about [subject]?' },
+    { cat: 'Learning', level: 'basic', text: 'Give me a simple definition of [concept] with one real-world example.' },
+    { cat: 'Learning', level: 'basic', text: 'Create a beginner study plan for learning [topic] in 30 days.' },
+    { cat: 'Learning', level: 'basic', text: 'What is [topic]? Explain it step by step.' },
+    { cat: 'Learning', level: 'intermediate', text: 'I know the basics of [topic]. What should I learn next to reach an intermediate level? Give me a structured learning path.' },
+    { cat: 'Learning', level: 'intermediate', text: 'Create 10 practice questions on [topic] at a medium difficulty level with answers and explanations.' },
+    { cat: 'Learning', level: 'intermediate', text: 'Compare [concept A] vs [concept B]. When should I use each one? Use a table.' },
+    { cat: 'Learning', level: 'intermediate', text: 'Quiz me on [topic]. Ask one question at a time and wait for my answer before giving feedback.' },
+    { cat: 'Learning', level: 'intermediate', text: 'Explain the top 3 misconceptions beginners have about [topic] and the correct understanding for each.' },
+    { cat: 'Learning', level: 'advanced', text: 'Design a 90-day mastery curriculum for [topic] with weekly milestones, project-based learning, and evaluation criteria.' },
+    { cat: 'Learning', level: 'advanced', text: 'What are the current unsolved problems or open debates in the field of [topic]? Explain them at an expert level.' },
+    { cat: 'Learning', level: 'advanced', text: 'I want to learn [topic] at a graduate level. What are the foundational texts, courses, and hands-on projects I need? Create a 6-month plan.' },
+    { cat: 'Learning', level: 'advanced', text: 'Act as a Socratic tutor. Ask me probing questions about [topic] to identify gaps in my understanding. Don\'t give me answers—guide me to discover them.' },
+
+    // --- WRITING ---
+    { cat: 'Writing', level: 'basic', text: 'Write a professional email to [person/company] about [topic]. Keep it under 150 words.' },
+    { cat: 'Writing', level: 'basic', text: 'Fix the grammar and spelling in the following text: [paste text]' },
+    { cat: 'Writing', level: 'basic', text: 'Write a short introduction paragraph for an essay about [topic].' },
+    { cat: 'Writing', level: 'basic', text: 'Summarize the following text in 3 bullet points: [paste text]' },
+    { cat: 'Writing', level: 'basic', text: 'Rewrite this sentence to be clearer: [paste sentence]' },
+    { cat: 'Writing', level: 'intermediate', text: 'Rewrite this paragraph to be more persuasive, targeting [specific audience]: [paste paragraph]' },
+    { cat: 'Writing', level: 'intermediate', text: 'Write a 500-word blog post introduction about [topic] that hooks the reader with a surprising statistic or counterintuitive claim.' },
+    { cat: 'Writing', level: 'intermediate', text: 'Transform this informal email into a professional one while preserving all the key information: [paste email]' },
+    { cat: 'Writing', level: 'intermediate', text: 'Write 5 different versions of this headline, each targeting a different emotion: [paste headline]' },
+    { cat: 'Writing', level: 'intermediate', text: 'Edit my writing for clarity, conciseness, and impact. Mark your changes and explain each edit: [paste text]' },
+    { cat: 'Writing', level: 'advanced', text: 'Act as a professional editor. Review this piece for structure, argument strength, tone consistency, and audience alignment. Provide detailed feedback with specific rewrites: [paste text]' },
+    { cat: 'Writing', level: 'advanced', text: 'Write a long-form thought leadership article (1,500 words) on [topic]. Include original arguments, counterpoints, and a memorable conclusion. Avoid clichés.' },
+    { cat: 'Writing', level: 'advanced', text: 'Analyze my writing style from these three samples and then ghost-write a new piece in my voice about [topic]: [samples]' },
+    { cat: 'Writing', level: 'advanced', text: 'Write a persuasive op-ed arguing [position] on [topic]. Use rhetorical devices, address the strongest counterargument, and end with a call to action.' },
+
+    // --- RESEARCH ---
+    { cat: 'Research', level: 'basic', text: 'What are the main arguments for and against [topic]? Give a balanced overview.' },
+    { cat: 'Research', level: 'basic', text: 'Summarize what scientists currently know about [topic] in simple terms.' },
+    { cat: 'Research', level: 'basic', text: 'What are 5 reliable sources or types of sources I should consult when researching [topic]?' },
+    { cat: 'Research', level: 'basic', text: 'Explain the key terms I need to understand before researching [topic].' },
+    { cat: 'Research', level: 'intermediate', text: 'Compare the three leading schools of thought on [topic]. Summarize each position and its main proponents.' },
+    { cat: 'Research', level: 'intermediate', text: 'I\'m researching [topic]. Generate 10 specific research questions I should try to answer, ranging from descriptive to analytical.' },
+    { cat: 'Research', level: 'intermediate', text: 'Analyze this research paper and extract: main thesis, methodology, key findings, limitations, and implications: [paste abstract/text]' },
+    { cat: 'Research', level: 'intermediate', text: 'What are the gaps in current research on [topic]? Where are more studies needed?' },
+    { cat: 'Research', level: 'advanced', text: 'Act as a systematic reviewer. I\'ll give you 5 paper abstracts. Synthesize their findings, identify agreements and contradictions, and suggest a research direction: [paste abstracts]' },
+    { cat: 'Research', level: 'advanced', text: 'Critique the methodology of this study. What are the threats to internal and external validity? [paste study details]' },
+    { cat: 'Research', level: 'advanced', text: 'Design a research study to test the hypothesis that [hypothesis]. Include research design, variables, sample, data collection method, and potential confounds.' },
+    { cat: 'Research', level: 'advanced', text: 'Conduct a meta-level analysis of how [topic] has been studied. What theories dominate? What\'s been understudied? What paradigm shifts have occurred?' },
+
+    // --- CODING ---
+    { cat: 'Coding', level: 'basic', text: 'Explain what this code does line by line: [paste code]' },
+    { cat: 'Coding', level: 'basic', text: 'Write a simple [language] function that [does X]. Include comments explaining each step.' },
+    { cat: 'Coding', level: 'basic', text: 'What does this error mean and how do I fix it? [paste error message]' },
+    { cat: 'Coding', level: 'basic', text: 'Convert this Python code to JavaScript: [paste code]' },
+    { cat: 'Coding', level: 'basic', text: 'Write a SQL query to [do X] from a table called [tablename] with columns [list columns].' },
+    { cat: 'Coding', level: 'intermediate', text: 'Refactor this code for better readability, performance, and maintainability. Explain each change: [paste code]' },
+    { cat: 'Coding', level: 'intermediate', text: 'Write unit tests for the following function. Cover edge cases, happy paths, and failure scenarios: [paste function]' },
+    { cat: 'Coding', level: 'intermediate', text: 'Review this code for security vulnerabilities, especially [injection, XSS, auth issues, etc.]: [paste code]' },
+    { cat: 'Coding', level: 'intermediate', text: 'I\'m building [feature]. Walk me through the architecture decision: should I use [approach A] or [approach B]? Consider scalability, complexity, and maintainability.' },
+    { cat: 'Coding', level: 'intermediate', text: 'Explain the [design pattern] with a TypeScript example. When should I use it and when should I avoid it?' },
+    { cat: 'Coding', level: 'advanced', text: 'Act as a staff engineer reviewing this PR. Provide detailed technical feedback on architecture, performance, edge cases, and maintainability: [paste code]' },
+    { cat: 'Coding', level: 'advanced', text: 'Design a system architecture for [application]. Include: component diagram, data flow, database schema, API design, and scaling strategy. Consider [constraints].' },
+    { cat: 'Coding', level: 'advanced', text: 'Optimize this algorithm for time and space complexity. Show the before/after Big O analysis and explain your optimization strategy: [paste code]' },
+    { cat: 'Coding', level: 'advanced', text: 'Write a production-ready implementation of [feature] in [language/framework]. Include error handling, logging, input validation, and tests. Follow [style guide/patterns].' },
+
+    // --- BUSINESS ---
+    { cat: 'Business', level: 'basic', text: 'Give me 5 business ideas for someone with [skill/budget/interest].' },
+    { cat: 'Business', level: 'basic', text: 'Write a simple SWOT analysis for a [type of business].' },
+    { cat: 'Business', level: 'basic', text: 'What are the most important things to do in the first 30 days of starting a business?' },
+    { cat: 'Business', level: 'basic', text: 'How do I write a basic business plan? What sections should it include?' },
+    { cat: 'Business', level: 'intermediate', text: 'Analyze my business idea: [describe idea]. Identify the top 3 risks, the most critical assumption to validate, and the first 3 steps I should take.' },
+    { cat: 'Business', level: 'intermediate', text: 'Act as a startup mentor. Review my pitch: [paste pitch]. What are the weakest points an investor would challenge?' },
+    { cat: 'Business', level: 'intermediate', text: 'Create a competitive analysis framework for [industry]. Include dimensions like: pricing, target market, distribution, key differentiators.' },
+    { cat: 'Business', level: 'intermediate', text: 'Write a 12-month business roadmap for a [stage/type] startup focused on [goal]. Include quarterly milestones.' },
+    { cat: 'Business', level: 'advanced', text: 'Act as a McKinsey consultant. Conduct a comprehensive analysis of [company/industry]: market dynamics, competitive position, growth levers, and a 3-horizon strategic roadmap.' },
+    { cat: 'Business', level: 'advanced', text: 'Design a unit economics model for a [business model]. Show: CAC, LTV, payback period, gross margin, and the key levers to improve each metric.' },
+    { cat: 'Business', level: 'advanced', text: 'I\'m raising a Series A for [company]. Write a 10-point investor memo covering: problem, solution, market size, traction, business model, competition, team, use of funds, and risks.' },
+    { cat: 'Business', level: 'advanced', text: 'Develop a go-to-market strategy for [product] targeting [ICP]. Include: positioning, pricing, channels, sales motion, launch plan, and success metrics.' },
+
+    // --- MARKETING ---
+    { cat: 'Marketing', level: 'basic', text: 'Write 5 social media captions for [product/brand]. Keep each under 150 characters.' },
+    { cat: 'Marketing', level: 'basic', text: 'Generate 10 hashtag ideas for a [type of business] on Instagram.' },
+    { cat: 'Marketing', level: 'basic', text: 'Write a simple tagline for a [brand/product] that [does X].' },
+    { cat: 'Marketing', level: 'basic', text: 'Create a basic email subject line for an email about [offer/topic]. Write 5 options.' },
+    { cat: 'Marketing', level: 'intermediate', text: 'Create a 30-day content calendar for a [brand] on [platform]. Include content types, topics, and posting schedule.' },
+    { cat: 'Marketing', level: 'intermediate', text: 'Write a Facebook ad for [product]. Include: headline, primary text, and CTA. Target audience: [describe]. Goal: [conversions/traffic/awareness].' },
+    { cat: 'Marketing', level: 'intermediate', text: 'Develop 3 different brand voice profiles for [company]. Define tone, vocabulary, what to avoid, and example copy for each.' },
+    { cat: 'Marketing', level: 'intermediate', text: 'Write a product launch email sequence: [Email 1: Teaser] [Email 2: Launch] [Email 3: Last chance]. Product: [describe].' },
+    { cat: 'Marketing', level: 'advanced', text: 'Build a full-funnel marketing strategy for [product] from awareness to retention. Include: channels, messaging per funnel stage, KPIs, budget allocation, and attribution model.' },
+    { cat: 'Marketing', level: 'advanced', text: 'Act as a growth marketing expert. Identify [company]\'s highest-leverage growth loops and design experiments to test them. Use the ICE scoring framework.' },
+    { cat: 'Marketing', level: 'advanced', text: 'Develop a positioning strategy for [product] using April Dunford\'s framework. Define: competitive alternatives, unique attributes, value for customers, best-fit customers.' },
+
+    // --- CREATIVE ---
+    { cat: 'Creative', level: 'basic', text: 'Write a short story (200 words) about [character/situation].' },
+    { cat: 'Creative', level: 'basic', text: 'Give me 10 creative name ideas for a [type of business/product/character].' },
+    { cat: 'Creative', level: 'basic', text: 'Write a fun poem about [topic] in [style: rhyming/haiku/limerick].' },
+    { cat: 'Creative', level: 'basic', text: 'Generate 5 creative plot ideas for a story set in [genre/setting].' },
+    { cat: 'Creative', level: 'intermediate', text: 'Write the first chapter of a [genre] novel. Protagonist: [describe]. Setting: [describe]. Central conflict: [describe]. Length: 600 words.' },
+    { cat: 'Creative', level: 'intermediate', text: 'Describe [scene/object/emotion] using only sensory details. No adjectives like "beautiful" or "amazing"—show, don\'t tell.' },
+    { cat: 'Creative', level: 'intermediate', text: 'Take my plot outline and identify the 3 biggest structural weaknesses. Suggest specific fixes: [paste outline]' },
+    { cat: 'Creative', level: 'advanced', text: 'Analyze the narrative structure of [book/film]. Identify: inciting incident, midpoint reversal, dark night of the soul, climax, and thematic resolution. Then apply the same structure to my story idea: [idea]' },
+    { cat: 'Creative', level: 'advanced', text: 'Act as a world-building consultant. Design a coherent fictional world for [genre/story]. Include: geography, history, power structures, economy, culture, and the central tension driving conflict.' },
+    { cat: 'Creative', level: 'advanced', text: 'Write in the style of [author]. Analyze their voice first (sentence structure, vocabulary, rhythm, themes), then write a new piece on [topic] in that style.' },
+
+    // --- PRODUCTIVITY ---
+    { cat: 'Productivity', level: 'basic', text: 'Create a daily schedule for someone who wants to [goal]. I have [hours] available per day.' },
+    { cat: 'Productivity', level: 'basic', text: 'Give me 10 tips to stop procrastinating on [type of task].' },
+    { cat: 'Productivity', level: 'basic', text: 'Help me prioritize these 10 tasks using the Eisenhower matrix: [list tasks]' },
+    { cat: 'Productivity', level: 'intermediate', text: 'Design a weekly productivity system for [role/profession] using time-blocking. I work best [morning/evening], have [commitments], and want to achieve [goals].' },
+    { cat: 'Productivity', level: 'intermediate', text: 'Conduct a productivity audit on my typical week: [describe week]. Identify time leaks, energy drains, and the 3 highest-leverage changes I could make.' },
+    { cat: 'Productivity', level: 'advanced', text: 'Design a personal operating system (OS) for a [role]. Include: decision-making frameworks, review cadences, information management, goal-setting, and energy management principles.' },
+    { cat: 'Productivity', level: 'advanced', text: 'I want to build a second brain in [Notion/Obsidian]. Design the complete architecture: folder structure, tagging system, capture workflow, review process, and output pipeline.' },
+
+    // --- PERSONAL DEVELOPMENT ---
+    { cat: 'Personal Dev', level: 'basic', text: 'What habits should I build if I want to [life goal]?' },
+    { cat: 'Personal Dev', level: 'basic', text: 'Give me 5 books to read if I want to get better at [skill/area].' },
+    { cat: 'Personal Dev', level: 'basic', text: 'How do I start building confidence in [area]? Give practical first steps.' },
+    { cat: 'Personal Dev', level: 'intermediate', text: 'Act as a life coach. I want to [goal] but I keep [obstacle]. Ask me questions to identify the root cause and develop an action plan.' },
+    { cat: 'Personal Dev', level: 'intermediate', text: 'Design a 90-day self-improvement challenge for someone who wants to [describe goal]. Include daily/weekly habits, checkpoints, and success metrics.' },
+    { cat: 'Personal Dev', level: 'advanced', text: 'Help me build a personal development philosophy. My values are [list], my long-term vision is [describe], and my current blockers are [list]. Create a coherent framework for decision-making and growth.' },
+
+    // --- EMAILS ---
+    { cat: 'Email', level: 'basic', text: 'Write a cold email to [company] applying for a [job title] position. I have [experience]. Keep it under 200 words.' },
+    { cat: 'Email', level: 'basic', text: 'Write a polite follow-up email to someone I emailed [X days ago] about [topic].' },
+    { cat: 'Email', level: 'basic', text: 'Write an apology email to a client about [issue].' },
+    { cat: 'Email', level: 'intermediate', text: 'Write a cold outreach email to a potential partnership with [company]. Show how our [product/service] can benefit their [specific goal]. CTA: a 20-min call.' },
+    { cat: 'Email', level: 'intermediate', text: 'Create a 5-email welcome sequence for new subscribers to [newsletter/product]. Include: welcome, value delivery, social proof, engagement, and call-to-action.' },
+    { cat: 'Email', level: 'advanced', text: 'Write a sales email sequence for [product]. Map each email to a specific objection stage: awareness, consideration, intent, decision. Include subject lines optimized for open rates and body copy with proven copywriting formulas.' },
+
+    // --- SOCIAL MEDIA ---
+    { cat: 'Social Media', level: 'basic', text: 'Write 5 tweet ideas about [topic] that would get engagement.' },
+    { cat: 'Social Media', level: 'basic', text: 'Create a LinkedIn post about [professional achievement/lesson]. Keep it authentic, under 300 words.' },
+    { cat: 'Social Media', level: 'intermediate', text: 'Create a viral-format Twitter/X thread about [topic]. Include: a hook tweet, 7-10 value tweets, and a CTA tweet. Topic: [describe]' },
+    { cat: 'Social Media', level: 'intermediate', text: 'Write 5 Instagram carousel concepts about [topic]. For each: main hook, 5 slides outline, and caption.' },
+    { cat: 'Social Media', level: 'advanced', text: 'Design a personal brand content strategy for [platform] in [niche]. Include: content pillars, posting cadence, engagement strategy, monetization path, and 90-day content plan.' },
+
+    // --- DATA & ANALYSIS ---
+    { cat: 'Data & Analysis', level: 'basic', text: 'Explain what this dataset tells us in plain English: [describe or paste data]' },
+    { cat: 'Data & Analysis', level: 'basic', text: 'What charts or graphs would best visualize [type of data]? Explain why.' },
+    { cat: 'Data & Analysis', level: 'intermediate', text: 'Analyze these key metrics and identify trends, outliers, and actionable insights: [paste metrics]' },
+    { cat: 'Data & Analysis', level: 'intermediate', text: 'Write a Python script to [process/analyze] this data using pandas. The dataset has columns: [list]. I want to: [describe analysis].' },
+    { cat: 'Data & Analysis', level: 'advanced', text: 'Design a data analytics framework for a [type of business]. Include: KPIs, data sources, pipeline architecture, reporting cadence, and decision triggers.' },
+    { cat: 'Data & Analysis', level: 'advanced', text: 'Perform a root cause analysis on this business metric drop: [describe drop]. Ask me clarifying questions, then build a hypothesis tree and suggest experiments to identify the cause.' },
+
+    // --- CUSTOMER SERVICE ---
+    { cat: 'Customer Service', level: 'basic', text: 'Write a friendly response to a customer who complained that [issue].' },
+    { cat: 'Customer Service', level: 'basic', text: 'Create a FAQ document for a [type of business] addressing the 10 most common customer questions.' },
+    { cat: 'Customer Service', level: 'intermediate', text: 'Write a customer service response to an angry customer threatening to cancel. Acknowledge, empathize, offer a solution, and retain the customer without caving completely on price.' },
+    { cat: 'Customer Service', level: 'advanced', text: 'Design a complete customer support playbook for a SaaS company. Include: response templates for 10 common scenarios, escalation policy, SLA definitions, CSAT measurement, and AI deflection strategy.' },
+
+    // --- PROMPTING (meta) ---
+    { cat: 'Prompt Engineering', level: 'basic', text: 'Help me improve this prompt: [paste prompt]. Make it more specific and likely to get a better response.' },
+    { cat: 'Prompt Engineering', level: 'basic', text: 'What information am I missing to write a good prompt about [topic]?' },
+    { cat: 'Prompt Engineering', level: 'intermediate', text: 'Review my prompt below. Identify its weaknesses, then rewrite it using the Task-Context-Constraints-Format-Tone framework: [paste prompt]' },
+    { cat: 'Prompt Engineering', level: 'intermediate', text: 'Generate 5 different versions of this prompt, each optimized for a different use case: [paste prompt]' },
+    { cat: 'Prompt Engineering', level: 'advanced', text: 'Act as a prompt engineering expert. Analyze why this prompt produces inconsistent results and design a robust, reusable prompt template for this use case: [paste prompt + example outputs]' },
+    { cat: 'Prompt Engineering', level: 'advanced', text: 'Design a system prompt for an AI assistant specialized in [domain]. Include: role definition, behavioral rules, output format requirements, error handling, and example interactions.' },
+
+    // --- CAREER ---
+    { cat: 'Career', level: 'basic', text: 'Review my resume and suggest 5 specific improvements: [paste resume]' },
+    { cat: 'Career', level: 'basic', text: 'Write bullet points for my job role as [job title] at [company]. My responsibilities were: [list]' },
+    { cat: 'Career', level: 'intermediate', text: 'Prepare me for a [job title] interview at [company type]. Give me 10 likely questions and help me answer them using the STAR method.' },
+    { cat: 'Career', level: 'intermediate', text: 'Create a 90-day plan for someone starting a new role as [job title] at [company type]. Include: learning objectives, relationship-building goals, and first wins to aim for.' },
+    { cat: 'Career', level: 'advanced', text: 'Act as a senior executive coach. Help me navigate [career situation: negotiation/promotion/transition/conflict]. Ask me questions to understand the full context, then give strategic advice.' },
+    { cat: 'Career', level: 'advanced', text: 'Design a 3-year career development plan for someone in [role] who wants to reach [target role]. Include: skills to build, visibility strategies, networking plan, and potential pivot options.' },
+  ];
+
+  const categories = [...new Set(promptsData.map(p => p.cat))];
+  let activeLevel = 'all';
+  let activeCat = 'all';
+
+  function renderCatFilter() {
+    const bar = document.getElementById('catFilter');
+    const cats = ['all', ...categories];
+    bar.innerHTML = cats.map(c => `<button class="cat-btn ${c === 'all' ? 'active' : ''}" onclick="setCat('${c}',this)">${c === 'all' ? 'All Categories' : c}</button>`).join('');
+  }
+
+  function setLevel(level, btn) {
+    activeLevel = level;
+    document.querySelectorAll('.level-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    filterPrompts();
+  }
+
+  function setCat(cat, btn) {
+    activeCat = cat;
+    document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    filterPrompts();
+  }
+
+  function filterPrompts() {
+    const search = document.getElementById('promptSearch').value.toLowerCase();
+    let filtered = promptsData.filter(p => {
+      const levelMatch = activeLevel === 'all' || p.level === activeLevel;
+      const catMatch = activeCat === 'all' || p.cat === activeCat;
+      const searchMatch = !search || p.text.toLowerCase().includes(search) || p.cat.toLowerCase().includes(search);
+      return levelMatch && catMatch && searchMatch;
+    });
+
+    document.getElementById('promptCount').textContent = `Showing ${filtered.length} of ${promptsData.length} prompts`;
+
+    const container = document.getElementById('promptsContainer');
+    if (filtered.length === 0) {
+      container.innerHTML = '<div class="no-results">No prompts found. Try adjusting your filters.</div>';
+      return;
+    }
+
+    const byCat = {};
+    filtered.forEach(p => {
+      if (!byCat[p.cat]) byCat[p.cat] = [];
+      byCat[p.cat].push(p);
+    });
+
+    let html = '';
+    for (const [cat, prompts] of Object.entries(byCat)) {
+      html += `<div class="prompts-section">
+        <div class="prompts-section-title">${cat} (${prompts.length})</div>
+        <div class="prompts-grid">
+          ${prompts.map((p, i) => `
+            <div class="prompt-card">
+              <div class="prompt-card-top">
+                <span class="level-badge ${p.level}">${p.level}</span>
+                <span class="prompt-cat-tag">${p.cat}</span>
+              </div>
+              <p class="prompt-text">${p.text}</p>
+              <div class="prompt-card-footer">
+                <button class="copy-btn" onclick="copyPrompt(this,'${p.text.replace(/'/g,"\\'")}')">Copy</button>
+              </div>
+            </div>
+          `).join('')}
+        </div>
+      </div>`;
+    }
+    container.innerHTML = html;
+  }
+
+  function copyPrompt(btn, text) {
+    navigator.clipboard.writeText(text).catch(() => {
+      const el = document.createElement('textarea');
+      el.value = text;
+      document.body.appendChild(el);
+      el.select();
+      document.execCommand('copy');
+      document.body.removeChild(el);
+    });
+    btn.textContent = 'Copied!';
+    btn.classList.add('done');
+    setTimeout(() => { btn.textContent = 'Copy'; btn.classList.remove('done'); }, 2000);
+  }
+
+  renderCatFilter();
+  filterPrompts();
+
+  // ===== TOOLS DATA =====
+  const toolsData = [
+    { name:'ChatGPT', cat:'chat', icon:'ic-chatgpt', emoji:'💬', desc:'Most popular AI chatbot. Versatile for writing, coding, and analysis.', free:['GPT-3.5/4o','Web search','Image upload','Basic voice'], pro:['GPT-4 priority','DALL-E images','Advanced analysis','Custom GPTs'], platforms:['Web','iOS','Android','macOS','Windows'], url:'https://chat.openai.com' },
+    { name:'Claude', cat:'chat', icon:'ic-claude', emoji:'🤖', desc:'Anthropic\'s AI. Best for long documents, nuanced writing, and safe outputs.', free:['Claude 3.5 Sonnet','100K context','Image analysis','Artifacts'], pro:['Claude Opus','5x limits','Projects'], platforms:['Web','iOS','Android'], url:'https://claude.ai' },
+    { name:'Gemini', cat:'chat', icon:'ic-gemini', emoji:'✨', desc:'Google\'s AI integrated with Google Workspace and real-time info.', free:['Gemini Pro','Google integration','Extensions'], pro:['Gemini Ultra','Workspace integration'], platforms:['Web','iOS','Android'], url:'https://gemini.google.com' },
+    { name:'Perplexity', cat:'search', icon:'ic-perplexity', emoji:'🔍', desc:'AI search engine with citations. Best for research.', free:['AI search','5 Pro searches/day'], pro:['300+ Pro searches','File uploads','API'], platforms:['Web','iOS','Android','macOS'], url:'https://perplexity.ai' },
+    { name:'Grok', cat:'chat', icon:'ic-default', emoji:'⚡', desc:'xAI\'s chatbot with real-time X data access.', free:['Limited access'], pro:['Full X integration','Grok 2'], platforms:['Web','X app'], url:'https://x.ai' },
+    { name:'DeepSeek', cat:'chat', icon:'ic-default', emoji:'🌊', desc:'Strong Chinese AI especially for coding tasks.', free:['DeepSeek-V3','Web search'], pro:['API access'], platforms:['Web','iOS','Android'], url:'https://chat.deepseek.com' },
+    { name:'Manus', cat:'agent', icon:'ic-manus', emoji:'🤖', desc:'Autonomous AI agent for complex multi-step tasks.', free:['Limited trials'], pro:['Full autonomy','Workflows'], platforms:['Web'], url:'https://manus.ai' },
+    { name:'Trae', cat:'agent', icon:'ic-trae', emoji:'🎯', desc:'AI-powered adaptive IDE that builds apps via conversation.', free:['Limited'], pro:['Full AI coding','Deploy integration'], platforms:['macOS','Windows','Linux'], url:'https://trae.ai' },
+    { name:'Devin', cat:'agent', icon:'ic-default', emoji:'👨‍💻', desc:'Cognition\'s AI software engineer for complex dev tasks.', free:['Waitlist'], pro:['Full access','Team collab'], platforms:['Web'], url:'https://cognition.ai' },
+    { name:'AutoGPT', cat:'agent', icon:'ic-default', emoji:'🔄', desc:'Open-source autonomous agent. Breaks goals into tasks.', free:['Fully open source'], pro:['Managed hosting'], platforms:['Web','Linux','macOS','Windows'], url:'https://github.com/Significant-Gravitas/AutoGPT' },
+    { name:'Lovable', cat:'nocode', icon:'ic-lovable', emoji:'❤️', desc:'AI app builder for full-stack web apps from natural language.', free:['Limited projects'], pro:['Unlimited projects','Custom domain','DB'], platforms:['Web'], url:'https://lovable.dev' },
+    { name:'Bolt.new', cat:'nocode', icon:'ic-bolt', emoji:'⚡', desc:'AI full-stack app builder by StackBlitz. Deploy instantly.', free:['Limited projects'], pro:['More projects','Priority'], platforms:['Web'], url:'https://bolt.new' },
+    { name:'v0.dev', cat:'nocode', icon:'ic-default', emoji:'🎨', desc:"Vercel's AI UI generator. Create React components from text.", free:['Limited generations'], pro:['Unlimited','Private projects'], platforms:['Web'], url:'https://v0.dev' },
+    { name:'Bubble', cat:'nocode', icon:'ic-default', emoji:'💭', desc:'Visual no-code platform with AI. Build complex web apps.', free:['Limited features','Branding'], pro:['Custom domain','No branding'], platforms:['Web'], url:'https://bubble.io' },
+    { name:'FlutterFlow', cat:'nocode', icon:'ic-default', emoji:'📱', desc:'No-code mobile app builder. Create iOS and Android apps.', free:['Limited projects'], pro:['Unlimited','Publish to stores'], platforms:['Web','iOS (apps)','Android (apps)'], url:'https://flutterflow.io' },
+    { name:'GitHub Copilot', cat:'code', icon:'ic-copilot', emoji:'👨‍💻', desc:'AI pair programmer integrated into VS Code.', free:['Free for students','Free for OSS'], pro:['Full access','Chat','Workspace'], platforms:['VS Code','JetBrains','Vim','macOS','Windows','Linux'], url:'https://github.com/features/copilot' },
+    { name:'Cursor', cat:'code', icon:'ic-cursor', emoji:'🖱️', desc:'AI-first code editor with deep AI integration.', free:['Free tier','Basic AI'], pro:['Unlimited AI','Claude+GPT-4','Agent mode'], platforms:['macOS','Windows','Linux'], url:'https://cursor.sh' },
+    { name:'Windsurf', cat:'code', icon:'ic-trae', emoji:'🌬️', desc:'AI-native IDE by Codeium with Cascade agent.', free:['Free tier'], pro:['Full AI','Cascade agent'], platforms:['macOS','Windows','Linux'], url:'https://codeium.com/windsurf' },
+    { name:'Codeium', cat:'code', icon:'ic-default', emoji:'⌨️', desc:'Free AI coding assistant across 70+ languages.', free:['Completely free','70+ languages','Unlimited'], pro:['Enterprise','Self-hosted'], platforms:['VS Code','JetBrains','Vim','macOS','Windows','Linux'], url:'https://codeium.com' },
+    { name:'Replit', cat:'code', icon:'ic-replit', emoji:'💻', desc:'Browser IDE with AI. Build and deploy apps online.', free:['Basic AI','Public repos'], pro:['Advanced AI','Private repos','Deploy'], platforms:['Web','iOS','Android'], url:'https://replit.com' },
+    { name:'Aider', cat:'code', icon:'ic-default', emoji:'🤝', desc:'Open-source AI pair programmer for terminal.', free:['Fully open source'], pro:['Needs API key'], platforms:['Terminal','macOS','Linux','Windows'], url:'https://aider.chat' },
+    { name:'Midjourney', cat:'image', icon:'ic-midjourney', emoji:'🎨', desc:'Best AI art generator for artistic, high-quality images.', free:['25 trial images'], pro:['Unlimited','Private mode','Stealth'], platforms:['Discord','Web'], url:'https://midjourney.com' },
+    { name:'DALL-E 3', cat:'image', icon:'ic-dalle', emoji:'🖼️', desc:"OpenAI's image generator. Great for text in images.", free:['Bing Image Creator'], pro:['ChatGPT Plus included'], platforms:['Web','ChatGPT iOS/Android'], url:'https://openai.com/dall-e-3' },
+    { name:'Stable Diffusion', cat:'image', icon:'ic-stable', emoji:'🌀', desc:'Open-source image gen. Run locally, unlimited and free.', free:['Fully open source','Local unlimited'], pro:['DreamStudio credits'], platforms:['Web','Windows','Linux','macOS'], url:'https://stability.ai' },
+    { name:'Leonardo AI', cat:'image', icon:'ic-default', emoji:'🦁', desc:'AI art for game assets, characters, and design.', free:['150 daily credits'], pro:['More credits','Private gen'], platforms:['Web','iOS','Android'], url:'https://leonardo.ai' },
+    { name:'Adobe Firefly', cat:'image', icon:'ic-default', emoji:'🔥', desc:"Adobe's ethical AI integrated into Creative Cloud.", free:['25 monthly credits'], pro:['CC included','Commercial use'], platforms:['Web','Photoshop','Illustrator'], url:'https://firefly.adobe.com' },
+    { name:'Ideogram', cat:'image', icon:'ic-default', emoji:'✏️', desc:'Best for text-in-image. Creates readable posters and logos.', free:['10 images/day'], pro:['More credits','HD quality'], platforms:['Web'], url:'https://ideogram.ai' },
+    { name:'Sora', cat:'video', icon:'ic-sora', emoji:'🎬', desc:"OpenAI's text-to-video. Creates realistic video clips.", free:['Limited access'], pro:['Full access'], platforms:['Web','ChatGPT Plus'], url:'https://openai.com/sora' },
+    { name:'Runway', cat:'video', icon:'ic-runway', emoji:'🎞️', desc:'Professional AI video generation and editing tools.', free:['125 credits'], pro:['Gen-3 Alpha','Motion brush'], platforms:['Web','iOS'], url:'https://runwayml.com' },
+    { name:'HeyGen', cat:'video', icon:'ic-heygen', emoji:'👤', desc:'AI video creation with realistic talking avatars.', free:['1 trial credit'], pro:['More credits','Custom avatars'], platforms:['Web','API'], url:'https://heygen.com' },
+    { name:'Pika', cat:'video', icon:'ic-default', emoji:'⚡', desc:'Fast AI video generation with creative effects.', free:['Daily credits'], pro:['More credits','Longer videos'], platforms:['Web','Discord'], url:'https://pika.art' },
+    { name:'Kling AI', cat:'video', icon:'ic-default', emoji:'🎭', desc:'High-quality long video generation from Kuaishou.', free:['Limited daily'], pro:['More credits','HD quality'], platforms:['Web'], url:'https://klingai.com' },
+    { name:'ElevenLabs', cat:'audio', icon:'ic-elevenlabs', emoji:'🔊', desc:'Best AI voice synthesis. Realistic speech in 29+ languages.', free:['10K chars/month','Standard voices'], pro:['Voice cloning','Professional voices','API'], platforms:['Web','iOS','Android','API'], url:'https://elevenlabs.io' },
+    { name:'Suno AI', cat:'audio', icon:'ic-suno', emoji:'🎵', desc:'AI music generation. Create full songs from text prompts.', free:['50 credits/day'], pro:['2,500/mo','Commercial use','4-min songs'], platforms:['Web','iOS','Android'], url:'https://suno.ai' },
+    { name:'Udio', cat:'audio', icon:'ic-default', emoji:'🎶', desc:'AI music generator for high-quality songs in any genre.', free:['Daily credits'], pro:['More credits','Commercial rights'], platforms:['Web','iOS','Android'], url:'https://udio.com' },
+    { name:'Descript', cat:'audio', icon:'ic-default', emoji:'🎤', desc:'AI audio/video editor with transcription and overdub.', free:['1 hr transcription/mo'], pro:['Unlimited','Overdub','Filler removal'], platforms:['Web','macOS','Windows'], url:'https://descript.com' },
+    { name:'Jasper', cat:'writing', icon:'ic-jasper', emoji:'✍️', desc:'AI writing platform for marketing teams.', free:['7-day trial'], pro:['Unlimited words','Brand voice','Team'], platforms:['Web','Chrome extension'], url:'https://jasper.ai' },
+    { name:'Grammarly', cat:'writing', icon:'ic-grammarly', emoji:'📐', desc:'AI writing assistant for grammar and style.', free:['Basic grammar','Browser ext'], pro:['Full rewriting','Plagiarism','Team'], platforms:['Web','Windows','macOS','Chrome','Word','iOS','Android'], url:'https://grammarly.com' },
+    { name:'Notion AI', cat:'writing', icon:'ic-default', emoji:'📓', desc:"AI built into Notion for writing and organizing.", free:['Limited free responses'], pro:['Unlimited AI','Q&A on workspace'], platforms:['Web','macOS','Windows','iOS','Android'], url:'https://notion.so/product/ai' },
+    { name:'Otter.ai', cat:'productivity', icon:'ic-default', emoji:'🐟', desc:'Meeting transcription and notes with speaker ID.', free:['300 mins/mo'], pro:['6K mins/mo','Team features'], platforms:['Web','iOS','Android','Zoom','Teams','Meet'], url:'https://otter.ai' },
+    { name:'Gamma', cat:'productivity', icon:'ic-default', emoji:'📊', desc:'AI presentation builder. Create slides from text.', free:['400 credits'], pro:['Unlimited','Custom branding','No watermark'], platforms:['Web'], url:'https://gamma.app' },
+    { name:'Perplexity', cat:'search', icon:'ic-perplexity', emoji:'🔍', desc:'AI-powered search with sources. Research-focused.', free:['AI search','5 Pro/day'], pro:['300+ Pro/day','File uploads'], platforms:['Web','iOS','Android','macOS'], url:'https://perplexity.ai' },
+    { name:'Phind', cat:'search', icon:'ic-default', emoji:'🔍', desc:'AI search engine for developers. Best for coding Q&A.', free:['AI search','Code examples'], pro:['More searches','GPT-4'], platforms:['Web','VS Code'], url:'https://phind.com' },
+    { name:'Consensus', cat:'search', icon:'ic-default', emoji:'📜', desc:'AI research tool searching academic papers.', free:['Basic search'], pro:['Unlimited queries','Citation export'], platforms:['Web'], url:'https://consensus.app' },
+  ];
+
+  const toolCats = ['all', ...new Set(toolsData.map(t => t.cat))];
+  const catNames = { all:'All Tools', chat:'Chatbots & LLMs', agent:'AI Agents', nocode:'App Builders', code:'Coding', image:'Image Gen', video:'Video Gen', audio:'Audio & Music', writing:'Writing', productivity:'Productivity', search:'Search' };
+  let activeToolCat = 'all';
+
+  function renderToolsFilter() {
+    const bar = document.getElementById('toolsFilterBar');
+    bar.innerHTML = toolCats.map(c => `<button class="tf-btn ${c === 'all' ? 'active' : ''}" onclick="setToolCat('${c}',this)">${catNames[c] || c}</button>`).join('');
+  }
+
+  function setToolCat(cat, btn) {
+    activeToolCat = cat;
+    document.querySelectorAll('.tf-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    renderTools();
+  }
+
+  function renderTools() {
+    const grid = document.getElementById('toolsGrid');
+    const filtered = activeToolCat === 'all' ? toolsData : toolsData.filter(t => t.cat === activeToolCat);
+    grid.innerHTML = filtered.map(t => `
+      <div class="tool-card">
+        <div class="tool-header">
+          <div class="tool-icon ${t.icon}">${t.emoji}</div>
+          <div class="tool-info">
+            <h3>${t.name}</h3>
+            <span class="cat">${catNames[t.cat] || t.cat}</span>
+          </div>
+        </div>
+        <p class="tool-desc">${t.desc}</p>
+        <div class="platforms">${(t.platforms||[]).map(p=>`<span class="plat">${p}</span>`).join('')}</div>
+        <div class="feat-cols">
+          <div class="feat-col">
+            <h5 class="f">✓ Free</h5>
+            <ul>${(t.free||[]).map(f=>`<li>${f}</li>`).join('')}</ul>
+          </div>
+          <div class="feat-col">
+            <h5 class="p">⭐ Pro</h5>
+            <ul>${(t.pro||[]).map(f=>`<li>${f}</li>`).join('')}</ul>
+          </div>
+        </div>
+        <div class="tool-footer">
+          <a href="${t.url}" target="_blank" rel="noopener" class="t-btn prim">Visit Site</a>
+          <button class="t-btn sec" onclick="copyToClip('${t.url}')">Copy Link</button>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  function copyToClip(text) {
+    navigator.clipboard.writeText(text).catch(()=>{});
+  }
+
+  renderToolsFilter();
+  renderTools();
+  </script>
 </body>
 </html>
