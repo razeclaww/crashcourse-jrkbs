@@ -1,1 +1,1317 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AI for Studying & Research · Teacher Guide</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    /* ── reset & variables (matching reference design) ── */
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
 
+    :root {
+      --sidebar-w: 220px;
+      --bg: #ffffff;
+      --bg2: #f8f8f8;
+      --bg3: #f0f0f0;
+      --border: #e5e5e5;
+      --border2: #d0d0d0;
+      --text: #111111;
+      --text2: #555555;
+      --text3: #888888;
+      --accent: #111111;
+      --accent-light: #f0f0f0;
+      --green: #16a34a;
+      --blue: #2563eb;
+      --orange: #d97706;
+      --red: #dc2626;
+      --badge-bg: #f5f5f5;
+      --shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+      --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    [data-theme="dark"] {
+      --bg: #0f0f0f;
+      --bg2: #1a1a1a;
+      --bg3: #222222;
+      --border: #2a2a2a;
+      --border2: #333333;
+      --text: #f5f5f5;
+      --text2: #aaaaaa;
+      --text3: #666666;
+      --accent: #f5f5f5;
+      --accent-light: #222222;
+      --badge-bg: #1e1e1e;
+      --shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+      --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.5);
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      display: flex;
+      min-height: 100vh;
+      line-height: 1.6;
+      transition: background 0.3s, color 0.3s;
+    }
+
+    /* ── sidebar ── */
+    .sidebar {
+      width: var(--sidebar-w);
+      min-width: var(--sidebar-w);
+      background: var(--bg);
+      border-right: 1px solid var(--border);
+      height: 100vh;
+      position: fixed;
+      top: 0;
+      left: 0;
+      overflow-y: auto;
+      z-index: 100;
+      display: flex;
+      flex-direction: column;
+    }
+    .sidebar::-webkit-scrollbar {
+      width: 4px;
+    }
+    .sidebar::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    .sidebar::-webkit-scrollbar-thumb {
+      background: var(--border);
+      border-radius: 2px;
+    }
+    .sidebar-top {
+      padding: 20px 16px 12px;
+      border-bottom: 1px solid var(--border);
+    }
+    .sidebar-title {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 4px;
+    }
+    .sidebar-subtitle {
+      font-size: 0.75rem;
+      color: var(--text3);
+      line-height: 1.4;
+    }
+    .sidebar-nav {
+      flex: 1;
+      padding: 12px 0 24px;
+    }
+    .nav-group {
+      margin-bottom: 2px;
+    }
+    .nav-group-header {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 16px;
+      cursor: pointer;
+      user-select: none;
+    }
+    .nav-group-header:hover {
+      background: var(--bg2);
+    }
+    .nav-group-chevron {
+      width: 14px;
+      height: 14px;
+      transition: transform 0.2s;
+      color: var(--text3);
+      flex-shrink: 0;
+    }
+    .nav-group-chevron.open {
+      transform: rotate(90deg);
+    }
+    .nav-group-label {
+      font-size: 0.68rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--text2);
+    }
+    .nav-group-items {
+      overflow: hidden;
+      transition: max-height 0.25s ease;
+    }
+    .nav-group-items.collapsed {
+      max-height: 0 !important;
+    }
+    .nav-item {
+      display: block;
+      padding: 5px 16px 5px 28px;
+      font-size: 0.8rem;
+      color: var(--text2);
+      text-decoration: none;
+      transition: all 0.15s;
+      border-radius: 0;
+      cursor: pointer;
+    }
+    .nav-item:hover {
+      color: var(--text);
+      background: var(--bg2);
+    }
+    .nav-item.active {
+      color: var(--text);
+      font-weight: 600;
+      background: var(--bg2);
+    }
+    .sidebar-footer {
+      padding: 12px 16px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .theme-btn {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: var(--bg2);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.9rem;
+      color: var(--text);
+      transition: all 0.2s;
+    }
+    .theme-btn:hover {
+      border-color: var(--border2);
+    }
+    .mobile-sidebar-btn {
+      display: none;
+      position: fixed;
+      top: 12px;
+      left: 12px;
+      z-index: 200;
+      width: 36px;
+      height: 36px;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      cursor: pointer;
+      align-items: center;
+      justify-content: center;
+      font-size: 1rem;
+    }
+    .sidebar-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.4);
+      z-index: 99;
+    }
+    .sidebar-overlay.show {
+      display: block;
+    }
+
+    /* ── main ── */
+    .main {
+      margin-left: var(--sidebar-w);
+      flex: 1;
+      min-height: 100vh;
+    }
+
+    /* ── pages ── */
+    .page {
+      display: none;
+      min-height: 100vh;
+    }
+    .page.active {
+      display: block;
+    }
+
+    /* ── content page ── */
+    .content-page {
+      max-width: 820px;
+      margin: 0 auto;
+      padding: 64px 40px 120px;
+    }
+    .content-page h1 {
+      font-size: 2rem;
+      font-weight: 800;
+      margin-bottom: 12px;
+      color: var(--text);
+      line-height: 1.2;
+    }
+    .content-page .page-desc {
+      font-size: 1rem;
+      color: var(--text2);
+      margin-bottom: 40px;
+      line-height: 1.7;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 32px;
+    }
+    .content-page h2 {
+      font-size: 1.35rem;
+      font-weight: 700;
+      margin: 44px 0 16px;
+      color: var(--text);
+    }
+    .content-page h3 {
+      font-size: 1.05rem;
+      font-weight: 600;
+      margin: 28px 0 10px;
+      color: var(--text);
+    }
+    .content-page h4 {
+      font-size: 0.92rem;
+      font-weight: 600;
+      margin: 20px 0 6px;
+      color: var(--text);
+    }
+    .content-page p {
+      font-size: 0.95rem;
+      color: var(--text2);
+      margin-bottom: 14px;
+      line-height: 1.75;
+    }
+    .content-page ul,
+    .content-page ol {
+      margin: 0 0 16px 20px;
+    }
+    .content-page li {
+      font-size: 0.95rem;
+      color: var(--text2);
+      margin-bottom: 6px;
+      line-height: 1.6;
+    }
+
+    .callout {
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 16px 20px;
+      margin: 20px 0;
+      background: var(--bg2);
+    }
+    .callout.info {
+      border-left: 3px solid var(--blue);
+    }
+    .callout.tip {
+      border-left: 3px solid var(--green);
+    }
+    .callout.warn {
+      border-left: 3px solid var(--orange);
+    }
+    .callout-label {
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-bottom: 6px;
+    }
+    .callout.info .callout-label {
+      color: var(--blue);
+    }
+    .callout.tip .callout-label {
+      color: var(--green);
+    }
+    .callout.warn .callout-label {
+      color: var(--orange);
+    }
+    .callout p {
+      margin: 0;
+      color: var(--text2);
+      font-size: 0.9rem;
+    }
+
+    /* ── tool cards ── */
+    .tool-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin: 16px 0 24px;
+    }
+    .tool-card-session {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 18px 20px 20px;
+      transition: all 0.2s;
+    }
+    .tool-card-session:hover {
+      border-color: var(--border2);
+      box-shadow: var(--shadow-md);
+      transform: translateY(-2px);
+    }
+    .tool-card-session h4 {
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--text);
+      margin: 0 0 2px;
+    }
+    .tool-card-session .tool-url {
+      font-size: 0.72rem;
+      color: var(--text3);
+      font-family: 'JetBrains Mono', monospace;
+      word-break: break-all;
+      margin-bottom: 6px;
+    }
+    .tool-card-session .tool-url a {
+      color: var(--text3);
+      text-decoration: none;
+    }
+    .tool-card-session .tool-url a:hover {
+      color: var(--text);
+      text-decoration: underline;
+    }
+    .tool-card-session .tool-best {
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: var(--blue);
+      margin-bottom: 6px;
+    }
+    .tool-card-session p {
+      font-size: 0.88rem;
+      color: var(--text2);
+      margin: 0 0 8px;
+      line-height: 1.6;
+    }
+    .tool-card-session .tool-tips {
+      font-size: 0.82rem;
+      color: var(--text2);
+      border-top: 1px solid var(--border);
+      padding-top: 10px;
+      margin-top: 8px;
+    }
+    .tool-card-session .tool-tips strong {
+      color: var(--text);
+      font-weight: 600;
+    }
+    .tool-card-session .tool-tips ul {
+      margin: 4px 0 0 16px;
+    }
+    .tool-card-session .tool-tips li {
+      font-size: 0.82rem;
+      margin-bottom: 2px;
+    }
+
+    /* ── prompt cards ── */
+    .prompt-grid-session {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin: 16px 0 24px;
+    }
+    .prompt-card-session {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 14px 16px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.8rem;
+      color: var(--text);
+      line-height: 1.5;
+      transition: border-color 0.2s;
+    }
+    .prompt-card-session:hover {
+      border-color: var(--border2);
+    }
+    .prompt-card-session .prompt-cat {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.65rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--text3);
+      margin-bottom: 6px;
+    }
+
+    /* ── difficulty filter buttons ── */
+    .difficulty-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+      margin: 24px 0 8px;
+      padding: 14px 16px;
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+    }
+    .difficulty-bar-label {
+      font-size: 0.7rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--text2);
+      margin-right: 4px;
+    }
+    .difficulty-btn {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.82rem;
+      font-weight: 600;
+      padding: 8px 18px;
+      border-radius: 50px;
+      border: 1px solid var(--border2);
+      background: var(--bg);
+      color: var(--text2);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .difficulty-btn:hover {
+      border-color: var(--text);
+      color: var(--text);
+    }
+    .difficulty-btn.active {
+      color: #ffffff;
+      border-color: transparent;
+    }
+    .difficulty-btn[data-level="all"].active {
+      background: var(--text);
+    }
+    .difficulty-btn[data-level="basic"].active {
+      background: var(--green);
+    }
+    .difficulty-btn[data-level="intermediate"].active {
+      background: var(--blue);
+    }
+    .difficulty-btn[data-level="advanced"].active {
+      background: var(--red);
+    }
+    .difficulty-count {
+      margin-left: auto;
+      font-size: 0.75rem;
+      color: var(--text3);
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    /* difficulty badge in prompt cards */
+    .prompt-card-session .prompt-level {
+      display: inline-block;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.6rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      padding: 2px 8px;
+      border-radius: 20px;
+      margin-left: 6px;
+    }
+    .prompt-card-session[data-level="basic"] {
+      border-left: 3px solid var(--green);
+    }
+    .prompt-card-session[data-level="intermediate"] {
+      border-left: 3px solid var(--blue);
+    }
+    .prompt-card-session[data-level="advanced"] {
+      border-left: 3px solid var(--red);
+    }
+    .prompt-card-session .prompt-level[data-level="basic"] {
+      background: #dcfce7;
+      color: #16a34a;
+    }
+    .prompt-card-session .prompt-level[data-level="intermediate"] {
+      background: #dbeafe;
+      color: #2563eb;
+    }
+    .prompt-card-session .prompt-level[data-level="advanced"] {
+      background: #fee2e2;
+      color: #dc2626;
+    }
+    [data-theme="dark"] .prompt-card-session .prompt-level[data-level="basic"] {
+      background: rgba(22, 163, 74, 0.2);
+      color: #4ade80;
+    }
+    [data-theme="dark"] .prompt-card-session .prompt-level[data-level="intermediate"] {
+      background: rgba(37, 99, 235, 0.2);
+      color: #60a5fa;
+    }
+    [data-theme="dark"] .prompt-card-session .prompt-level[data-level="advanced"] {
+      background: rgba(220, 38, 38, 0.2);
+      color: #f87171;
+    }
+
+    .prompt-section {
+      margin-top: 8px;
+    }
+    .prompt-section.hidden {
+      display: none;
+    }
+
+    /* ── cheat sheet table ── */
+    .cheat-table-wrap {
+      overflow-x: auto;
+      margin: 20px 0 32px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      background: var(--bg);
+    }
+    .cheat-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.82rem;
+      min-width: 600px;
+    }
+    .cheat-table th {
+      text-align: left;
+      padding: 12px 14px;
+      background: var(--bg2);
+      font-weight: 700;
+      color: var(--text);
+      border-bottom: 1px solid var(--border);
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .cheat-table td {
+      padding: 11px 14px;
+      border-bottom: 1px solid var(--border);
+      color: var(--text2);
+      vertical-align: middle;
+    }
+    .cheat-table tr:last-child td {
+      border-bottom: none;
+    }
+    .cheat-table .tool-name {
+      font-weight: 600;
+      color: var(--text);
+    }
+    .cheat-table .tool-name small {
+      display: block;
+      font-weight: 400;
+      font-size: 0.68rem;
+      color: var(--text3);
+      font-family: 'JetBrains Mono', monospace;
+    }
+    .cheat-table .free-badge {
+      display: inline-block;
+      padding: 2px 10px;
+      border-radius: 20px;
+      font-size: 0.68rem;
+      font-weight: 600;
+      background: #dcfce7;
+      color: #16a34a;
+    }
+    [data-theme="dark"] .cheat-table .free-badge {
+      background: rgba(22, 163, 74, 0.2);
+      color: #4ade80;
+    }
+    .cheat-table .free-badge.limited {
+      background: #fef3c7;
+      color: #d97706;
+    }
+    [data-theme="dark"] .cheat-table .free-badge.limited {
+      background: rgba(217, 119, 6, 0.2);
+      color: #fbbf24;
+    }
+    .cheat-table .ch-ref {
+      font-size: 0.7rem;
+      color: var(--text3);
+    }
+
+    /* ── responsive ── */
+    @media (max-width: 768px) {
+      .sidebar {
+        transform: translateX(-100%);
+        transition: transform 0.3s;
+      }
+      .sidebar.open {
+        transform: translateX(0);
+      }
+      .main {
+        margin-left: 0;
+      }
+      .mobile-sidebar-btn {
+        display: flex;
+      }
+      .content-page {
+        padding: 48px 20px 80px;
+      }
+      .tool-grid {
+        grid-template-columns: 1fr;
+      }
+      .prompt-grid-session {
+        grid-template-columns: 1fr;
+      }
+      .cheat-table-wrap {
+        border-radius: 0;
+        border-left: none;
+        border-right: none;
+      }
+    }
+
+    .section-divider {
+      border: none;
+      border-top: 1px solid var(--border);
+      margin: 32px 0 28px;
+    }
+
+    /* hero / start page */
+    .hero-page {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      padding: 60px 40px;
+      text-align: center;
+    }
+    .hero-h1 {
+      font-size: clamp(2rem, 5vw, 3.5rem);
+      font-weight: 800;
+      line-height: 1.1;
+      color: var(--text);
+      max-width: 700px;
+      margin-bottom: 20px;
+    }
+    .hero-desc {
+      font-size: 1rem;
+      color: var(--text2);
+      max-width: 520px;
+      margin-bottom: 36px;
+      line-height: 1.7;
+    }
+    .hero-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 14px 28px;
+      background: var(--text);
+      color: var(--bg);
+      border: none;
+      border-radius: 50px;
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: opacity 0.2s, transform 0.2s;
+      text-decoration: none;
+    }
+    .hero-btn:hover {
+      opacity: 0.85;
+      transform: translateY(-1px);
+    }
+  </style>
+</head>
+<body data-theme="light">
+
+  <!-- mobile toggle -->
+  <button class="mobile-sidebar-btn" id="mobBtn">☰</button>
+  <div class="sidebar-overlay" id="overlay"></div>
+
+  <!-- ─── SIDEBAR ─── -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-top">
+      <div class="sidebar-title">AI Study Guide</div>
+      <div class="sidebar-subtitle" id="sidebarSubtitle">AI for Studying &amp; Research</div>
+    </div>
+    <nav class="sidebar-nav" id="sidebarNav">
+
+      <!-- Introduction -->
+      <div class="nav-group">
+        <div class="nav-group-header" onclick="toggleGroup(this)">
+          <svg class="nav-group-chevron open" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"/></svg>
+          <span class="nav-group-label">Introduction</span>
+        </div>
+        <div class="nav-group-items">
+          <a class="nav-item active" onclick="showPage('start')">Start Here</a>
+        </div>
+      </div>
+
+      <!-- Chapter 1 -->
+      <div class="nav-group">
+        <div class="nav-group-header" onclick="toggleGroup(this)">
+          <svg class="nav-group-chevron open" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"/></svg>
+          <span class="nav-group-label">Chapter 1</span>
+        </div>
+        <div class="nav-group-items">
+          <a class="nav-item" onclick="showPage('ch1')">Research Tools</a>
+        </div>
+      </div>
+
+      <!-- Chapter 2 -->
+      <div class="nav-group">
+        <div class="nav-group-header" onclick="toggleGroup(this)">
+          <svg class="nav-group-chevron open" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"/></svg>
+          <span class="nav-group-label">Chapter 2</span>
+        </div>
+        <div class="nav-group-items">
+          <a class="nav-item" onclick="showPage('ch2')">Studying Tools</a>
+        </div>
+      </div>
+
+      <!-- Chapter 3 -->
+      <div class="nav-group">
+        <div class="nav-group-header" onclick="toggleGroup(this)">
+          <svg class="nav-group-chevron open" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"/></svg>
+          <span class="nav-group-label">Chapter 3</span>
+        </div>
+        <div class="nav-group-items">
+          <a class="nav-item" onclick="showPage('ch3')">Prompt Library</a>
+        </div>
+      </div>
+
+      <!-- Chapter 4 -->
+      <div class="nav-group">
+        <div class="nav-group-header" onclick="toggleGroup(this)">
+          <svg class="nav-group-chevron open" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"/></svg>
+          <span class="nav-group-label">Chapter 4</span>
+        </div>
+        <div class="nav-group-items">
+          <a class="nav-item" onclick="showPage('ch4')">Cheat Sheet</a>
+        </div>
+      </div>
+
+    </nav>
+    <div class="sidebar-footer">
+      <span style="font-size:0.72rem;color:var(--text3);">Teacher Guide</span>
+      <button class="theme-btn" id="themeBtn" title="Toggle theme">🌙</button>
+    </div>
+  </aside>
+
+  <!-- ─── MAIN ─── -->
+  <main class="main">
+
+    <!-- ═══ START PAGE ═══ -->
+    <div id="page-start" class="page active">
+      <div class="hero-page">
+        <h1 class="hero-h1">AI for Studying &amp; Research</h1>
+        <p class="hero-desc">
+          A Beginner's Guide for Teachers &bull; Grades 1–8 &bull; Mixed Subjects &bull; Practical &amp; Ready‑to‑Use
+        </p>
+        <p style="max-width:600px;color:var(--text2);margin-bottom:32px;font-size:0.95rem;line-height:1.7;">
+          This guide helps you feel comfortable using AI — not as a tech expert, but as someone who just wants to do their job better and faster. No jargon, no complicated instructions. Just real tools, real prompts, and real results.
+        </p>
+        <a class="hero-btn" onclick="showPage('ch1')">Start Reading &darr;</a>
+      </div>
+    </div>
+
+    <!-- ═══ CHAPTER 1 ═══ -->
+    <div id="page-ch1" class="page">
+      <div class="content-page">
+        <h1>1 · AI Tools for Research</h1>
+        <p class="page-desc">
+          One of the biggest time‑savers AI brings to teaching is research. Whether you're trying to understand a topic better before a lesson, looking for strategies that actually work in the classroom, or figuring out how to support a struggling student — there's an AI tool that can help. Here are the ones worth knowing about.
+        </p>
+
+        <div class="tool-grid">
+          <!-- ChatGPT -->
+          <div class="tool-card-session">
+            <h4>ChatGPT</h4>
+            <div class="tool-url"><a href="https://chat.openai.com" target="_blank">chat.openai.com</a></div>
+            <div class="tool-best">Best for: General research, brainstorming, topic summaries</div>
+            <p>This is the one most people have heard of, and for good reason. You can ask it almost anything and get a solid, readable answer in seconds. It's great when you need to quickly understand a topic before teaching it, or when you want ideas on how to explain something in a simpler way for younger students.</p>
+            <div class="tool-tips">
+              <strong>Quick tips:</strong>
+              <ul>
+                <li>Type your question like you'd ask a colleague</li>
+                <li>Say 'explain this for a Grade 3 student' to simplify</li>
+                <li>Ask it to give you a list, summary, or step‑by‑step guide</li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- Perplexity -->
+          <div class="tool-card-session">
+            <h4>Perplexity AI</h4>
+            <div class="tool-url"><a href="https://perplexity.ai" target="_blank">perplexity.ai</a></div>
+            <div class="tool-best">Best for: Research with real, verifiable sources</div>
+            <p>Unlike ChatGPT, Perplexity shows you exactly where its answers come from — real websites, articles, and references you can check. This is perfect when you need to back up something with a reliable source, or when you want to make sure the information is accurate before sharing it with students or parents.</p>
+            <div class="tool-tips">
+              <strong>Quick tips:</strong>
+              <ul>
+                <li>Use when accuracy matters most</li>
+                <li>Click the source links to verify info yourself</li>
+                <li>Great for finding articles on education strategies</li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- Gemini -->
+          <div class="tool-card-session">
+            <h4>Google Gemini</h4>
+            <div class="tool-url"><a href="https://gemini.google.com" target="_blank">gemini.google.com</a></div>
+            <div class="tool-best">Best for: Research that connects with Google tools</div>
+            <p>If your school runs on Google Classroom, Docs, Drive — then Gemini is a natural fit. It can help you research a topic and then drop the results straight into a Google Doc. It also understands context from your Google Workspace, so it can feel more connected to your day‑to‑day work than other tools.</p>
+            <div class="tool-tips">
+              <strong>Quick tips:</strong>
+              <ul>
+                <li>Best if you already use Google Classroom</li>
+                <li>Can summarize and draft inside Google Docs</li>
+                <li>Works well for lesson plan research</li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- Consensus -->
+          <div class="tool-card-session">
+            <h4>Consensus</h4>
+            <div class="tool-url"><a href="https://consensus.app" target="_blank">consensus.app</a></div>
+            <div class="tool-best">Best for: Evidence‑based teaching strategies and academic research</div>
+            <p>This one is a bit different — it searches real academic research papers and gives you results backed by actual studies. If you want to know what the research says about a particular teaching method, learning strategy, or student support approach, this is the tool to use. It filters out opinion and gives you evidence.</p>
+            <div class="tool-tips">
+              <strong>Quick tips:</strong>
+              <ul>
+                <li>Ask things like: 'What works for reading comprehension?'</li>
+                <li>Results come from peer‑reviewed studies</li>
+                <li>Good for justifying your methods to school leadership</li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- Elicit -->
+          <div class="tool-card-session">
+            <h4>Elicit</h4>
+            <div class="tool-url"><a href="https://elicit.com" target="_blank">elicit.com</a></div>
+            <div class="tool-best">Best for: Deep research for curriculum development and academic topics</div>
+            <p>Elicit is built for serious research. It finds academic papers, summarizes them, and lets you compare findings across multiple studies. It's particularly useful when you're developing curriculum, writing reports, or trying to understand a complex topic in depth. It takes a bit more time to use but the quality of research it delivers is excellent.</p>
+            <div class="tool-tips">
+              <strong>Quick tips:</strong>
+              <ul>
+                <li>Use when you need more than surface‑level answers</li>
+                <li>Great for comparing different research findings</li>
+                <li>Ideal for curriculum or policy‑related research</li>
+              </ul>
+            </div>
+          </div>
+        </div><!-- /tool-grid -->
+      </div>
+    </div>
+
+    <!-- ═══ CHAPTER 2 ═══ -->
+    <div id="page-ch2" class="page">
+      <div class="content-page">
+        <h1>2 · AI Tools for Studying</h1>
+        <p class="page-desc">
+          Tools to help students study smarter — and how teachers can guide them through these.
+        </p>
+
+        <div class="tool-grid">
+          <!-- NotebookLM -->
+          <div class="tool-card-session">
+            <h4>NotebookLM</h4>
+            <div class="tool-url"><a href="https://notebooklm.google.com" target="_blank">notebooklm.google.com</a></div>
+            <div class="tool-best">Best for: Turning your documents into a smart study assistant</div>
+            <p>This is honestly one of the most impressive tools for teachers. You upload your own materials — lesson notes, textbook chapters, PDFs — and NotebookLM becomes an AI that only answers questions based on what you gave it. No random internet stuff. You can use it to create study summaries, generate quiz questions, or let students ask questions about the content in their own words.</p>
+            <div class="tool-tips">
+              <strong>Quick tips:</strong>
+              <ul>
+                <li>Upload your own lesson notes and PDFs</li>
+                <li>Ask it to create a study guide or FAQ from your content</li>
+                <li>Students can ask questions and get answers from your material</li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- Quizlet -->
+          <div class="tool-card-session">
+            <h4>Quizlet</h4>
+            <div class="tool-url"><a href="https://quizlet.com" target="_blank">quizlet.com</a></div>
+            <div class="tool-best">Best for: Flashcard‑based studying — especially for Grades 3 to 8</div>
+            <p>Quizlet has been around for years, but its AI features now make it much more powerful. It can generate flashcard sets from any topic automatically. Students can study in multiple modes — classic flashcards, matching games, practice tests. As a teacher, you can create sets and share them with your class so everyone studies the same material.</p>
+            <div class="tool-tips">
+              <strong>Quick tips:</strong>
+              <ul>
+                <li>Create flashcard sets and share the link with students</li>
+                <li>AI can generate cards from any topic in seconds</li>
+                <li>Works great for vocabulary, dates, definitions, formulas</li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- Khanmigo -->
+          <div class="tool-card-session">
+            <h4>Khanmigo</h4>
+            <div class="tool-url"><a href="https://khanacademy.org" target="_blank">khanacademy.org</a></div>
+            <div class="tool-best">Best for: Guided subject studying for all grades</div>
+            <p>Khanmigo is Khan Academy's built‑in AI tutor. What makes it special is that it doesn't just give students the answer — it walks them through the thinking process step by step. It covers Math, Science, Social Studies, and Language Arts across all grade levels. Teachers also get a dashboard to see how students are progressing.</p>
+            <div class="tool-tips">
+              <strong>Quick tips:</strong>
+              <ul>
+                <li>Students get guided hints, not just answers</li>
+                <li>Covers grades 1 through 8 across all major subjects</li>
+                <li>Teacher dashboard helps you track student progress</li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- Socratic -->
+          <div class="tool-card-session">
+            <h4>Socratic by Google</h4>
+            <div class="tool-url"><a href="https://socratic.org" target="_blank">socratic.org</a></div>
+            <div class="tool-best">Best for: Homework help when students are stuck on a concept</div>
+            <p>Socratic is a free app by Google that lets students take a photo of a homework question and get a full explanation back. It doesn't just solve the problem — it explains the concept behind it. Works well for grades 5 to 8 across most subjects. A good tool to recommend to parents for home studying support.</p>
+            <div class="tool-tips">
+              <strong>Quick tips:</strong>
+              <ul>
+                <li>Works by taking a photo of the question</li>
+                <li>Explains the 'why' behind the answer</li>
+                <li>Recommend to parents for after‑school support</li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- MagicSchool -->
+          <div class="tool-card-session">
+            <h4>MagicSchool AI</h4>
+            <div class="tool-url"><a href="https://magicschool.ai" target="_blank">magicschool.ai</a></div>
+            <div class="tool-best">Best for: Creating studying materials without spending hours on it</div>
+            <p>MagicSchool AI is built specifically for teachers, and it shows. It can generate quizzes, rubrics, study guides, exit tickets, and differentiated materials in seconds. If you need to put together a study packet for students before an exam, this tool will save you a significant amount of time. It understands education — it's not just a general AI tool.</p>
+            <div class="tool-tips">
+              <strong>Quick tips:</strong>
+              <ul>
+                <li>Built for teachers — knows education context</li>
+                <li>Generate quizzes and study guides in under 2 minutes</li>
+                <li>Adjust difficulty level for different student abilities</li>
+              </ul>
+            </div>
+          </div>
+        </div><!-- /tool-grid -->
+      </div>
+    </div>
+
+    <!-- ═══ CHAPTER 3 ═══ -->
+    <div id="page-ch3" class="page">
+      <div class="content-page">
+        <h1>3 · Prompt Library for Teacher Research</h1>
+        <p class="page-desc">
+          A prompt is simply what you type into an AI tool to get a useful response. The better your prompt, the better your result. Think of it like giving directions — the clearer you are, the more likely you end up where you want to go. All of these prompts are ready to copy and paste. Just replace the parts in <strong>[brackets]</strong> with your specific details.
+          <br><br>
+          <span style="font-size:0.85rem;color:var(--text3);">Where to use these prompts: ChatGPT, Google Gemini, or Perplexity AI work best for all of these.</span>
+        </p>
+
+        <!-- Difficulty filter -->
+        <div class="difficulty-bar" role="toolbar" aria-label="Filter prompts by difficulty">
+          <span class="difficulty-bar-label">Level:</span>
+          <button class="difficulty-btn active" data-level="all" onclick="filterPrompts('all')">All</button>
+          <button class="difficulty-btn" data-level="basic" onclick="filterPrompts('basic')">Basic</button>
+          <button class="difficulty-btn" data-level="intermediate" onclick="filterPrompts('intermediate')">Intermediate</button>
+          <button class="difficulty-btn" data-level="advanced" onclick="filterPrompts('advanced')">Advanced</button>
+          <span class="difficulty-count" id="promptCount"></span>
+        </div>
+
+        <h3 class="prompt-section" data-section>Lesson &amp; Curriculum Research</h3>
+        <div class="prompt-grid-session">
+          <div class="prompt-card-session" data-level="basic"><div class="prompt-cat">Concepts <span class="prompt-level" data-level="basic">Basic</span></div>&ldquo;Give me a list of key concepts a Grade [X] student should understand about [Topic]. Include simple explanations for each.&rdquo;</div>
+          <div class="prompt-card-session" data-level="intermediate"><div class="prompt-cat">Teaching strategies <span class="prompt-level" data-level="intermediate">Intermediate</span></div>&ldquo;What are the most effective teaching strategies for introducing [Subject] to [Grade level] students? Include research‑backed methods.&rdquo;</div>
+          <div class="prompt-card-session" data-level="basic"><div class="prompt-cat">Curriculum standards <span class="prompt-level" data-level="basic">Basic</span></div>&ldquo;Summarize the core learning objectives for [Subject] at the [Grade] level based on common curriculum standards.&rdquo;</div>
+          <div class="prompt-card-session" data-level="intermediate"><div class="prompt-cat">Misconceptions <span class="prompt-level" data-level="intermediate">Intermediate</span></div>&ldquo;What common misconceptions do Grade [X] students have about [Topic]? How can a teacher address each one?&rdquo;</div>
+          <div class="prompt-card-session" data-level="basic"><div class="prompt-cat">Activities <span class="prompt-level" data-level="basic">Basic</span></div>&ldquo;Suggest 5 engaging activities to teach [Topic] to Grade [X] students in a [class duration]-minute lesson.&rdquo;</div>
+          <div class="prompt-card-session" data-level="basic"><div class="prompt-cat">Prior knowledge <span class="prompt-level" data-level="basic">Basic</span></div>&ldquo;What prior knowledge should Grade [X] students already have before I start teaching [Topic]? List each prerequisite clearly.&rdquo;</div>
+          <div class="prompt-card-session" data-level="intermediate"><div class="prompt-cat">Scope & sequence <span class="prompt-level" data-level="intermediate">Intermediate</span></div>&ldquo;Build a week‑by‑week scope and sequence for teaching [Topic] to Grade [X] over [N] weeks, with one objective per week.&rdquo;</div>
+          <div class="prompt-card-session" data-level="intermediate"><div class="prompt-cat">Cross‑curricular <span class="prompt-level" data-level="intermediate">Intermediate</span></div>&ldquo;Suggest cross‑curricular lesson ideas that link [Subject A] with [Subject B] for Grade [X] students, including shared learning goals.&rdquo;</div>
+          <div class="prompt-card-session" data-level="advanced"><div class="prompt-cat">Unit design <span class="prompt-level" data-level="advanced">Advanced</span></div>&ldquo;Design a full 4‑week unit on [Topic] for Grade [X] using the Understanding by Design framework: list enduring understandings, essential questions, assessments, and learning activities.&rdquo;</div>
+          <div class="prompt-card-session" data-level="advanced"><div class="prompt-cat">Curriculum critique <span class="prompt-level" data-level="advanced">Advanced</span></div>&ldquo;Critique this draft unit outline for [Topic] against current research on how children learn [Subject], and suggest evidence‑based revisions with citations.&rdquo;</div>
+        </div>
+
+        <h3 class="prompt-section" data-section>Student Behavior &amp; Needs Research</h3>
+        <div class="prompt-grid-session">
+          <div class="prompt-card-session" data-level="basic"><div class="prompt-cat">Classroom management <span class="prompt-level" data-level="basic">Basic</span></div>&ldquo;What does research say about effective classroom management strategies for Grade [X] students aged [age range]?&rdquo;</div>
+          <div class="prompt-card-session" data-level="intermediate"><div class="prompt-cat">Early intervention <span class="prompt-level" data-level="intermediate">Intermediate</span></div>&ldquo;What are signs that a Grade [X] student may be struggling with [reading / math / social skills]? What early interventions work best?&rdquo;</div>
+          <div class="prompt-card-session" data-level="intermediate"><div class="prompt-cat">Mixed abilities <span class="prompt-level" data-level="intermediate">Intermediate</span></div>&ldquo;How can a teacher support students with mixed learning abilities in a Grade [X] classroom without slowing the rest of the class down?&rdquo;</div>
+          <div class="prompt-card-session" data-level="basic"><div class="prompt-cat">Shy / anxious students <span class="prompt-level" data-level="basic">Basic</span></div>&ldquo;What strategies help shy or anxious students participate more in class at the [Grade] level?&rdquo;</div>
+          <div class="prompt-card-session" data-level="basic"><div class="prompt-cat">Attention spans <span class="prompt-level" data-level="basic">Basic</span></div>&ldquo;What is the typical attention span of a Grade [X] student and how long should a single activity last?&rdquo;</div>
+          <div class="prompt-card-session" data-level="intermediate"><div class="prompt-cat">Transitions <span class="prompt-level" data-level="intermediate">Intermediate</span></div>&ldquo;Give me 5 research‑based transition techniques to reduce off‑task behavior between activities for Grade [X] students.&rdquo;</div>
+          <div class="prompt-card-session" data-level="advanced"><div class="prompt-cat">Behavior intervention plan <span class="prompt-level" data-level="advanced">Advanced</span></div>&ldquo;Draft a tiered behavior intervention plan for a Grade [X] student who [describe behavior], aligned with PBIS tier 2 supports and measurable goals.&rdquo;</div>
+          <div class="prompt-card-session" data-level="advanced"><div class="prompt-cat">Trauma‑informed <span class="prompt-level" data-level="advanced">Advanced</span></div>&ldquo;Summarize the core principles of trauma‑informed teaching for elementary classrooms and give 5 specific instructional adaptations with research support.&rdquo;</div>
+        </div>
+
+        <h3 class="prompt-section" data-section>Subject‑Specific Prompts</h3>
+        <div class="prompt-grid-session">
+          <div class="prompt-card-session" data-level="basic"><div class="prompt-cat">Math <span class="prompt-level" data-level="basic">Basic</span></div>&ldquo;What hands‑on activities help Grade [X] students understand [math concept] better?&rdquo;</div>
+          <div class="prompt-card-session" data-level="intermediate"><div class="prompt-cat">Math misconceptions <span class="prompt-level" data-level="intermediate">Intermediate</span></div>&ldquo;Identify the three most common misconceptions Grade [X] students hold about [fractions / decimals / place value] and provide a corrective teaching sequence for each.&rdquo;</div>
+          <div class="prompt-card-session" data-level="advanced"><div class="prompt-cat">Math problem strings <span class="prompt-level" data-level="advanced">Advanced</span></div>&ldquo;Design a problem string for Grade [X] that builds the strategy of [compensation / partial products / doubling] for [operation], including anticipated student strategies and teacher talk moves.&rdquo;</div>
+          <div class="prompt-card-session" data-level="basic"><div class="prompt-cat">Science <span class="prompt-level" data-level="basic">Basic</span></div>&ldquo;Summarize age‑appropriate experiments for Grade [X] students learning about [science topic]. List materials needed.&rdquo;</div>
+          <div class="prompt-card-session" data-level="intermediate"><div class="prompt-cat">Inquiry learning <span class="prompt-level" data-level="intermediate">Intermediate</span></div>&ldquo;Outline a 5E inquiry lesson sequence (Engage, Explore, Explain, Elaborate, Evaluate) for teaching [science topic] to Grade [X] students.&rdquo;</div>
+          <div class="prompt-card-session" data-level="advanced"><div class="prompt-cat">Phenomenon‑based <span class="prompt-level" data-level="advanced">Advanced</span></div>&ldquo;Design a phenomenon‑based, 3‑dimensional science unit on [topic] for Grade [X] aligned to NGSS, specifying the disciplinary core idea, crosscutting concepts, and science &amp; engineering practices addressed.&rdquo;</div>
+          <div class="prompt-card-session" data-level="basic"><div class="prompt-cat">Social Studies <span class="prompt-level" data-level="basic">Basic</span></div>&ldquo;What are the best ways to teach [historical event or geography topic] to Grade [X] students in an engaging way?&rdquo;</div>
+          <div class="prompt-card-session" data-level="intermediate"><div class="prompt-cat">Primary sources <span class="prompt-level" data-level="intermediate">Intermediate</span></div>&ldquo;Suggest 3 grade‑appropriate primary sources for teaching [event] to Grade [X] students, each with a discussion question and a comprehension scaffold.&rdquo;</div>
+          <div class="prompt-card-session" data-level="advanced"><div class="prompt-cat">Inquiry arcs <span class="prompt-level" data-level="advanced">Advanced</span></div>&ldquo;Build a C3 inquiry arc for Grade [X] around the compelling question '[question]', including supporting questions, formative tasks, and a summative argument‑based assessment.&rdquo;</div>
+          <div class="prompt-card-session" data-level="basic"><div class="prompt-cat">Languages <span class="prompt-level" data-level="basic">Basic</span></div>&ldquo;What reading strategies are most effective for building comprehension in Grade [X] students?&rdquo;</div>
+          <div class="prompt-card-session" data-level="intermediate"><div class="prompt-cat">Phonics sequence <span class="prompt-level" data-level="intermediate">Intermediate</span></div>&ldquo;Create a systematic [N]‑week phonics scope and sequence for Grade [X] covering [skills], with weekly focus and decodable text suggestions.&rdquo;</div>
+          <div class="prompt-card-session" data-level="advanced"><div class="prompt-cat">Science of reading <span class="prompt-level" data-level="advanced">Advanced</span></div>&ldquo;Map a Grade [X] literacy block against the Simple View of Reading and Scarborough's Reading Rope, identifying components, time allocations, and evidence‑based routines for each strand.&rdquo;</div>
+          <div class="prompt-card-session" data-level="basic"><div class="prompt-cat">Computer / Digital <span class="prompt-level" data-level="basic">Basic</span></div>&ldquo;What are beginner‑friendly ways to teach [coding / internet safety / digital literacy] to Grade [X] students?&rdquo;</div>
+          <div class="prompt-card-session" data-level="intermediate"><div class="prompt-cat">Computational thinking <span class="prompt-level" data-level="intermediate">Intermediate</span></div>&ldquo;Unplugged activity ideas for teaching [sequence / loops / conditionals] to Grade [X] students with no devices, including learning objectives and differentiation tips.&rdquo;</div>
+          <div class="prompt-card-session" data-level="advanced"><div class="prompt-cat">CS integration <span class="prompt-level" data-level="advanced">Advanced</span></div>&ldquo;Design a [N]‑week integrated coding + [Subject] project for Grade [X] that uses project‑based learning, includes assessment rubrics for both CS and content standards, and lists required scaffolds.&rdquo;</div>
+          <div class="prompt-card-session" data-level="basic"><div class="prompt-cat">Pre‑Primary <span class="prompt-level" data-level="basic">Basic</span></div>&ldquo;What play‑based activities support early literacy and numeracy skills for pre‑primary students aged [age]?&rdquo;</div>
+          <div class="prompt-card-session" data-level="intermediate"><div class="prompt-cat">Developmentally appropriate <span class="prompt-level" data-level="intermediate">Intermediate</span></div>&ldquo;Using DAP principles, suggest 5 center‑based activities for [topic] that are appropriate for [age] and target different developmental domains.&rdquo;</div>
+          <div class="prompt-card-session" data-level="advanced"><div class="prompt-cat">Early childhood pedagogy <span class="prompt-level" data-level="advanced">Advanced</span></div>&ldquo;Analyze this early‑childhood lesson plan against Vygotsky's scaffolding and Piaget's stages, and recommend revisions that better fit the developmental level of [age] learners.&rdquo;</div>
+        </div>
+
+        <h3 class="prompt-section" data-section>Assessment &amp; Feedback Research</h3>
+        <div class="prompt-grid-session">
+          <div class="prompt-card-session" data-level="basic"><div class="prompt-cat">Exit tickets <span class="prompt-level" data-level="basic">Basic</span></div>&ldquo;Give me 5 quick exit ticket prompts to check understanding of [Topic] after a Grade [X] lesson.&rdquo;</div>
+          <div class="prompt-card-session" data-level="basic"><div class="prompt-cat">Question types <span class="prompt-level" data-level="basic">Basic</span></div>&ldquo;Write 10 varied‑difficulty questions on [Topic] for Grade [X], mixing recall, application, and reasoning.&rdquo;</div>
+          <div class="prompt-card-session" data-level="intermediate"><div class="prompt-cat">Rubric design <span class="prompt-level" data-level="intermediate">Intermediate</span></div>&ldquo;Create an analytic rubric for a Grade [X] [project type] on [Topic], with 4 performance levels and descriptors that are student‑friendly.&rdquo;</div>
+          <div class="prompt-card-session" data-level="intermediate"><div class="prompt-cat">Formative checks <span class="prompt-level" data-level="intermediate">Intermediate</span></div>&ldquo;Suggest 8 formative assessment strategies for [Subject] in Grade [X] that require no grading and give instant feedback to the teacher.&rdquo;</div>
+          <div class="prompt-card-session" data-level="advanced"><div class="prompt-cat">Assessment alignment <span class="prompt-level" data-level="advanced">Advanced</span></div>&ldquo;Audit this Grade [X] [Topic] assessment for alignment with the stated learning objectives using Bloom's taxonomy, and recommend revisions to improve cognitive validity and reduce construct‑irrelevant variance.&rdquo;</div>
+          <div class="prompt-card-session" data-level="advanced"><div class="prompt-cat">Feedback research <span class="prompt-level" data-level="advanced">Advanced</span></div>&ldquo;Summarize Hattie &amp; Timperley's feedback model and translate it into 5 concrete feedback routines I can use with Grade [X] students on [assignment type], with worked examples.&rdquo;</div>
+        </div>
+
+        <h3 class="prompt-section" data-section>Differentiation &amp; Inclusion Research</h3>
+        <div class="prompt-grid-session">
+          <div class="prompt-card-session" data-level="basic"><div class="prompt-cat">Simplify content <span class="prompt-level" data-level="basic">Basic</span></div>&ldquo;Rewrite this explanation of [Topic] at three reading levels for Grade [X] students who are below, at, and above grade level.&rdquo;</div>
+          <div class="prompt-card-session" data-level="basic"><div class="prompt-cat">Choice boards <span class="prompt-level" data-level="basic">Basic</span></div>&ldquo;Create a 3x3 choice board for [Topic] in Grade [X] that appeals to visual, auditory, and kinesthetic learners.&rdquo;</div>
+          <div class="prompt-card-session" data-level="intermediate"><div class="prompt-cat">Scaffolds <span class="prompt-level" data-level="intermediate">Intermediate</span></div>&ldquo;List 6 research‑based scaffolds for English Language Learners in a Grade [X] [Subject] lesson on [Topic], with examples of each.&rdquo;</div>
+          <div class="prompt-card-session" data-level="intermediate"><div class="prompt-cat">Extension tasks <span class="prompt-level" data-level="intermediate">Intermediate</span></div>&ldquo;Design 5 extension tasks for early finishers on [Topic] that push higher‑order thinking without just being 'more work'.&rdquo;</div>
+          <div class="prompt-card-session" data-level="advanced"><div class="prompt-cat">UDL design <span class="prompt-level" data-level="advanced">Advanced</span></div>&ldquo;Apply Universal Design for Learning guidelines to redesign this Grade [X] lesson on [Topic], specifying multiple means of engagement, representation, and action &amp; expression with rationale.&rdquo;</div>
+          <div class="prompt-card-session" data-level="advanced"><div class="prompt-cat">IEP alignment <span class="prompt-level" data-level="advanced">Advanced</span></div>&ldquo;Given these IEP goals [paste], suggest specific accommodations, modifications, and measurable progress‑monitoring tools for a Grade [X] student studying [Topic].&rdquo;</div>
+        </div>
+
+        <h3 class="prompt-section" data-section>Study Skills &amp; Student Learning Research</h3>
+        <div class="prompt-grid-session">
+          <div class="prompt-card-session" data-level="basic"><div class="prompt-cat">Note‑taking <span class="prompt-level" data-level="basic">Basic</span></div>&ldquo;Explain 3 simple note‑taking methods suitable for Grade [X] students studying [Subject], with a worked example for each.&rdquo;</div>
+          <div class="prompt-card-session" data-level="basic"><div class="prompt-cat">Study habits <span class="prompt-level" data-level="basic">Basic</span></div>&ldquo;List 10 evidence‑based study habits for Grade [X] students and explain why each one helps learning stick.&rdquo;</div>
+          <div class="prompt-card-session" data-level="intermediate"><div class="prompt-cat">Spaced practice <span class="prompt-level" data-level="intermediate">Intermediate</span></div>&ldquo;Build a 2‑week spaced‑repetition review schedule for [Topic] in Grade [X], specifying what to review each day and which retrieval method to use.&rdquo;</div>
+          <div class="prompt-card-session" data-level="intermediate"><div class="prompt-cat">Metacognition <span class="prompt-level" data-level="intermediate">Intermediate</span></div>&ldquo;Design a 5‑question metacognitive reflection prompt for Grade [X] students to use after studying [Topic], and explain the purpose of each question.&rdquo;</div>
+          <div class="prompt-card-session" data-level="advanced"><div class="prompt-cat">Cognitive load <span class="prompt-level" data-level="advanced">Advanced</span></div>&ldquo;Analyze this Grade [X] worksheet on [Topic] through cognitive load theory, flagging intrinsic, extraneous, and germane load, and propose redesigns that manage each.&rdquo;</div>
+          <div class="prompt-card-session" data-level="advanced"><div class="prompt-cat">Retrieval practice <span class="prompt-level" data-level="advanced">Advanced</span></div>&ldquo;Compare the evidence for retrieval practice, spaced practice, and interleaving for [Subject] in Grade [X], and design a 6‑week study plan that braids all three together.&rdquo;</div>
+        </div>
+
+        <h3 class="prompt-section" data-section>Reading &amp; Literature Research</h3>
+        <div class="prompt-grid-session">
+          <div class="prompt-card-session" data-level="basic"><div class="prompt-cat">Book recommendations <span class="prompt-level" data-level="basic">Basic</span></div>&ldquo;Recommend 10 age‑appropriate books on [Theme] for Grade [X] readers, with a one‑line summary and reading level for each.&rdquo;</div>
+          <div class="prompt-card-session" data-level="basic"><div class="prompt-cat">Comprehension questions <span class="prompt-level" data-level="basic">Basic</span></div>&ldquo;Write 8 comprehension questions for [Book/Chapter] suitable for Grade [X], covering literal, inferential, and evaluative levels.&rdquo;</div>
+          <div class="prompt-card-session" data-level="intermediate"><div class="prompt-cat">Vocabulary <span class="prompt-level" data-level="intermediate">Intermediate</span></div>&ldquo;Select 8 tier‑2 vocabulary words from [Text] for Grade [X], and design a 5‑day instructional routine for each word using research‑based strategies.&rdquo;</div>
+          <div class="prompt-card-session" data-level="intermediate"><div class="prompt-cat">Close reading <span class="prompt-level" data-level="intermediate">Intermediate</span></div>&ldquo;Create a 3‑read close reading protocol for [Text] with Grade [X], specifying the purpose and text‑dependent questions for each read.&rdquo;</div>
+          <div class="prompt-card-session" data-level="advanced"><div class="prompt-cat">Text complexity <span class="prompt-level" data-level="advanced">Advanced</span></div>&ldquo;Analyze [Text] for quantitative, qualitative, and reader/task dimensions of text complexity for Grade [X], and recommend paired texts and scaffolds for access.&rdquo;</div>
+          <div class="prompt-card-session" data-level="advanced"><div class="prompt-cat">Knowledge building <span class="prompt-level" data-level="advanced">Advanced</span></div>&ldquo;Design a knowledge‑building text set on [Topic] for Grade [X] using the 'text sets to build knowledge' approach, sequencing from simplest to most complex and including discussion protocols.&rdquo;</div>
+        </div>
+
+        <h3 class="prompt-section" data-section>Writing &amp; Literacy Research</h3>
+        <div class="prompt-grid-session">
+          <div class="prompt-card-session" data-level="basic"><div class="prompt-cat">Writing prompts <span class="prompt-level" data-level="basic">Basic</span></div>&ldquo;Give me 10 engaging writing prompts for Grade [X] students on [Topic], mixing narrative, informative, and opinion text types.&rdquo;</div>
+          <div class="prompt-card-session" data-level="basic"><div class="prompt-cat">Mentor sentences <span class="prompt-level" data-level="basic">Basic</span></div>&ldquo;Suggest 5 mentor sentences from [Text/Topic] that model [grammar skill] for Grade [X], with an imitation activity for each.&rdquo;</div>
+          <div class="prompt-card-session" data-level="intermediate"><div class="prompt-cat">Writing process <span class="prompt-level" data-level="intermediate">Intermediate</span></div>&ldquo;Outline a step‑by‑step writing process lesson for [text type] in Grade [X], including prewriting, drafting, revising, and editing mini‑lessons.&rdquo;</div>
+          <div class="prompt-card-session" data-level="intermediate"><div class="prompt-cat">Feedback focus <span class="prompt-level" data-level="intermediate">Intermediate</span></div>&ldquo;Identify the 5 most high‑impact feedback points for a Grade [X] [text type] on [Topic], and provide example comments for each.&rdquo;</div>
+          <div class="prompt-card-session" data-level="advanced"><div class="prompt-cat">Self‑regulated writing <span class="prompt-level" data-level="advanced">Advanced</span></div>&ldquo;Apply the Self‑Regulated Strategy Development (SRSD) model to design a [text type] unit for Grade [X] on [Topic], with the six stages of instruction and example think‑alouds.&rdquo;</div>
+          <div class="prompt-card-session" data-level="advanced"><div class="prompt-cat">Genre pedagogy <span class="prompt-level" data-level="advanced">Advanced</span></div>&ldquo;Use the teaching‑learning cycle (deconstruction, joint construction, independent construction) to plan a 3‑week [genre] unit for Grade [X] on [Topic], with mentor texts and language features specified.&rdquo;</div>
+        </div>
+
+        <h3 class="prompt-section" data-section>Parent &amp; Communication Research</h3>
+        <div class="prompt-grid-session">
+          <div class="prompt-card-session" data-level="basic"><div class="prompt-cat">Progress communication <span class="prompt-level" data-level="basic">Basic</span></div>&ldquo;Help me research how to communicate student progress effectively to parents of Grade [X] students.&rdquo;</div>
+          <div class="prompt-card-session" data-level="intermediate"><div class="prompt-cat">Parent involvement <span class="prompt-level" data-level="intermediate">Intermediate</span></div>&ldquo;What are best practices for involving parents in their child's studying habits at home for Grade [X]?&rdquo;</div>
+          <div class="prompt-card-session" data-level="basic"><div class="prompt-cat">Engagement ideas <span class="prompt-level" data-level="basic">Basic</span></div>&ldquo;Give me 5 ways to encourage parents of Grade [X] students to engage more with their child's school work at home.&rdquo;</div>
+          <div class="prompt-card-session" data-level="intermediate"><div class="prompt-cat">Difficult conversations <span class="prompt-level" data-level="intermediate">Intermediate</span></div>&ldquo;Suggest a script and research‑based talking points for a parent meeting about a Grade [X] student struggling with [issue].&rdquo;</div>
+          <div class="prompt-card-session" data-level="advanced"><div class="prompt-cat">Family engagement framework <span class="prompt-level" data-level="advanced">Advanced</span></div>&ldquo;Using Epstein's Six Types of Family Involvement, design a year‑long family engagement plan for a Grade [X] classroom studying [Topic/curriculum], with measurable goals.&rdquo;</div>
+          <div class="prompt-card-session" data-level="advanced"><div class="prompt-cat">Equitable communication <span class="prompt-level" data-level="advanced">Advanced</span></div>&ldquo;Analyze my current parent‑communication practices [describe] for equity and accessibility across languages, tech access, and work schedules, and propose a tiered improvement plan.&rdquo;</div>
+        </div>
+        <p style="font-size:0.85rem;color:var(--text3);margin-top:-8px;">Note: These prompts work great in ChatGPT or Gemini. You can also ask the AI to help you draft the actual parent communication after you have done the research.</p>
+
+        <h3 class="prompt-section" data-section>Professional Development Research</h3>
+        <div class="prompt-grid-session">
+          <div class="prompt-card-session" data-level="basic"><div class="prompt-cat">Latest trends <span class="prompt-level" data-level="basic">Basic</span></div>&ldquo;What are the latest trends and best practices in teaching [Subject] for elementary or middle school levels?&rdquo;</div>
+          <div class="prompt-card-session" data-level="intermediate"><div class="prompt-cat">Teacher burnout <span class="prompt-level" data-level="intermediate">Intermediate</span></div>&ldquo;Summarize research on teacher burnout and what strategies have been shown to help teachers manage workload sustainably.&rdquo;</div>
+          <div class="prompt-card-session" data-level="basic"><div class="prompt-cat">PD topics <span class="prompt-level" data-level="basic">Basic</span></div>&ldquo;What professional development topics are most recommended for teachers of grades 1–8 right now?&rdquo;</div>
+          <div class="prompt-card-session" data-level="basic"><div class="prompt-cat">Free resources <span class="prompt-level" data-level="basic">Basic</span></div>&ldquo;What free online resources or courses are available for teachers who want to learn more about [Topic]?&rdquo;</div>
+          <div class="prompt-card-session" data-level="intermediate"><div class="prompt-cat">Pedagogy deep‑dive <span class="prompt-level" data-level="intermediate">Intermediate</span></div>&ldquo;Explain [pedagogical theory, e.g., constructivism / cognitivism] and give 3 concrete classroom applications for Grade [X].&rdquo;</div>
+          <div class="prompt-card-session" data-level="advanced"><div class="prompt-cat">Action research <span class="prompt-level" data-level="advanced">Advanced</span></div>&ldquo;Help me design a classroom‑based action research study on [question] for Grade [X], including research question, data sources, collection methods, and analysis approach.&rdquo;</div>
+          <div class="prompt-card-session" data-level="advanced"><div class="prompt-cat">Literature synthesis <span class="prompt-level" data-level="advanced">Advanced</span></div>&ldquo;Synthesize 5 recent peer‑reviewed studies on [Topic] for Grade [X], identifying consensus findings, gaps, and implications for my own practice.&rdquo;</div>
+        </div>
+
+        <h3 class="prompt-section" data-section>Research &amp; Source Verification</h3>
+        <div class="prompt-grid-session">
+          <div class="prompt-card-session" data-level="basic"><div class="prompt-cat">Plain‑language summary <span class="prompt-level" data-level="basic">Basic</span></div>&ldquo;Summarize this article on [Topic] in 5 bullet points simple enough for a parent newsletter.&rdquo;</div>
+          <div class="prompt-card-session" data-level="basic"><div class="prompt-cat">Fact‑check <span class="prompt-level" data-level="basic">Basic</span></div>&ldquo;Check this claim about [Topic] for accuracy and tell me what credible sources say.&rdquo;</div>
+          <div class="prompt-card-session" data-level="intermediate"><div class="prompt-cat">Source comparison <span class="prompt-level" data-level="intermediate">Intermediate</span></div>&ldquo;Compare these two sources on [Topic] for credibility, bias, and recency, and tell me which is more reliable for classroom use.&rdquo;</div>
+          <div class="prompt-card-session" data-level="intermediate"><div class="prompt-cat">Find experts <span class="prompt-level" data-level="intermediate">Intermediate</span></div>&ldquo;Identify 5 reputable experts or organizations on [Topic] suitable for a Grade [X] teacher to follow or cite.&rdquo;</div>
+          <div class="prompt-card-session" data-level="advanced"><div class="prompt-cat">CRAAP test <span class="prompt-level" data-level="advanced">Advanced</span></div>&ldquo;Apply the CRAAP test (Currency, Relevance, Authority, Accuracy, Purpose) to this source on [Topic] and give a reasoned verdict on classroom use.&rdquo;</div>
+          <div class="prompt-card-session" data-level="advanced"><div class="prompt-cat">Media literacy <span class="prompt-level" data-level="advanced">Advanced</span></div>&ldquo;Design a 3‑lesson media literacy sequence for Grade [X] that teaches students to evaluate online sources on [Topic], including assessment and real source examples.&rdquo;</div>
+        </div>
+
+        <h3 class="prompt-section" data-section>Critical Thinking &amp; Inquiry Research</h3>
+        <div class="prompt-grid-session">
+          <div class="prompt-card-session" data-level="basic"><div class="prompt-cat">Question stems <span class="prompt-level" data-level="basic">Basic</span></div>&ldquo;Give me 10 higher‑order question stems aligned to Bloom's taxonomy for a Grade [X] discussion on [Topic].&rdquo;</div>
+          <div class="prompt-card-session" data-level="basic"><div class="prompt-cat">Debate topics <span class="prompt-level" data-level="basic">Basic</span></div>&ldquo;Suggest 5 age‑appropriate debate topics on [Subject] for Grade [X], with two clear sides each.&rdquo;</div>
+          <div class="prompt-card-session" data-level="intermediate"><div class="prompt-cat">Socratic seminar <span class="prompt-level" data-level="intermediate">Intermediate</span></div>&ldquo;Plan a Socratic seminar on [Text/Topic] for Grade [X], including an opening question, core questions, and a closing reflection.&rdquo;</div>
+          <div class="prompt-card-session" data-level="intermediate"><div class="prompt-cat">Inquiry questions <span class="prompt-level" data-level="intermediate">Intermediate</span></div>&ldquo;Generate 8 essential and guiding questions for a Grade [X] inquiry unit on [Topic], explaining how each drives investigation.&rdquo;</div>
+          <div class="prompt-card-session" data-level="advanced"><div class="prompt-cat">Argumentation <span class="prompt-level" data-level="advanced">Advanced</span></div>&ldquo;Using the Claim‑Evidence‑Reasoning framework, design a [N]‑lesson argumentation sequence for Grade [X] on [Topic], including exemplars, sentence stems, and a rubric.&rdquo;</div>
+          <div class="prompt-card-session" data-level="advanced"><div class="prompt-cat">Concept mapping <span class="prompt-level" data-level="advanced">Advanced</span></div>&ldquo;Design a concept‑mapping task for Grade [X] on [Topic] that reveals prior knowledge and misconceptions, with a scoring guide and follow‑up instructional moves.&rdquo;</div>
+        </div>
+
+        <h3 class="prompt-section" data-section>Homework &amp; Independent Study Research</h3>
+        <div class="prompt-grid-session">
+          <div class="prompt-card-session" data-level="basic"><div class="prompt-cat">Homework policy <span class="prompt-level" data-level="basic">Basic</span></div>&ldquo;What does research say about appropriate homework load for Grade [X] students? Include time guidelines.&rdquo;</div>
+          <div class="prompt-card-session" data-level="basic"><div class="prompt-cat">Home study tips <span class="prompt-level" data-level="basic">Basic</span></div>&ldquo;List 10 practical home study tips I can share with parents of Grade [X] students.&rdquo;</div>
+          <div class="prompt-card-session" data-level="intermediate"><div class="prompt-cat">Flipped prep <span class="prompt-level" data-level="intermediate">Intermediate</span></div>&ldquo;Design a flipped‑classroom homework task for Grade [X] on [Topic] and outline the in‑class follow‑up activity.&rdquo;</div>
+          <div class="prompt-card-session" data-level="intermediate"><div class="prompt-cat">Project pacing <span class="prompt-level" data-level="intermediate">Intermediate</span></div>&ldquo;Break a [N]‑week independent research project on [Topic] into weekly milestones for Grade [X], with a parent check‑in at each step.&rdquo;</div>
+          <div class="prompt-card-session" data-level="advanced"><div class="prompt-cat">Homework design <span class="prompt-level" data-level="advanced">Advanced</span></div>&ldquo;Critique this Grade [X] homework assignment against research on homework effectiveness (purpose, dosage, differentiation, feedback), and propose a research‑aligned redesign.&rdquo;</div>
+          <div class="prompt-card-session" data-level="advanced"><div class="prompt-cat">Self‑regulated learning <span class="prompt-level" data-level="advanced">Advanced</span></div>&ldquo;Using Zimmerman's self‑regulated learning model, design a 4‑week independent study routine for Grade [X] students on [Topic] with forethought, performance, and reflection phases.&rdquo;</div>
+          <div class="prompt-card-session" data-level="basic"><div class="prompt-cat">Study schedule <span class="prompt-level" data-level="basic">Basic</span></div>&ldquo;Create a simple weekly study schedule template for a Grade [X] student juggling [Subject A] and [Subject B], balancing study and breaks.&rdquo;</div>
+          <div class="prompt-card-session" data-level="basic"><div class="prompt-cat">Avoiding procrastination <span class="prompt-level" data-level="basic">Basic</span></div>&ldquo;List 6 simple techniques Grade [X] students can use to beat procrastination when studying [Subject].&rdquo;</div>
+          <div class="prompt-card-session" data-level="intermediate"><div class="prompt-cat">Active recall <span class="prompt-level" data-level="intermediate">Intermediate</span></div>&ldquo;Build a 3‑day active recall study plan for a Grade [X] student preparing for a [Subject] test on [Topic], specifying the recall method per session.&rdquo;</div>
+          <div class="prompt-card-session" data-level="intermediate"><div class="prompt-cat">Group study <span class="prompt-level" data-level="intermediate">Intermediate</span></div>&ldquo;Suggest 5 structured group study activities for Grade [X] students reviewing [Topic], with clear roles and timing.&rdquo;</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ CHAPTER 4 ═══ -->
+    <div id="page-ch4" class="page">
+      <div class="content-page">
+        <h1>4 · Quick Reference Cheat Sheet</h1>
+        <p class="page-desc">
+          Here's everything in one place. Bookmark this page. Stick it on your desk. Share it with a colleague. This is your go‑to summary of every tool covered in this guide.
+        </p>
+
+        <div class="cheat-table-wrap">
+          <table class="cheat-table">
+            <thead>
+              <tr>
+                <th>Tool</th>
+                <th>Best For</th>
+                <th>Free?</th>
+                <th>Chapter</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td class="tool-name">ChatGPT <small>chat.openai.com</small></td><td>General research &amp; content</td><td><span class="free-badge">Yes</span></td><td class="ch-ref">1 &amp; 3</td></tr>
+              <tr><td class="tool-name">Perplexity AI <small>perplexity.ai</small></td><td>Research with real sources</td><td><span class="free-badge">Yes</span></td><td class="ch-ref">1 &amp; 3</td></tr>
+              <tr><td class="tool-name">Google Gemini <small>gemini.google.com</small></td><td>Google‑connected research</td><td><span class="free-badge">Yes</span></td><td class="ch-ref">1 &amp; 3</td></tr>
+              <tr><td class="tool-name">Consensus <small>consensus.app</small></td><td>Academic &amp; evidence‑based research</td><td><span class="free-badge limited">Limited</span></td><td class="ch-ref">1</td></tr>
+              <tr><td class="tool-name">Elicit <small>elicit.com</small></td><td>Deep research &amp; study summaries</td><td><span class="free-badge limited">Limited</span></td><td class="ch-ref">1</td></tr>
+              <tr><td class="tool-name">NotebookLM <small>notebooklm.google.com</small></td><td>Studying from your own documents</td><td><span class="free-badge">Yes</span></td><td class="ch-ref">2</td></tr>
+              <tr><td class="tool-name">Quizlet <small>quizlet.com</small></td><td>Flashcard‑based studying</td><td><span class="free-badge limited">Limited</span></td><td class="ch-ref">2</td></tr>
+              <tr><td class="tool-name">Khanmigo <small>khanacademy.org</small></td><td>Guided student studying (all grades)</td><td><span class="free-badge">Yes</span></td><td class="ch-ref">2</td></tr>
+              <tr><td class="tool-name">Socratic <small>socratic.org</small></td><td>Homework &amp; concept help (Gr 5–8)</td><td><span class="free-badge">Yes</span></td><td class="ch-ref">2</td></tr>
+              <tr><td class="tool-name">MagicSchool AI <small>magicschool.ai</small></td><td>Creating teacher study materials</td><td><span class="free-badge limited">Limited</span></td><td class="ch-ref">2</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="callout tip">
+          <div class="callout-label">A note before you go</div>
+          <p>You don't need to master all of these tools at once. Pick one from Chapter 1 and one from Chapter 2, spend a week with them, and see how they fit into your routine. The teachers who get the most out of AI are the ones who start small and build from there. You've already taken the first step by reading this guide.</p>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- ─── SCRIPTS ─── -->
+  <script>
+    // ── navigation ──
+    const pageNames = {
+      start: 'AI for Studying & Research',
+      ch1: 'Chapter 1 · Research Tools',
+      ch2: 'Chapter 2 · Studying Tools',
+      ch3: 'Chapter 3 · Prompt Library',
+      ch4: 'Chapter 4 · Cheat Sheet'
+    };
+
+    function showPage(id) {
+      document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+      document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+      const pg = document.getElementById('page-' + id);
+      if (pg) pg.classList.add('active');
+      document.querySelectorAll('.nav-item').forEach(n => {
+        if (n.getAttribute('onclick') && n.getAttribute('onclick').includes("'" + id + "'")) {
+          n.classList.add('active');
+        }
+      });
+      document.getElementById('sidebarSubtitle').textContent = pageNames[id] || id;
+      window.scrollTo(0, 0);
+      document.getElementById('sidebar').classList.remove('open');
+      document.getElementById('overlay').classList.remove('show');
+    }
+
+    function toggleGroup(header) {
+      const chevron = header.querySelector('.nav-group-chevron');
+      const items = header.nextElementSibling;
+      chevron.classList.toggle('open');
+      if (chevron.classList.contains('open')) {
+        items.style.maxHeight = items.scrollHeight + 'px';
+        items.classList.remove('collapsed');
+      } else {
+        items.style.maxHeight = items.scrollHeight + 'px';
+        requestAnimationFrame(() => { items.style.maxHeight = '0px'; });
+        items.classList.add('collapsed');
+      }
+    }
+
+    // init all groups open
+    document.querySelectorAll('.nav-group-items').forEach(el => {
+      el.style.maxHeight = 'none';
+    });
+
+    // ── prompt difficulty filter ──
+    function filterPrompts(level) {
+      const ch3 = document.getElementById('page-ch3');
+      const cards = ch3.querySelectorAll('.prompt-card-session');
+      const sections = ch3.querySelectorAll('.prompt-section');
+      let visibleCount = 0;
+
+      // toggle active button
+      document.querySelectorAll('.difficulty-btn').forEach(b => b.classList.remove('active'));
+      document.querySelector('.difficulty-btn[data-level="' + level + '"]').classList.add('active');
+
+      // show/hide cards
+      cards.forEach(card => {
+        if (level === 'all' || card.getAttribute('data-level') === level) {
+          card.style.display = '';
+          visibleCount++;
+        } else {
+          card.style.display = 'none';
+        }
+      });
+
+      // hide section headers with no visible cards
+      sections.forEach(sec => {
+        let grid = sec.nextElementSibling;
+        if (!grid || !grid.classList.contains('prompt-grid-session')) {
+          // account for the p.note that sits after the parent comm section
+          sec.classList.remove('hidden');
+          return;
+        }
+        const hasVisible = Array.from(grid.querySelectorAll('.prompt-card-session'))
+          .some(c => c.style.display !== 'none');
+        sec.classList.toggle('hidden', !hasVisible);
+        grid.classList.toggle('hidden', !hasVisible);
+        // also toggle a following note paragraph if it belongs to this section
+        let next = grid.nextElementSibling;
+        if (next && next.tagName === 'P' && !hasVisible) {
+          next.dataset.wasNote = '1';
+          next.style.display = 'none';
+        } else if (next && next.tagName === 'P' && next.dataset.wasNote === '1' && hasVisible) {
+          next.style.display = '';
+        }
+      });
+
+      const countEl = document.getElementById('promptCount');
+      countEl.textContent = visibleCount + ' prompt' + (visibleCount === 1 ? '' : 's') + ' shown';
+    }
+
+    // mobile sidebar
+    document.getElementById('mobBtn').addEventListener('click', () => {
+      document.getElementById('sidebar').classList.toggle('open');
+      document.getElementById('overlay').classList.toggle('show');
+    });
+    document.getElementById('overlay').addEventListener('click', () => {
+      document.getElementById('sidebar').classList.remove('open');
+      document.getElementById('overlay').classList.remove('show');
+    });
+
+    // theme
+    document.getElementById('themeBtn').addEventListener('click', () => {
+      const curr = document.body.getAttribute('data-theme');
+      const next = curr === 'dark' ? 'light' : 'dark';
+      document.body.setAttribute('data-theme', next);
+      document.getElementById('themeBtn').textContent = next === 'dark' ? '☀️' : '🌙';
+      localStorage.setItem('pe-theme', next);
+    });
+    const savedTheme = localStorage.getItem('pe-theme') || 'light';
+    document.body.setAttribute('data-theme', savedTheme);
+    document.getElementById('themeBtn').textContent = savedTheme === 'dark' ? '☀️' : '🌙';
+
+    // initial prompt count
+    document.addEventListener('DOMContentLoaded', () => {
+      const total = document.querySelectorAll('#page-ch3 .prompt-card-session').length;
+      const countEl = document.getElementById('promptCount');
+      countEl.textContent = total + ' prompts shown';
+    });
+  </script>
+</body>
+</html>
