@@ -1,96 +1,1282 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Upcoming Session | AI and Digital Skills</title>
-  <link rel="icon" type="image/png" href="../../assets/favicon.png">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,500;0,600;1,400&display=swap" rel="stylesheet">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AI for Writing &amp; Presentations</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
   <style>
-    :root {
-      --bg: #F9F8F6;
-      --text: #1A1A1A;
-      --text-muted: #666666;
-      --line: #E5E2DD;
-      --accent: #2C3E50;
+    /* ── reset & variables (matching reference design) ── */
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
     }
-    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --sidebar-w: 220px;
+      --bg: #ffffff;
+      --bg2: #f8f8f8;
+      --bg3: #f0f0f0;
+      --border: #e5e5e5;
+      --border2: #d0d0d0;
+      --text: #111111;
+      --text2: #555555;
+      --text3: #888888;
+      --accent: #111111;
+      --accent-light: #f0f0f0;
+      --green: #16a34a;
+      --blue: #2563eb;
+      --orange: #d97706;
+      --red: #dc2626;
+      --badge-bg: #f5f5f5;
+      --shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+      --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    [data-theme="dark"] {
+      --bg: #0f0f0f;
+      --bg2: #1a1a1a;
+      --bg3: #222222;
+      --border: #2a2a2a;
+      --border2: #333333;
+      --text: #f5f5f5;
+      --text2: #aaaaaa;
+      --text3: #666666;
+      --accent: #f5f5f5;
+      --accent-light: #222222;
+      --badge-bg: #1e1e1e;
+      --shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+      --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.5);
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
     body {
       font-family: 'Inter', sans-serif;
-      background-color: var(--bg);
+      background: var(--bg);
       color: var(--text);
       display: flex;
+      min-height: 100vh;
+      line-height: 1.6;
+      transition: background 0.3s, color 0.3s;
+    }
+
+    /* ── sidebar ── */
+    .sidebar {
+      width: var(--sidebar-w);
+      min-width: var(--sidebar-w);
+      background: var(--bg);
+      border-right: 1px solid var(--border);
+      height: 100vh;
+      position: fixed;
+      top: 0;
+      left: 0;
+      overflow-y: auto;
+      z-index: 100;
+      display: flex;
       flex-direction: column;
+    }
+    .sidebar::-webkit-scrollbar {
+      width: 4px;
+    }
+    .sidebar::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    .sidebar::-webkit-scrollbar-thumb {
+      background: var(--border);
+      border-radius: 2px;
+    }
+    .sidebar-top {
+      padding: 20px 16px 12px;
+      border-bottom: 1px solid var(--border);
+    }
+    .sidebar-title {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 4px;
+    }
+    .sidebar-subtitle {
+      font-size: 0.75rem;
+      color: var(--text3);
+      line-height: 1.4;
+    }
+    .sidebar-nav {
+      flex: 1;
+      padding: 12px 0 24px;
+    }
+    .nav-group {
+      margin-bottom: 2px;
+    }
+    .nav-group-header {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 16px;
+      cursor: pointer;
+      user-select: none;
+    }
+    .nav-group-header:hover {
+      background: var(--bg2);
+    }
+    .nav-group-chevron {
+      width: 14px;
+      height: 14px;
+      transition: transform 0.2s;
+      color: var(--text3);
+      flex-shrink: 0;
+    }
+    .nav-group-chevron.open {
+      transform: rotate(90deg);
+    }
+    .nav-group-label {
+      font-size: 0.68rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--text2);
+    }
+    .nav-group-items {
+      overflow: hidden;
+      transition: max-height 0.25s ease;
+    }
+    .nav-group-items.collapsed {
+      max-height: 0 !important;
+    }
+    .nav-item {
+      display: block;
+      padding: 5px 16px 5px 28px;
+      font-size: 0.8rem;
+      color: var(--text2);
+      text-decoration: none;
+      transition: all 0.15s;
+      border-radius: 0;
+      cursor: pointer;
+    }
+    .nav-item:hover {
+      color: var(--text);
+      background: var(--bg2);
+    }
+    .nav-item.active {
+      color: var(--text);
+      font-weight: 600;
+      background: var(--bg2);
+    }
+    .sidebar-footer {
+      padding: 12px 16px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .theme-btn {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: var(--bg2);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.9rem;
+      color: var(--text);
+      transition: all 0.2s;
+    }
+    .theme-btn:hover {
+      border-color: var(--border2);
+    }
+    .mobile-sidebar-btn {
+      display: none;
+      position: fixed;
+      top: 12px;
+      left: 12px;
+      z-index: 200;
+      width: 36px;
+      height: 36px;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      cursor: pointer;
+      align-items: center;
+      justify-content: center;
+      font-size: 1rem;
+    }
+    .sidebar-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.4);
+      z-index: 99;
+    }
+    .sidebar-overlay.show {
+      display: block;
+    }
+
+    /* ── main ── */
+    .main {
+      margin-left: var(--sidebar-w);
+      flex: 1;
       min-height: 100vh;
     }
-    .navbar {
-      width: 100%;
-      background: var(--bg);
-      border-bottom: 1px solid var(--line);
-      padding: 1rem 2rem;
+
+    /* ── pages ── */
+    .page {
+      display: none;
+      min-height: 100vh;
     }
-    .nav-container {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      max-width: 1200px;
+    .page.active {
+      display: block;
+    }
+
+    /* ── content page ── */
+    .content-page {
+      max-width: 820px;
       margin: 0 auto;
+      padding: 64px 40px 120px;
     }
-    .nav-brand {
-      font-family: 'Playfair Display', serif;
-      font-size: 1.25rem;
-      font-weight: 500;
+    .content-page h1 {
+      font-size: 2rem;
+      font-weight: 800;
+      margin-bottom: 12px;
+      color: var(--text);
+      line-height: 1.2;
     }
-    .nav-menu {
-      display: flex;
-      gap: 1.5rem;
-      list-style: none;
+    .content-page .page-desc {
+      font-size: 1rem;
+      color: var(--text2);
+      margin-bottom: 40px;
+      line-height: 1.7;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 32px;
     }
-    .nav-menu a {
-      text-decoration: none;
-      color: var(--text-muted);
-      font-weight: 500;
+    .content-page h2 {
+      font-size: 1.35rem;
+      font-weight: 700;
+      margin: 44px 0 16px;
+      color: var(--text);
+    }
+    .content-page h3 {
+      font-size: 1.05rem;
+      font-weight: 600;
+      margin: 28px 0 10px;
+      color: var(--text);
+    }
+    .content-page h4 {
+      font-size: 0.92rem;
+      font-weight: 600;
+      margin: 20px 0 6px;
+      color: var(--text);
+    }
+    .content-page p {
+      font-size: 0.95rem;
+      color: var(--text2);
+      margin-bottom: 14px;
+      line-height: 1.75;
+    }
+    .content-page ul,
+    .content-page ol {
+      margin: 0 0 16px 20px;
+    }
+    .content-page li {
+      font-size: 0.95rem;
+      color: var(--text2);
+      margin-bottom: 6px;
+      line-height: 1.6;
+    }
+
+    .callout {
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 16px 20px;
+      margin: 20px 0;
+      background: var(--bg2);
+    }
+    .callout.info {
+      border-left: 3px solid var(--blue);
+    }
+    .callout.tip {
+      border-left: 3px solid var(--green);
+    }
+    .callout.warn {
+      border-left: 3px solid var(--orange);
+    }
+    .callout-label {
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-bottom: 6px;
+    }
+    .callout.info .callout-label {
+      color: var(--blue);
+    }
+    .callout.tip .callout-label {
+      color: var(--green);
+    }
+    .callout.warn .callout-label {
+      color: var(--orange);
+    }
+    .callout p {
+      margin: 0;
+      color: var(--text2);
       font-size: 0.9rem;
-      transition: color 0.2s;
     }
-    .nav-menu a:hover { color: var(--text); }
-    .main-content {
-      flex: 1;
+
+    /* ── tool cards ── */
+    .tool-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin: 16px 0 24px;
+    }
+    .tool-card-session {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 18px 20px 20px;
+      transition: all 0.2s;
+    }
+    .tool-card-session:hover {
+      border-color: var(--border2);
+      box-shadow: var(--shadow-md);
+      transform: translateY(-2px);
+    }
+    .tool-card-session h4 {
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--text);
+      margin: 0 0 2px;
+    }
+    .tool-card-session .tool-url {
+      font-size: 0.72rem;
+      color: var(--text3);
+      font-family: 'JetBrains Mono', monospace;
+      word-break: break-all;
+      margin-bottom: 6px;
+    }
+    .tool-card-session .tool-url a {
+      color: var(--text3);
+      text-decoration: none;
+    }
+    .tool-card-session .tool-url a:hover {
+      color: var(--text);
+      text-decoration: underline;
+    }
+    .tool-card-session .tool-best {
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: var(--blue);
+      margin-bottom: 6px;
+    }
+    .tool-card-session p {
+      font-size: 0.88rem;
+      color: var(--text2);
+      margin: 0 0 8px;
+      line-height: 1.6;
+    }
+    .tool-card-session .tool-tips {
+      font-size: 0.82rem;
+      color: var(--text2);
+      border-top: 1px solid var(--border);
+      padding-top: 10px;
+      margin-top: 8px;
+    }
+    .tool-card-session .tool-tips strong {
+      color: var(--text);
+      font-weight: 600;
+    }
+    .tool-card-session .tool-tips ul {
+      margin: 4px 0 0 16px;
+    }
+    .tool-card-session .tool-tips li {
+      font-size: 0.82rem;
+      margin-bottom: 2px;
+    }
+
+    /* ── prompt cards ── */
+    .prompt-grid-session {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin: 16px 0 24px;
+    }
+    .prompt-card-session {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 14px 16px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.8rem;
+      color: var(--text);
+      line-height: 1.5;
+      transition: border-color 0.2s;
+    }
+    .prompt-card-session:hover {
+      border-color: var(--border2);
+    }
+    .prompt-card-session .prompt-cat {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.65rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--text3);
+      margin-bottom: 6px;
+    }
+
+    /* ── difficulty filter buttons ── */
+    .difficulty-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+      margin: 24px 0 8px;
+      padding: 14px 16px;
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+    }
+    .difficulty-bar-label {
+      font-size: 0.7rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--text2);
+      margin-right: 4px;
+    }
+    .difficulty-btn {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.82rem;
+      font-weight: 600;
+      padding: 8px 18px;
+      border-radius: 50px;
+      border: 1px solid var(--border2);
+      background: var(--bg);
+      color: var(--text2);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .difficulty-btn:hover {
+      border-color: var(--text);
+      color: var(--text);
+    }
+    .difficulty-btn.active {
+      color: #ffffff;
+      border-color: transparent;
+    }
+    .difficulty-btn[data-level="all"].active {
+      background: var(--text);
+    }
+    .difficulty-btn[data-level="basic"].active {
+      background: var(--green);
+    }
+    .difficulty-btn[data-level="intermediate"].active {
+      background: var(--blue);
+    }
+    .difficulty-btn[data-level="advanced"].active {
+      background: var(--red);
+    }
+    .difficulty-count {
+      margin-left: auto;
+      font-size: 0.75rem;
+      color: var(--text3);
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    /* difficulty badge in prompt cards */
+    .prompt-card-session .prompt-level {
+      display: inline-block;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.6rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      padding: 2px 8px;
+      border-radius: 20px;
+      margin-left: 6px;
+    }
+    .prompt-card-session[data-level="basic"] {
+      border-left: 3px solid var(--green);
+    }
+    .prompt-card-session[data-level="intermediate"] {
+      border-left: 3px solid var(--blue);
+    }
+    .prompt-card-session[data-level="advanced"] {
+      border-left: 3px solid var(--red);
+    }
+    .prompt-card-session .prompt-level[data-level="basic"] {
+      background: #dcfce7;
+      color: #16a34a;
+    }
+    .prompt-card-session .prompt-level[data-level="intermediate"] {
+      background: #dbeafe;
+      color: #2563eb;
+    }
+    .prompt-card-session .prompt-level[data-level="advanced"] {
+      background: #fee2e2;
+      color: #dc2626;
+    }
+    [data-theme="dark"] .prompt-card-session .prompt-level[data-level="basic"] {
+      background: rgba(22, 163, 74, 0.2);
+      color: #4ade80;
+    }
+    [data-theme="dark"] .prompt-card-session .prompt-level[data-level="intermediate"] {
+      background: rgba(37, 99, 235, 0.2);
+      color: #60a5fa;
+    }
+    [data-theme="dark"] .prompt-card-session .prompt-level[data-level="advanced"] {
+      background: rgba(220, 38, 38, 0.2);
+      color: #f87171;
+    }
+
+    .prompt-section {
+      margin-top: 8px;
+    }
+    .prompt-section.hidden {
+      display: none;
+    }
+    .prompt-grid-session.hidden {
+      display: none;
+    }
+
+    /* ── cheat sheet table ── */
+    .cheat-table-wrap {
+      overflow-x: auto;
+      margin: 20px 0 32px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      background: var(--bg);
+    }
+    .cheat-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.82rem;
+      min-width: 600px;
+    }
+    .cheat-table th {
+      text-align: left;
+      padding: 12px 14px;
+      background: var(--bg2);
+      font-weight: 700;
+      color: var(--text);
+      border-bottom: 1px solid var(--border);
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .cheat-table td {
+      padding: 11px 14px;
+      border-bottom: 1px solid var(--border);
+      color: var(--text2);
+      vertical-align: middle;
+    }
+    .cheat-table tr:last-child td {
+      border-bottom: none;
+    }
+    .cheat-table .tool-name {
+      font-weight: 600;
+      color: var(--text);
+    }
+    .cheat-table .tool-name small {
+      display: block;
+      font-weight: 400;
+      font-size: 0.68rem;
+      color: var(--text3);
+      font-family: 'JetBrains Mono', monospace;
+    }
+    .cheat-table .free-badge {
+      display: inline-block;
+      padding: 2px 10px;
+      border-radius: 20px;
+      font-size: 0.68rem;
+      font-weight: 600;
+      background: #dcfce7;
+      color: #16a34a;
+    }
+    [data-theme="dark"] .cheat-table .free-badge {
+      background: rgba(22, 163, 74, 0.2);
+      color: #4ade80;
+    }
+    .cheat-table .free-badge.limited {
+      background: #fef3c7;
+      color: #d97706;
+    }
+    [data-theme="dark"] .cheat-table .free-badge.limited {
+      background: rgba(217, 119, 6, 0.2);
+      color: #fbbf24;
+    }
+    .cheat-table .ch-ref {
+      font-size: 0.7rem;
+      color: var(--text3);
+    }
+
+    /* ── responsive ── */
+    @media (max-width: 768px) {
+      .sidebar {
+        transform: translateX(-100%);
+        transition: transform 0.3s;
+      }
+      .sidebar.open {
+        transform: translateX(0);
+      }
+      .main {
+        margin-left: 0;
+      }
+      .mobile-sidebar-btn {
+        display: flex;
+      }
+      .content-page {
+        padding: 48px 20px 80px;
+      }
+      .tool-grid {
+        grid-template-columns: 1fr;
+      }
+      .prompt-grid-session {
+        grid-template-columns: 1fr;
+      }
+      .cheat-table-wrap {
+        border-radius: 0;
+        border-left: none;
+        border-right: none;
+      }
+    }
+
+    .section-divider {
+      border: none;
+      border-top: 1px solid var(--border);
+      margin: 32px 0 28px;
+    }
+
+    /* hero / start page */
+    .hero-page {
       display: flex;
       flex-direction: column;
-      justify-content: center;
       align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      padding: 60px 40px;
       text-align: center;
-      padding: 2rem;
     }
-    h1 {
-      font-family: 'Playfair Display', serif;
-      font-size: 3rem;
-      font-style: italic;
-      margin-bottom: 1rem;
+    .hero-h1 {
+      font-size: clamp(2rem, 5vw, 3.5rem);
+      font-weight: 800;
+      line-height: 1.1;
+      color: var(--text);
+      max-width: 700px;
+      margin-bottom: 20px;
     }
-    p {
-      color: var(--text-muted);
-      font-size: 1.1rem;
-      max-width: 500px;
+    .hero-desc {
+      font-size: 1rem;
+      color: var(--text2);
+      max-width: 520px;
+      margin-bottom: 36px;
+      line-height: 1.7;
+    }
+    .hero-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 14px 28px;
+      background: var(--text);
+      color: var(--bg);
+      border: none;
+      border-radius: 50px;
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: opacity 0.2s, transform 0.2s;
+      text-decoration: none;
+    }
+    .hero-btn:hover {
+      opacity: 0.85;
+      transform: translateY(-1px);
     }
   </style>
 </head>
-<body>
-  <nav class="navbar">
-    <div class="nav-container">
-      <div class="nav-brand">Upcoming Session</div>
-      <ul class="nav-menu">
-        <li><a href="../../">Home</a></li>
-        <li><a href="../../syllabus/">Syllabus</a></li>
-      </ul>
+<body data-theme="light">
+
+  <!-- mobile toggle -->
+  <button class="mobile-sidebar-btn" id="mobBtn">☰</button>
+  <div class="sidebar-overlay" id="overlay"></div>
+
+  <!-- ─── SIDEBAR ─── -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-top">
+      <div class="sidebar-title">AI Writing &amp; Presentations</div>
+      <div class="sidebar-subtitle" id="sidebarSubtitle">Teacher Guide</div>
     </div>
-  </nav>
-  <main class="main-content">
-    <h1>Upcoming Session</h1>
-    <p>This session content is currently being prepared and will be available soon. Please check back later.</p>
+    <nav class="sidebar-nav" id="sidebarNav">
+
+      <!-- Introduction -->
+      <div class="nav-group">
+        <div class="nav-group-header" onclick="toggleGroup(this)">
+          <svg class="nav-group-chevron open" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"/></svg>
+          <span class="nav-group-label">Introduction</span>
+        </div>
+        <div class="nav-group-items">
+          <a class="nav-item active" onclick="showPage('start')">Start Here</a>
+        </div>
+      </div>
+
+      <!-- Chapter 1 -->
+      <div class="nav-group">
+        <div class="nav-group-header" onclick="toggleGroup(this)">
+          <svg class="nav-group-chevron open" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"/></svg>
+          <span class="nav-group-label">Chapter 1</span>
+        </div>
+        <div class="nav-group-items">
+          <a class="nav-item" onclick="showPage('ch1')">Writing Tools</a>
+        </div>
+      </div>
+
+      <!-- Chapter 2 -->
+      <div class="nav-group">
+        <div class="nav-group-header" onclick="toggleGroup(this)">
+          <svg class="nav-group-chevron open" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"/></svg>
+          <span class="nav-group-label">Chapter 2</span>
+        </div>
+        <div class="nav-group-items">
+          <a class="nav-item" onclick="showPage('ch2')">Presentation Tools</a>
+        </div>
+      </div>
+
+      <!-- Chapter 3 -->
+      <div class="nav-group">
+        <div class="nav-group-header" onclick="toggleGroup(this)">
+          <svg class="nav-group-chevron open" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"/></svg>
+          <span class="nav-group-label">Chapter 3</span>
+        </div>
+        <div class="nav-group-items">
+          <a class="nav-item" onclick="showPage('ch3')">Prompt Library</a>
+        </div>
+      </div>
+
+      <!-- Chapter 4 -->
+      <div class="nav-group">
+        <div class="nav-group-header" onclick="toggleGroup(this)">
+          <svg class="nav-group-chevron open" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"/></svg>
+          <span class="nav-group-label">Chapter 4</span>
+        </div>
+        <div class="nav-group-items">
+          <a class="nav-item" onclick="showPage('ch4')">Cheat Sheet</a>
+        </div>
+      </div>
+
+    </nav>
+    <div class="sidebar-footer">
+      <span style="font-size:0.72rem;color:var(--text3);">Teacher Guide</span>
+      <button class="theme-btn" id="themeBtn" title="Toggle theme">🌙</button>
+    </div>
+  </aside>
+
+  <!-- ─── MAIN ─── -->
+  <main class="main">
+
+    <!-- ═══ START PAGE ═══ -->
+    <div id="page-start" class="page active">
+      <div class="hero-page">
+        <h1 class="hero-h1">AI for Writing &amp; Presentations</h1>
+        <p class="hero-desc">
+          A Beginner's Guide for Teachers &bull; Grades 1–8 &bull; Mixed Subjects &bull; Practical &amp; Ready‑to‑Use
+        </p>
+        <p style="max-width:600px;color:var(--text2);margin-bottom:32px;font-size:0.95rem;line-height:1.7;">
+          This guide helps you feel comfortable using AI for all your writing and presentation needs — lesson plans, emails, reports, student feedback, slide decks, speaker notes, and more. No tech jargon, just real tools, real prompts, and real results.
+        </p>
+        <a class="hero-btn" onclick="showPage('ch1')">Start Reading &darr;</a>
+      </div>
+    </div>
+
+    <!-- ═══ CHAPTER 1 ═══ -->
+    <div id="page-ch1" class="page">
+      <div class="content-page">
+        <h1>1 · AI Tools for Writing</h1>
+        <p class="page-desc">
+          Whether you're drafting lesson plans, writing parent emails, creating student reports, or developing classroom materials — these AI tools will save you time and improve your writing quality. They help with brainstorming, structuring, editing, and polishing any text you need.
+        </p>
+
+        <div class="tool-grid">
+          <!-- ChatGPT -->
+          <div class="tool-card-session">
+            <h4>ChatGPT</h4>
+            <div class="tool-url"><a href="https://chat.openai.com" target="_blank">chat.openai.com</a></div>
+            <div class="tool-best">Best for: Drafting, brainstorming, rewriting any text</div>
+            <p>Your go‑to AI writing assistant. You can ask it to write a first draft of a lesson plan, rewrite a parent email in a friendlier tone, or generate discussion questions. It adapts to your style and audience.</p>
+            <div class="tool-tips">
+              <strong>Quick tips:</strong>
+              <ul>
+                <li>Ask it to 'write in a warm, professional tone'</li>
+                <li>Use 'rewrite this for a Grade 3 audience' to simplify</li>
+                <li>Perfect for generating multiple versions of the same text</li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- Grammarly -->
+          <div class="tool-card-session">
+            <h4>Grammarly</h4>
+            <div class="tool-url"><a href="https://grammarly.com" target="_blank">grammarly.com</a></div>
+            <div class="tool-best">Best for: Editing, grammar, tone, and clarity</div>
+            <p>Grammarly goes beyond spell‑checking — it suggests style improvements, adjusts tone (formal, friendly, confident), and helps you write more clearly. It works in your browser, Word, and Google Docs.</p>
+            <div class="tool-tips">
+              <strong>Quick tips:</strong>
+              <ul>
+                <li>Set a goal: 'Audience: Parents' for more empathetic suggestions</li>
+                <li>Use the tone detector to make sure your message lands right</li>
+                <li>Great for proofreading student feedback before sending</li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- QuillBot -->
+          <div class="tool-card-session">
+            <h4>QuillBot</h4>
+            <div class="tool-url"><a href="https://quillbot.com" target="_blank">quillbot.com</a></div>
+            <div class="tool-best">Best for: Paraphrasing, summarising, and rephrasing</div>
+            <p>Sometimes you have a sentence that just doesn't sound right. QuillBot gives you multiple ways to rewrite it. It also has a summariser that can condense long articles into key points — perfect for creating study guides.</p>
+            <div class="tool-tips">
+              <strong>Quick tips:</strong>
+              <ul>
+                <li>Use the 'Synonyms' slider to control how much it changes</li>
+                <li>Summarise professional articles into plain English for students</li>
+                <li>Helps avoid repetitive language in your writing</li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- Jasper -->
+          <div class="tool-card-session">
+            <h4>Jasper</h4>
+            <div class="tool-url"><a href="https://jasper.ai" target="_blank">jasper.ai</a></div>
+            <div class="tool-best">Best for: Long‑form content, lesson plans, curriculum writing</div>
+            <p>Jasper is built for creating structured content. You give it a topic and audience, and it generates a full draft — from lesson plans to newsletters to blog posts. It has templates specifically for education.</p>
+            <div class="tool-tips">
+              <strong>Quick tips:</strong>
+              <ul>
+                <li>Use the 'Lesson Plan' template to save time</li>
+                <li>Set the tone to 'educational and engaging'</li>
+                <li>Great for curriculum development or grant writing</li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- Copy.ai -->
+          <div class="tool-card-session">
+            <h4>Copy.ai</h4>
+            <div class="tool-url"><a href="https://copy.ai" target="_blank">copy.ai</a></div>
+            <div class="tool-best">Best for: Quick, creative writing and idea generation</div>
+            <p>If you're stuck for words, Copy.ai can generate dozens of ideas in seconds. It's excellent for coming up with creative hooks, parent survey questions, student writing prompts, or engaging subject introductions.</p>
+            <div class="tool-tips">
+              <strong>Quick tips:</strong>
+              <ul>
+                <li>Give it a simple prompt like 'write 10 hooks for a science lesson'</li>
+                <li>Use it for brainstorming before you write the full version</li>
+                <li>Great for social media posts or class updates</li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- Writesonic -->
+          <div class="tool-card-session">
+            <h4>Writesonic</h4>
+            <div class="tool-url"><a href="https://writesonic.com" target="_blank">writesonic.com</a></div>
+            <div class="tool-best">Best for: Repurposing content and generating multiple versions</div>
+            <p>Writesonic can take a single idea and turn it into a lesson plan, a parent newsletter, a student handout, and a presentation outline — all in one go. It's perfect for teachers who want to create different formats from the same content.</p>
+            <div class="tool-tips">
+              <strong>Quick tips:</strong>
+              <ul>
+                <li>Use 'Article Rewriter' to adapt content for different audiences</li>
+                <li>Generate a set of questions from a text in seconds</li>
+                <li>Ideal for creating differentiated materials</li>
+              </ul>
+            </div>
+          </div>
+        </div><!-- /tool-grid -->
+      </div>
+    </div>
+
+    <!-- ═══ CHAPTER 2 ═══ -->
+    <div id="page-ch2" class="page">
+      <div class="content-page">
+        <h1>2 · AI Tools for Presentations</h1>
+        <p class="page-desc">
+          Creating engaging slides and presentations can be time‑consuming. These AI tools help you design beautiful slides, generate speaker notes, structure your content, and even create entire presentations from a simple prompt — so you can focus on delivering your message.
+        </p>
+
+        <div class="tool-grid">
+          <!-- Canva Magic Design -->
+          <div class="tool-card-session">
+            <h4>Canva Magic Design</h4>
+            <div class="tool-url"><a href="https://canva.com" target="_blank">canva.com</a></div>
+            <div class="tool-best">Best for: Beautiful slide design and visual storytelling</div>
+            <p>Canva's AI (Magic Design) can turn a simple prompt into a complete presentation with layouts, images, and fonts that match. You can also upload a document and it will transform it into slides. Perfect for teachers who want professional‑looking presentations without design skills.</p>
+            <div class="tool-tips">
+              <strong>Quick tips:</strong>
+              <ul>
+                <li>Type a topic and get a full slide deck in seconds</li>
+                <li>Easily change themes and colours</li>
+                <li>Great for student‑facing presentations</li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- Tome -->
+          <div class="tool-card-session">
+            <h4>Tome</h4>
+            <div class="tool-url"><a href="https://tome.app" target="_blank">tome.app</a></div>
+            <div class="tool-best">Best for: AI‑generated storytelling presentations</div>
+            <p>Tome is built for narrative presentations. You give it a prompt, and it generates a story‑like presentation with text, images, and a logical flow. It's excellent for lesson introductions, project showcases, and interactive student presentations.</p>
+            <div class="tool-tips">
+              <strong>Quick tips:</strong>
+              <ul>
+                <li>Prompt it with a topic and it creates a full narrative</li>
+                <li>Add images automatically from its library</li>
+                <li>Great for engaging class starter presentations</li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- Gamma -->
+          <div class="tool-card-session">
+            <h4>Gamma</h4>
+            <div class="tool-url"><a href="https://gamma.app" target="_blank">gamma.app</a></div>
+            <div class="tool-best">Best for: Clean, modern presentations from any content</div>
+            <p>Gamma turns your text, notes, or PDFs into a polished presentation in minutes. It understands structure and creates clear, visually appealing slides with minimal effort. It's ideal when you have existing content that you want to present.</p>
+            <div class="tool-tips">
+              <strong>Quick tips:</strong>
+              <ul>
+                <li>Paste your lesson outline and get a presentation</li>
+                <li>Customise the look with one click</li>
+                <li>Works well for staff meetings or class lessons</li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- Beautiful.ai -->
+          <div class="tool-card-session">
+            <h4>Beautiful.ai</h4>
+            <div class="tool-url"><a href="https://beautiful.ai" target="_blank">beautiful.ai</a></div>
+            <div class="tool-best">Best for: Designer‑quality slides with zero design effort</div>
+            <p>This tool uses AI to automatically layout your content in the most visually pleasing way. You just add text and images, and it arranges everything perfectly. It's like having a professional designer on your team.</p>
+            <div class="tool-tips">
+              <strong>Quick tips:</strong>
+              <ul>
+                <li>Add content and let the AI handle layout</li>
+                <li>Use smart templates tailored for education</li>
+                <li>Great for sharing visually with students and parents</li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- Microsoft Copilot (PowerPoint) -->
+          <div class="tool-card-session">
+            <h4>Copilot for PowerPoint</h4>
+            <div class="tool-url"><a href="https://microsoft.com" target="_blank">microsoft.com</a></div>
+            <div class="tool-best">Best for: PowerPoint users who want AI‑assisted slide creation</div>
+            <p>Integrated into Microsoft 365, Copilot can turn a prompt into a full PowerPoint presentation complete with slides, speaker notes, and design suggestions. You can also ask it to rewrite or restructure existing slides.</p>
+            <div class="tool-tips">
+              <strong>Quick tips:</strong>
+              <ul>
+                <li>Type a topic and get a full deck</li>
+                <li>Ask it to add speaker notes to each slide</li>
+                <li>Perfect for those already using Microsoft</li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- Prezi AI -->
+          <div class="tool-card-session">
+            <h4>Prezi AI</h4>
+            <div class="tool-url"><a href="https://prezi.com" target="_blank">prezi.com</a></div>
+            <div class="tool-best">Best for: Dynamic, non‑linear presentations</div>
+            <p>Prezi's AI helps you create interactive, zoomable presentations that are more engaging than traditional slides. It can suggest structures and visual paths based on your content, making complex ideas easier to follow.</p>
+            <div class="tool-tips">
+              <strong>Quick tips:</strong>
+              <ul>
+                <li>Great for storytelling and big‑picture concepts</li>
+                <li>AI suggests a flow for your topic</li>
+                <li>Ideal for student projects and interactive lessons</li>
+              </ul>
+            </div>
+          </div>
+        </div><!-- /tool-grid -->
+      </div>
+    </div>
+
+    <!-- ═══ CHAPTER 3 ═══ -->
+    <div id="page-ch3" class="page">
+      <div class="content-page">
+        <h1>3 · Prompt Library for Writing &amp; Presentations</h1>
+        <p class="page-desc">
+          A prompt is simply what you type into an AI tool to get a useful response. The better your prompt, the better your result. Think of it like giving directions — the clearer you are, the more likely you end up where you want to go. All of these prompts are ready to copy and paste. Just replace the parts in <strong>[brackets]</strong> with your specific details.
+          <br><br>
+          <span style="font-size:0.85rem;color:var(--text3);">Where to use these prompts: ChatGPT, Google Gemini, or any AI writing tool work best for these.</span>
+        </p>
+
+        <!-- Difficulty filter -->
+        <div class="difficulty-bar" role="toolbar" aria-label="Filter prompts by difficulty">
+          <span class="difficulty-bar-label">Level:</span>
+          <button class="difficulty-btn active" data-level="all" onclick="filterPrompts('all')">All</button>
+          <button class="difficulty-btn" data-level="basic" onclick="filterPrompts('basic')">Basic</button>
+          <button class="difficulty-btn" data-level="intermediate" onclick="filterPrompts('intermediate')">Intermediate</button>
+          <button class="difficulty-btn" data-level="advanced" onclick="filterPrompts('advanced')">Advanced</button>
+          <span class="difficulty-count" id="promptCount"></span>
+        </div>
+
+        <!-- ── Writing – Lesson Plans & Curriculum ── -->
+        <h3 class="prompt-section" data-section>Writing – Lesson Plans &amp; Curriculum Materials</h3>
+        <div class="prompt-grid-session">
+          <div class="prompt-card-session" data-level="basic"><div class="prompt-cat">Lesson draft <span class="prompt-level" data-level="basic">Basic</span></div>&ldquo;Write a draft lesson plan for a [X]‑minute lesson on [Topic] for Grade [Y]. Include a hook, main activity, and a closing reflection.&rdquo;</div>
+          <div class="prompt-card-session" data-level="intermediate"><div class="prompt-cat">Learning objectives <span class="prompt-level" data-level="intermediate">Intermediate</span></div>&ldquo;Write 3 clear, measurable learning objectives for a [Grade] lesson on [Topic] using Bloom's taxonomy.&rdquo;</div>
+          <div class="prompt-card-session" data-level="basic"><div class="prompt-cat">Warm‑up <span class="prompt-level" data-level="basic">Basic</span></div>&ldquo;Suggest 3 engaging warm‑up activities for a [Grade] class on [Topic] that take 5 minutes each.&rdquo;</div>
+          <div class="prompt-card-session" data-level="intermediate"><div class="prompt-cat">Differentiation <span class="prompt-level" data-level="intermediate">Intermediate</span></div>&ldquo;Provide 3 differentiation strategies for a lesson on [Topic] for Grade [Y] to support below‑level, at‑level, and above‑level students.&rdquo;</div>
+          <div class="prompt-card-session" data-level="basic"><div class="prompt-cat">Materials list <span class="prompt-level" data-level="basic">Basic</span></div>&ldquo;List the materials and resources I need to teach a lesson on [Topic] for Grade [Y].&rdquo;</div>
+          <div class="prompt-card-session" data-level="advanced"><div class="prompt-cat">Unit outline <span class="prompt-level" data-level="advanced">Advanced</span></div>&ldquo;Design a 6‑week unit outline for [Subject] for Grade [Y], with essential questions, key assessments, and weekly learning goals.&rdquo;</div>
+        </div>
+
+        <!-- ── Writing – Professional Communication ── -->
+        <h3 class="prompt-section" data-section>Writing – Professional Communication (Emails, Reports, Newsletters)</h3>
+        <div class="prompt-grid-session">
+          <div class="prompt-card-session" data-level="basic"><div class="prompt-cat">Parent email <span class="prompt-level" data-level="basic">Basic</span></div>&ldquo;Write a friendly, professional email to parents of Grade [Y] students about [Topic/Event]. Keep it positive and clear.&rdquo;</div>
+          <div class="prompt-card-session" data-level="basic"><div class="prompt-cat">Newsletter intro <span class="prompt-level" data-level="basic">Basic</span></div>&ldquo;Write a warm introduction for a class newsletter for Grade [Y] parents, highlighting what we covered this week and what's coming next.&rdquo;</div>
+          <div class="prompt-card-session" data-level="intermediate"><div class="prompt-cat">Progress report <span class="prompt-level" data-level="intermediate">Intermediate</span></div>&ldquo;Draft a progress report comment for a [Grade] student who [describe strengths and area for growth] in [Subject], using a supportive tone.&rdquo;</div>
+          <div class="prompt-card-session" data-level="basic"><div class="prompt-cat">Reminder <span class="prompt-level" data-level="basic">Basic</span></div>&ldquo;Write a short, clear reminder to parents about [event/deadline] for Grade [Y] with a friendly tone.&rdquo;</div>
+          <div class="prompt-card-session" data-level="intermediate"><div class="prompt-cat">Difficult conversation <span class="prompt-level" data-level="intermediate">Intermediate</span></div>&ldquo;Draft a script for a parent‑teacher meeting about a Grade [Y] student who is struggling with [issue], focusing on solutions and partnership.&rdquo;</div>
+          <div class="prompt-card-session" data-level="advanced"><div class="prompt-cat">Annual report <span class="prompt-level" data-level="advanced">Advanced</span></div>&ldquo;Write a draft of a grade‑level annual report summarising student progress, achievements, and goals for the next year, in a professional and encouraging tone.&rdquo;</div>
+        </div>
+
+        <!-- ── Writing – Student Feedback & Assessment ── -->
+        <h3 class="prompt-section" data-section>Writing – Student Feedback &amp; Assessment</h3>
+        <div class="prompt-grid-session">
+          <div class="prompt-card-session" data-level="basic"><div class="prompt-cat">Positive feedback <span class="prompt-level" data-level="basic">Basic</span></div>&ldquo;Write 5 positive, specific comments I can give a Grade [Y] student who did well on [assignment/task].&rdquo;</div>
+          <div class="prompt-card-session" data-level="basic"><div class="prompt-cat">Constructive feedback <span class="prompt-level" data-level="basic">Basic</span></div>&ldquo;Write a constructive feedback comment for a Grade [Y] student's [project/essay] that highlights strengths and offers one clear next step.&rdquo;</div>
+          <div class="prompt-card-session" data-level="intermediate"><div class="prompt-cat">Rubric language <span class="prompt-level" data-level="intermediate">Intermediate</span></div>&ldquo;Write clear, student‑friendly descriptors for a rubric on [Topic/Assignment] for Grade [Y] across 4 levels of performance.&rdquo;</div>
+          <div class="prompt-card-session" data-level="intermediate"><div class="prompt-cat">Goal setting <span class="prompt-level" data-level="intermediate">Intermediate</span></div>&ldquo;Draft 3 learning goals for a Grade [Y] student in [Subject] based on their recent performance, with actionable steps for each.&rdquo;</div>
+          <div class="prompt-card-session" data-level="advanced"><div class="prompt-cat">Portfolio reflection <span class="prompt-level" data-level="advanced">Advanced</span></div>&ldquo;Write a reflection prompt and guiding questions for Grade [Y] students to use when reflecting on their learning portfolio for [Subject].&rdquo;</div>
+        </div>
+
+        <!-- ── Writing – Creative & Instructional Content ── -->
+        <h3 class="prompt-section" data-section>Writing – Creative &amp; Instructional Content</h3>
+        <div class="prompt-grid-session">
+          <div class="prompt-card-session" data-level="basic"><div class="prompt-cat">Writing prompts <span class="prompt-level" data-level="basic">Basic</span></div>&ldquo;Generate 10 creative writing prompts for Grade [Y] students on the theme [Theme].&rdquo;</div>
+          <div class="prompt-card-session" data-level="basic"><div class="prompt-cat">Explanations <span class="prompt-level" data-level="basic">Basic</span></div>&ldquo;Explain [Concept] in simple, easy‑to‑understand language for a Grade [Y] student. Use examples.&rdquo;</div>
+          <div class="prompt-card-session" data-level="intermediate"><div class="prompt-cat">Story starters <span class="prompt-level" data-level="intermediate">Intermediate</span></div>&ldquo;Write 5 story starters for Grade [Y] students that connect to our current topic [Topic].&rdquo;</div>
+          <div class="prompt-card-session" data-level="intermediate"><div class="prompt-cat">Project instructions <span class="prompt-level" data-level="intermediate">Intermediate</span></div>&ldquo;Write clear, step‑by‑step instructions for a Grade [Y] project on [Topic], including materials and success criteria.&rdquo;</div>
+          <div class="prompt-card-session" data-level="advanced"><div class="prompt-cat">Cross‑curricular text <span class="prompt-level" data-level="advanced">Advanced</span></div>&ldquo;Write a short, engaging informational text for Grade [Y] students that connects [Subject A] and [Subject B] through [Theme].&rdquo;</div>
+        </div>
+
+        <!-- ── Presentations – Slide Content & Outlines ── -->
+        <h3 class="prompt-section" data-section>Presentations – Slide Content &amp; Outlines</h3>
+        <div class="prompt-grid-session">
+          <div class="prompt-card-session" data-level="basic"><div class="prompt-cat">Slide outline <span class="prompt-level" data-level="basic">Basic</span></div>&ldquo;Give me a slide‑by‑slide outline for a presentation on [Topic] for a [Grade] audience. Include key points per slide.&rdquo;</div>
+          <div class="prompt-card-session" data-level="basic"><div class="prompt-cat">Intro slide <span class="prompt-level" data-level="basic">Basic</span></div>&ldquo;Write an engaging introduction slide for a presentation on [Topic] for Grade [Y]. Include a hook and overview.&rdquo;</div>
+          <div class="prompt-card-session" data-level="intermediate"><div class="prompt-cat">Data slide <span class="prompt-level" data-level="intermediate">Intermediate</span></div>&ldquo;Suggest how to present [data/facts] on a slide for Grade [Y] in a clear, visual way. Write the accompanying talking points.&rdquo;</div>
+          <div class="prompt-card-session" data-level="basic"><div class="prompt-cat">Conclusion slide <span class="prompt-level" data-level="basic">Basic</span></div>&ldquo;Write a strong conclusion slide and call‑to‑action for a presentation on [Topic] for Grade [Y].&rdquo;</div>
+          <div class="prompt-card-session" data-level="intermediate"><div class="prompt-cat">Discussion questions <span class="prompt-level" data-level="intermediate">Intermediate</span></div>&ldquo;Generate 5 discussion questions for a presentation on [Topic] to engage a Grade [Y] class.&rdquo;</div>
+          <div class="prompt-card-session" data-level="advanced"><div class="prompt-cat">Interactive elements <span class="prompt-level" data-level="advanced">Advanced</span></div>&ldquo;Suggest 3 interactive elements (polls, Q&A, activities) to add to my presentation on [Topic] for Grade [Y] to boost engagement.&rdquo;</div>
+        </div>
+
+        <!-- ── Presentations – Speaker Notes & Scripts ── -->
+        <h3 class="prompt-section" data-section>Presentations – Speaker Notes &amp; Scripts</h3>
+        <div class="prompt-grid-session">
+          <div class="prompt-card-session" data-level="basic"><div class="prompt-cat">Speaker notes <span class="prompt-level" data-level="basic">Basic</span></div>&ldquo;Write speaker notes for a [X]‑minute presentation on [Topic] for Grade [Y]. Keep the language natural and conversational.&rdquo;</div>
+          <div class="prompt-card-session" data-level="basic"><div class="prompt-cat">Opening script <span class="prompt-level" data-level="basic">Basic</span></div>&ldquo;Write an opening script (60 seconds) for my presentation on [Topic] that grabs attention and sets the context.&rdquo;</div>
+          <div class="prompt-card-session" data-level="intermediate"><div class="prompt-cat">Transition phrases <span class="prompt-level" data-level="intermediate">Intermediate</span></div>&ldquo;Give me 5 smooth transition phrases to move between sections in my presentation on [Topic].&rdquo;</div>
+          <div class="prompt-card-session" data-level="intermediate"><div class="prompt-cat">Storytelling script <span class="prompt-level" data-level="intermediate">Intermediate</span></div>&ldquo;Turn this presentation outline on [Topic] into a storytelling script that would engage a Grade [Y] audience.&rdquo;</div>
+          <div class="prompt-card-session" data-level="advanced"><div class="prompt-cat">Q&A prep <span class="prompt-level" data-level="advanced">Advanced</span></div>&ldquo;Anticipate 5 likely questions from a Grade [Y] class about [Topic] and draft concise, clear answers for each.&rdquo;</div>
+        </div>
+
+        <!-- ── Presentations – Design & Visuals ── -->
+        <h3 class="prompt-section" data-section>Presentations – Design &amp; Visuals</h3>
+        <div class="prompt-grid-session">
+          <div class="prompt-card-session" data-level="basic"><div class="prompt-cat">Image suggestions <span class="prompt-level" data-level="basic">Basic</span></div>&ldquo;Suggest 5 types of images or visuals I should include in a presentation on [Topic] for Grade [Y] and where to place them.&rdquo;</div>
+          <div class="prompt-card-session" data-level="basic"><div class="prompt-cat">Colour scheme <span class="prompt-level" data-level="basic">Basic</span></div>&ldquo;Recommend a colour scheme and font pairing for a presentation on [Topic] that is age‑appropriate and visually appealing.&rdquo;</div>
+          <div class="prompt-card-session" data-level="intermediate"><div class="prompt-cat">Infographic ideas <span class="prompt-level" data-level="intermediate">Intermediate</span></div>&ldquo;Suggest an infographic layout for presenting [data/concept] in a presentation for Grade [Y].&rdquo;</div>
+          <div class="prompt-card-session" data-level="intermediate"><div class="prompt-cat">Animation tips <span class="prompt-level" data-level="intermediate">Intermediate</span></div>&ldquo;Give me 3 ways to use animation or motion in my presentation on [Topic] to enhance understanding without distracting.&rdquo;</div>
+          <div class="prompt-card-session" data-level="advanced"><div class="prompt-cat">Slide makeover <span class="prompt-level" data-level="advanced">Advanced</span></div>&ldquo;I have this slide with too much text: [paste text]. Redesign it visually for a Grade [Y] audience, suggesting layout, visuals, and bullet structure.&rdquo;</div>
+        </div>
+
+        <!-- ── Cross‑cutting prompts ── -->
+        <h3 class="prompt-section" data-section>Cross‑cutting – Writing + Presenting</h3>
+        <div class="prompt-grid-session">
+          <div class="prompt-card-session" data-level="basic"><div class="prompt-cat">From text to slides <span class="prompt-level" data-level="basic">Basic</span></div>&ldquo;Turn this lesson plan [paste] into a 10‑slide presentation outline for Grade [Y], with slide titles and bullet points.&rdquo;</div>
+          <div class="prompt-card-session" data-level="intermediate"><div class="prompt-cat">Handout + slides <span class="prompt-level" data-level="intermediate">Intermediate</span></div>&ldquo;Based on this presentation [paste outline], create a one‑page student handout that summarises the key takeaways for Grade [Y].&rdquo;</div>
+          <div class="prompt-card-session" data-level="advanced"><div class="prompt-cat">Integrated unit <span class="prompt-level" data-level="advanced">Advanced</span></div>&ldquo;Design a 2‑week unit for Grade [Y] on [Topic] that includes: a writing assignment, a presentation project, a rubric, and a peer feedback form.&rdquo;</div>
+        </div>
+
+        <p style="font-size:0.85rem;color:var(--text3);margin-top:-8px;">Note: These prompts work great in ChatGPT, Gemini, or any AI writing tool. For presentation tools, paste the generated outline and let the tool build the slides.</p>
+      </div>
+    </div>
+
+    <!-- ═══ CHAPTER 4 ═══ -->
+    <div id="page-ch4" class="page">
+      <div class="content-page">
+        <h1>4 · Quick Reference Cheat Sheet</h1>
+        <p class="page-desc">
+          Here's everything in one place. Bookmark this page. Stick it on your desk. Share it with a colleague. This is your go‑to summary of every tool covered in this guide.
+        </p>
+
+        <div class="cheat-table-wrap">
+          <table class="cheat-table">
+            <thead>
+              <tr>
+                <th>Tool</th>
+                <th>Best For</th>
+                <th>Free?</th>
+                <th>Chapter</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td class="tool-name">ChatGPT <small>chat.openai.com</small></td><td>Drafting, brainstorming, rewriting</td><td><span class="free-badge">Yes</span></td><td class="ch-ref">1 &amp; 3</td></tr>
+              <tr><td class="tool-name">Grammarly <small>grammarly.com</small></td><td>Editing, tone, clarity</td><td><span class="free-badge limited">Limited</span></td><td class="ch-ref">1</td></tr>
+              <tr><td class="tool-name">QuillBot <small>quillbot.com</small></td><td>Paraphrasing, summarising</td><td><span class="free-badge limited">Limited</span></td><td class="ch-ref">1</td></tr>
+              <tr><td class="tool-name">Jasper <small>jasper.ai</small></td><td>Long‑form content, lesson plans</td><td><span class="free-badge limited">Limited</span></td><td class="ch-ref">1</td></tr>
+              <tr><td class="tool-name">Copy.ai <small>copy.ai</small></td><td>Quick ideas, creative writing</td><td><span class="free-badge">Yes</span></td><td class="ch-ref">1</td></tr>
+              <tr><td class="tool-name">Writesonic <small>writesonic.com</small></td><td>Repurposing content, multiple versions</td><td><span class="free-badge limited">Limited</span></td><td class="ch-ref">1</td></tr>
+              <tr><td class="tool-name">Canva Magic Design <small>canva.com</small></td><td>Slide design, visual storytelling</td><td><span class="free-badge">Yes</span></td><td class="ch-ref">2 &amp; 3</td></tr>
+              <tr><td class="tool-name">Tome <small>tome.app</small></td><td>AI‑generated narrative presentations</td><td><span class="free-badge">Yes</span></td><td class="ch-ref">2</td></tr>
+              <tr><td class="tool-name">Gamma <small>gamma.app</small></td><td>Clean, modern presentations</td><td><span class="free-badge">Yes</span></td><td class="ch-ref">2</td></tr>
+              <tr><td class="tool-name">Beautiful.ai <small>beautiful.ai</small></td><td>Designer‑quality slides</td><td><span class="free-badge limited">Limited</span></td><td class="ch-ref">2</td></tr>
+              <tr><td class="tool-name">Copilot (PowerPoint) <small>microsoft.com</small></td><td>AI‑assisted PowerPoint creation</td><td><span class="free-badge limited">Limited</span></td><td class="ch-ref">2</td></tr>
+              <tr><td class="tool-name">Prezi AI <small>prezi.com</small></td><td>Dynamic, non‑linear presentations</td><td><span class="free-badge limited">Limited</span></td><td class="ch-ref">2</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="callout tip">
+          <div class="callout-label">A note before you go</div>
+          <p>You don't need to master all of these tools at once. Pick one writing tool and one presentation tool, spend a week with them, and see how they fit into your routine. The teachers who get the most out of AI are the ones who start small and build from there. You've already taken the first step by reading this guide.</p>
+        </div>
+      </div>
+    </div>
+
   </main>
+
+  <!-- ─── SCRIPTS ─── -->
+  <script>
+    // ── navigation ──
+    const pageNames = {
+      start: 'AI for Writing & Presentations',
+      ch1: 'Chapter 1 · Writing Tools',
+      ch2: 'Chapter 2 · Presentation Tools',
+      ch3: 'Chapter 3 · Prompt Library',
+      ch4: 'Chapter 4 · Cheat Sheet'
+    };
+
+    function showPage(id) {
+      document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+      document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+      const pg = document.getElementById('page-' + id);
+      if (pg) pg.classList.add('active');
+      document.querySelectorAll('.nav-item').forEach(n => {
+        if (n.getAttribute('onclick') && n.getAttribute('onclick').includes("'" + id + "'")) {
+          n.classList.add('active');
+        }
+      });
+      document.getElementById('sidebarSubtitle').textContent = pageNames[id] || id;
+      window.scrollTo(0, 0);
+      document.getElementById('sidebar').classList.remove('open');
+      document.getElementById('overlay').classList.remove('show');
+    }
+
+    function toggleGroup(header) {
+      const chevron = header.querySelector('.nav-group-chevron');
+      const items = header.nextElementSibling;
+      chevron.classList.toggle('open');
+      if (chevron.classList.contains('open')) {
+        items.style.maxHeight = items.scrollHeight + 'px';
+        items.classList.remove('collapsed');
+      } else {
+        items.style.maxHeight = items.scrollHeight + 'px';
+        requestAnimationFrame(() => { items.style.maxHeight = '0px'; });
+        items.classList.add('collapsed');
+      }
+    }
+
+    // init all groups open
+    document.querySelectorAll('.nav-group-items').forEach(el => {
+      el.style.maxHeight = 'none';
+    });
+
+    // ── prompt difficulty filter ──
+    function filterPrompts(level) {
+      const ch3 = document.getElementById('page-ch3');
+      const cards = ch3.querySelectorAll('.prompt-card-session');
+      const sections = ch3.querySelectorAll('.prompt-section');
+      let visibleCount = 0;
+
+      // toggle active button
+      document.querySelectorAll('.difficulty-btn').forEach(b => b.classList.remove('active'));
+      document.querySelector('.difficulty-btn[data-level="' + level + '"]').classList.add('active');
+
+      // show/hide cards
+      cards.forEach(card => {
+        if (level === 'all' || card.getAttribute('data-level') === level) {
+          card.style.display = '';
+          visibleCount++;
+        } else {
+          card.style.display = 'none';
+        }
+      });
+
+      // hide section headers with no visible cards
+      sections.forEach(sec => {
+        let grid = sec.nextElementSibling;
+        if (!grid || !grid.classList.contains('prompt-grid-session')) {
+          sec.classList.remove('hidden');
+          return;
+        }
+        const hasVisible = Array.from(grid.querySelectorAll('.prompt-card-session'))
+          .some(c => c.style.display !== 'none');
+        sec.classList.toggle('hidden', !hasVisible);
+        grid.classList.toggle('hidden', !hasVisible);
+        // toggle a following note paragraph if it belongs to this section
+        let next = grid.nextElementSibling;
+        if (next && next.tagName === 'P' && !hasVisible) {
+          next.dataset.wasNote = '1';
+          next.style.display = 'none';
+        } else if (next && next.tagName === 'P' && next.dataset.wasNote === '1' && hasVisible) {
+          next.style.display = '';
+        }
+      });
+
+      const countEl = document.getElementById('promptCount');
+      countEl.textContent = visibleCount + ' prompt' + (visibleCount === 1 ? '' : 's') + ' shown';
+    }
+
+    // mobile sidebar
+    document.getElementById('mobBtn').addEventListener('click', () => {
+      document.getElementById('sidebar').classList.toggle('open');
+      document.getElementById('overlay').classList.toggle('show');
+    });
+    document.getElementById('overlay').addEventListener('click', () => {
+      document.getElementById('sidebar').classList.remove('open');
+      document.getElementById('overlay').classList.remove('show');
+    });
+
+    // theme
+    document.getElementById('themeBtn').addEventListener('click', () => {
+      const curr = document.body.getAttribute('data-theme');
+      const next = curr === 'dark' ? 'light' : 'dark';
+      document.body.setAttribute('data-theme', next);
+      document.getElementById('themeBtn').textContent = next === 'dark' ? '☀️' : '🌙';
+      localStorage.setItem('pe-theme', next);
+    });
+    const savedTheme = localStorage.getItem('pe-theme') || 'light';
+    document.body.setAttribute('data-theme', savedTheme);
+    document.getElementById('themeBtn').textContent = savedTheme === 'dark' ? '☀️' : '🌙';
+
+    // initial prompt count
+    document.addEventListener('DOMContentLoaded', () => {
+      const total = document.querySelectorAll('#page-ch3 .prompt-card-session').length;
+      const countEl = document.getElementById('promptCount');
+      countEl.textContent = total + ' prompts shown';
+    });
+  </script>
 </body>
 </html>
