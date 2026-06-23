@@ -1,96 +1,1067 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Upcoming Session | AI and Digital Skills</title>
-  <link rel="icon" type="image/png" href="../../assets/favicon.png">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,500;0,600;1,400&display=swap" rel="stylesheet">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AI Safety & Critical Thinking</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
   <style>
-    :root {
-      --bg: #F9F8F6;
-      --text: #1A1A1A;
-      --text-muted: #666666;
-      --line: #E5E2DD;
-      --accent: #2C3E50;
+    /* ── reset & variables (matching reference design) ── */
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
     }
-    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --sidebar-w: 220px;
+      --bg: #ffffff;
+      --bg2: #f8f8f8;
+      --bg3: #f0f0f0;
+      --border: #e5e5e5;
+      --border2: #d0d0d0;
+      --text: #111111;
+      --text2: #555555;
+      --text3: #888888;
+      --accent: #111111;
+      --accent-light: #f0f0f0;
+      --green: #16a34a;
+      --blue: #2563eb;
+      --orange: #d97706;
+      --red: #dc2626;
+      --badge-bg: #f5f5f5;
+      --shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+      --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    [data-theme="dark"] {
+      --bg: #0f0f0f;
+      --bg2: #1a1a1a;
+      --bg3: #222222;
+      --border: #2a2a2a;
+      --border2: #333333;
+      --text: #f5f5f5;
+      --text2: #aaaaaa;
+      --text3: #666666;
+      --accent: #f5f5f5;
+      --accent-light: #222222;
+      --badge-bg: #1e1e1e;
+      --shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+      --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.5);
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
     body {
       font-family: 'Inter', sans-serif;
-      background-color: var(--bg);
+      background: var(--bg);
       color: var(--text);
       display: flex;
+      min-height: 100vh;
+      line-height: 1.6;
+      transition: background 0.3s, color 0.3s;
+    }
+
+    /* ── sidebar ── */
+    .sidebar {
+      width: var(--sidebar-w);
+      min-width: var(--sidebar-w);
+      background: var(--bg);
+      border-right: 1px solid var(--border);
+      height: 100vh;
+      position: fixed;
+      top: 0;
+      left: 0;
+      overflow-y: auto;
+      z-index: 100;
+      display: flex;
       flex-direction: column;
+    }
+    .sidebar::-webkit-scrollbar {
+      width: 4px;
+    }
+    .sidebar::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    .sidebar::-webkit-scrollbar-thumb {
+      background: var(--border);
+      border-radius: 2px;
+    }
+    .sidebar-top {
+      padding: 20px 16px 12px;
+      border-bottom: 1px solid var(--border);
+    }
+    .sidebar-title {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 4px;
+    }
+    .sidebar-subtitle {
+      font-size: 0.75rem;
+      color: var(--text3);
+      line-height: 1.4;
+    }
+    .sidebar-nav {
+      flex: 1;
+      padding: 12px 0 24px;
+    }
+    .nav-group {
+      margin-bottom: 2px;
+    }
+    .nav-group-header {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 16px;
+      cursor: pointer;
+      user-select: none;
+    }
+    .nav-group-header:hover {
+      background: var(--bg2);
+    }
+    .nav-group-chevron {
+      width: 14px;
+      height: 14px;
+      transition: transform 0.2s;
+      color: var(--text3);
+      flex-shrink: 0;
+    }
+    .nav-group-chevron.open {
+      transform: rotate(90deg);
+    }
+    .nav-group-label {
+      font-size: 0.68rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--text2);
+    }
+    .nav-group-items {
+      overflow: hidden;
+      transition: max-height 0.25s ease;
+    }
+    .nav-group-items.collapsed {
+      max-height: 0 !important;
+    }
+    .nav-item {
+      display: block;
+      padding: 5px 16px 5px 28px;
+      font-size: 0.8rem;
+      color: var(--text2);
+      text-decoration: none;
+      transition: all 0.15s;
+      border-radius: 0;
+      cursor: pointer;
+    }
+    .nav-item:hover {
+      color: var(--text);
+      background: var(--bg2);
+    }
+    .nav-item.active {
+      color: var(--text);
+      font-weight: 600;
+      background: var(--bg2);
+    }
+    .sidebar-footer {
+      padding: 12px 16px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .theme-btn {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: var(--bg2);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.9rem;
+      color: var(--text);
+      transition: all 0.2s;
+    }
+    .theme-btn:hover {
+      border-color: var(--border2);
+    }
+    .mobile-sidebar-btn {
+      display: none;
+      position: fixed;
+      top: 12px;
+      left: 12px;
+      z-index: 200;
+      width: 36px;
+      height: 36px;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      cursor: pointer;
+      align-items: center;
+      justify-content: center;
+      font-size: 1rem;
+    }
+    .sidebar-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.4);
+      z-index: 99;
+    }
+    .sidebar-overlay.show {
+      display: block;
+    }
+
+    /* ── main ── */
+    .main {
+      margin-left: var(--sidebar-w);
+      flex: 1;
       min-height: 100vh;
     }
-    .navbar {
-      width: 100%;
-      background: var(--bg);
-      border-bottom: 1px solid var(--line);
-      padding: 1rem 2rem;
+
+    /* ── pages ── */
+    .page {
+      display: none;
+      min-height: 100vh;
     }
-    .nav-container {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      max-width: 1200px;
+    .page.active {
+      display: block;
+    }
+
+    /* ── content page ── */
+    .content-page {
+      max-width: 820px;
       margin: 0 auto;
+      padding: 64px 40px 120px;
     }
-    .nav-brand {
-      font-family: 'Playfair Display', serif;
-      font-size: 1.25rem;
-      font-weight: 500;
+    .content-page h1 {
+      font-size: 2rem;
+      font-weight: 800;
+      margin-bottom: 12px;
+      color: var(--text);
+      line-height: 1.2;
     }
-    .nav-menu {
-      display: flex;
-      gap: 1.5rem;
-      list-style: none;
+    .content-page .page-desc {
+      font-size: 1rem;
+      color: var(--text2);
+      margin-bottom: 40px;
+      line-height: 1.7;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 32px;
     }
-    .nav-menu a {
-      text-decoration: none;
-      color: var(--text-muted);
-      font-weight: 500;
+    .content-page h2 {
+      font-size: 1.35rem;
+      font-weight: 700;
+      margin: 44px 0 16px;
+      color: var(--text);
+    }
+    .content-page h3 {
+      font-size: 1.05rem;
+      font-weight: 600;
+      margin: 28px 0 10px;
+      color: var(--text);
+    }
+    .content-page h4 {
+      font-size: 0.92rem;
+      font-weight: 600;
+      margin: 20px 0 6px;
+      color: var(--text);
+    }
+    .content-page p {
+      font-size: 0.95rem;
+      color: var(--text2);
+      margin-bottom: 14px;
+      line-height: 1.75;
+    }
+    .content-page ul,
+    .content-page ol {
+      margin: 0 0 16px 20px;
+    }
+    .content-page li {
+      font-size: 0.95rem;
+      color: var(--text2);
+      margin-bottom: 6px;
+      line-height: 1.6;
+    }
+
+    .callout {
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 16px 20px;
+      margin: 20px 0;
+      background: var(--bg2);
+    }
+    .callout.info {
+      border-left: 3px solid var(--blue);
+    }
+    .callout.tip {
+      border-left: 3px solid var(--green);
+    }
+    .callout.warn {
+      border-left: 3px solid var(--orange);
+    }
+    .callout-label {
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-bottom: 6px;
+    }
+    .callout.info .callout-label {
+      color: var(--blue);
+    }
+    .callout.tip .callout-label {
+      color: var(--green);
+    }
+    .callout.warn .callout-label {
+      color: var(--orange);
+    }
+    .callout p {
+      margin: 0;
+      color: var(--text2);
       font-size: 0.9rem;
-      transition: color 0.2s;
     }
-    .nav-menu a:hover { color: var(--text); }
-    .main-content {
-      flex: 1;
+
+    /* ── tool cards (reused for rules & activities) ── */
+    .tool-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin: 16px 0 24px;
+    }
+    .tool-card-session {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 18px 20px 20px;
+      transition: all 0.2s;
+    }
+    .tool-card-session:hover {
+      border-color: var(--border2);
+      box-shadow: var(--shadow-md);
+      transform: translateY(-2px);
+    }
+    .tool-card-session h4 {
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--text);
+      margin: 0 0 2px;
+    }
+    .tool-card-session .tool-url {
+      font-size: 0.72rem;
+      color: var(--text3);
+      font-family: 'JetBrains Mono', monospace;
+      word-break: break-all;
+      margin-bottom: 6px;
+    }
+    .tool-card-session .tool-best {
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: var(--blue);
+      margin-bottom: 6px;
+    }
+    .tool-card-session p {
+      font-size: 0.88rem;
+      color: var(--text2);
+      margin: 0 0 8px;
+      line-height: 1.6;
+    }
+    .tool-card-session .tool-tips {
+      font-size: 0.82rem;
+      color: var(--text2);
+      border-top: 1px solid var(--border);
+      padding-top: 10px;
+      margin-top: 8px;
+    }
+    .tool-card-session .tool-tips strong {
+      color: var(--text);
+      font-weight: 600;
+    }
+    .tool-card-session .tool-tips ul {
+      margin: 4px 0 0 16px;
+    }
+    .tool-card-session .tool-tips li {
+      font-size: 0.82rem;
+      margin-bottom: 2px;
+    }
+
+    /* ── prompt cards ── */
+    .prompt-grid-session {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin: 16px 0 24px;
+    }
+    .prompt-card-session {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 14px 16px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.8rem;
+      color: var(--text);
+      line-height: 1.5;
+      transition: border-color 0.2s;
+    }
+    .prompt-card-session:hover {
+      border-color: var(--border2);
+    }
+    .prompt-card-session .prompt-cat {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.65rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--text3);
+      margin-bottom: 6px;
+    }
+
+    /* difficulty filter & badges */
+    .difficulty-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+      margin: 24px 0 8px;
+      padding: 14px 16px;
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+    }
+    .difficulty-bar-label {
+      font-size: 0.7rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--text2);
+      margin-right: 4px;
+    }
+    .difficulty-btn {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.82rem;
+      font-weight: 600;
+      padding: 8px 18px;
+      border-radius: 50px;
+      border: 1px solid var(--border2);
+      background: var(--bg);
+      color: var(--text2);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .difficulty-btn:hover {
+      border-color: var(--text);
+      color: var(--text);
+    }
+    .difficulty-btn.active {
+      color: #ffffff;
+      border-color: transparent;
+    }
+    .difficulty-btn[data-level="all"].active {
+      background: var(--text);
+    }
+    .difficulty-btn[data-level="basic"].active {
+      background: var(--green);
+    }
+    .difficulty-btn[data-level="intermediate"].active {
+      background: var(--blue);
+    }
+    .difficulty-btn[data-level="advanced"].active {
+      background: var(--red);
+    }
+    .difficulty-count {
+      margin-left: auto;
+      font-size: 0.75rem;
+      color: var(--text3);
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    .prompt-card-session .prompt-level {
+      display: inline-block;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.6rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      padding: 2px 8px;
+      border-radius: 20px;
+      margin-left: 6px;
+    }
+    .prompt-card-session[data-level="basic"] {
+      border-left: 3px solid var(--green);
+    }
+    .prompt-card-session[data-level="intermediate"] {
+      border-left: 3px solid var(--blue);
+    }
+    .prompt-card-session[data-level="advanced"] {
+      border-left: 3px solid var(--red);
+    }
+    .prompt-card-session .prompt-level[data-level="basic"] {
+      background: #dcfce7;
+      color: #16a34a;
+    }
+    .prompt-card-session .prompt-level[data-level="intermediate"] {
+      background: #dbeafe;
+      color: #2563eb;
+    }
+    .prompt-card-session .prompt-level[data-level="advanced"] {
+      background: #fee2e2;
+      color: #dc2626;
+    }
+    [data-theme="dark"] .prompt-card-session .prompt-level[data-level="basic"] {
+      background: rgba(22, 163, 74, 0.2);
+      color: #4ade80;
+    }
+    [data-theme="dark"] .prompt-card-session .prompt-level[data-level="intermediate"] {
+      background: rgba(37, 99, 235, 0.2);
+      color: #60a5fa;
+    }
+    [data-theme="dark"] .prompt-card-session .prompt-level[data-level="advanced"] {
+      background: rgba(220, 38, 38, 0.2);
+      color: #f87171;
+    }
+
+    .prompt-section {
+      margin-top: 8px;
+    }
+    .prompt-section.hidden {
+      display: none;
+    }
+    .prompt-grid-session.hidden {
+      display: none;
+    }
+
+    /* ── cheat sheet table ── */
+    .cheat-table-wrap {
+      overflow-x: auto;
+      margin: 20px 0 32px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      background: var(--bg);
+    }
+    .cheat-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.82rem;
+      min-width: 500px;
+    }
+    .cheat-table th {
+      text-align: left;
+      padding: 12px 14px;
+      background: var(--bg2);
+      font-weight: 700;
+      color: var(--text);
+      border-bottom: 1px solid var(--border);
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .cheat-table td {
+      padding: 11px 14px;
+      border-bottom: 1px solid var(--border);
+      color: var(--text2);
+      vertical-align: middle;
+    }
+    .cheat-table tr:last-child td {
+      border-bottom: none;
+    }
+    .cheat-table .ch-ref {
+      font-size: 0.7rem;
+      color: var(--text3);
+    }
+    .cheat-table .tag-badge {
+      display: inline-block;
+      padding: 2px 10px;
+      border-radius: 20px;
+      font-size: 0.68rem;
+      font-weight: 600;
+      background: var(--badge-bg);
+      color: var(--text2);
+    }
+    .cheat-table .tag-badge.rule {
+      background: #dbeafe;
+      color: #2563eb;
+    }
+    [data-theme="dark"] .cheat-table .tag-badge.rule {
+      background: rgba(37, 99, 235, 0.2);
+      color: #60a5fa;
+    }
+    .cheat-table .tag-badge.activity {
+      background: #dcfce7;
+      color: #16a34a;
+    }
+    [data-theme="dark"] .cheat-table .tag-badge.activity {
+      background: rgba(22, 163, 74, 0.2);
+      color: #4ade80;
+    }
+    .cheat-table .tag-badge.prompt {
+      background: #fef3c7;
+      color: #d97706;
+    }
+    [data-theme="dark"] .cheat-table .tag-badge.prompt {
+      background: rgba(217, 119, 6, 0.2);
+      color: #fbbf24;
+    }
+
+    /* ── responsive ── */
+    @media (max-width: 768px) {
+      .sidebar {
+        transform: translateX(-100%);
+        transition: transform 0.3s;
+      }
+      .sidebar.open {
+        transform: translateX(0);
+      }
+      .main {
+        margin-left: 0;
+      }
+      .mobile-sidebar-btn {
+        display: flex;
+      }
+      .content-page {
+        padding: 48px 20px 80px;
+      }
+      .tool-grid {
+        grid-template-columns: 1fr;
+      }
+      .prompt-grid-session {
+        grid-template-columns: 1fr;
+      }
+      .cheat-table-wrap {
+        border-radius: 0;
+        border-left: none;
+        border-right: none;
+      }
+    }
+
+    .hero-page {
       display: flex;
       flex-direction: column;
-      justify-content: center;
       align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      padding: 60px 40px;
       text-align: center;
-      padding: 2rem;
     }
-    h1 {
-      font-family: 'Playfair Display', serif;
-      font-size: 3rem;
-      font-style: italic;
-      margin-bottom: 1rem;
+    .hero-h1 {
+      font-size: clamp(2rem, 5vw, 3.5rem);
+      font-weight: 800;
+      line-height: 1.1;
+      color: var(--text);
+      max-width: 700px;
+      margin-bottom: 20px;
     }
-    p {
-      color: var(--text-muted);
-      font-size: 1.1rem;
-      max-width: 500px;
+    .hero-desc {
+      font-size: 1rem;
+      color: var(--text2);
+      max-width: 520px;
+      margin-bottom: 36px;
+      line-height: 1.7;
+    }
+    .hero-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 14px 28px;
+      background: var(--text);
+      color: var(--bg);
+      border: none;
+      border-radius: 50px;
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: opacity 0.2s, transform 0.2s;
+      text-decoration: none;
+    }
+    .hero-btn:hover {
+      opacity: 0.85;
+      transform: translateY(-1px);
     }
   </style>
 </head>
-<body>
-  <nav class="navbar">
-    <div class="nav-container">
-      <div class="nav-brand">Upcoming Session</div>
-      <ul class="nav-menu">
-        <li><a href="../../">Home</a></li>
-        <li><a href="../../syllabus/">Syllabus</a></li>
-      </ul>
+<body data-theme="light">
+
+  <!-- mobile toggle -->
+  <button class="mobile-sidebar-btn" id="mobBtn">☰</button>
+  <div class="sidebar-overlay" id="overlay"></div>
+
+  <!-- ─── SIDEBAR ─── -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-top">
+      <div class="sidebar-title">AI Safety &amp; Thinking</div>
+      <div class="sidebar-subtitle" id="sidebarSubtitle">Critical Thinking Guide</div>
     </div>
-  </nav>
-  <main class="main-content">
-    <h1>Upcoming Session</h1>
-    <p>This session content is currently being prepared and will be available soon. Please check back later.</p>
+    <nav class="sidebar-nav" id="sidebarNav">
+
+      <div class="nav-group">
+        <div class="nav-group-header" onclick="toggleGroup(this)">
+          <svg class="nav-group-chevron open" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"/></svg>
+          <span class="nav-group-label">Introduction</span>
+        </div>
+        <div class="nav-group-items">
+          <a class="nav-item active" onclick="showPage('start')">Start Here</a>
+        </div>
+      </div>
+
+      <div class="nav-group">
+        <div class="nav-group-header" onclick="toggleGroup(this)">
+          <svg class="nav-group-chevron open" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"/></svg>
+          <span class="nav-group-label">Chapter 1</span>
+        </div>
+        <div class="nav-group-items">
+          <a class="nav-item" onclick="showPage('ch1')">3 Big Rules</a>
+        </div>
+      </div>
+
+      <div class="nav-group">
+        <div class="nav-group-header" onclick="toggleGroup(this)">
+          <svg class="nav-group-chevron open" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"/></svg>
+          <span class="nav-group-label">Chapter 2</span>
+        </div>
+        <div class="nav-group-items">
+          <a class="nav-item" onclick="showPage('ch2')">3 Activities</a>
+        </div>
+      </div>
+
+      <div class="nav-group">
+        <div class="nav-group-header" onclick="toggleGroup(this)">
+          <svg class="nav-group-chevron open" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"/></svg>
+          <span class="nav-group-label">Chapter 3</span>
+        </div>
+        <div class="nav-group-items">
+          <a class="nav-item" onclick="showPage('ch3')">Golden Prompts</a>
+        </div>
+      </div>
+
+      <div class="nav-group">
+        <div class="nav-group-header" onclick="toggleGroup(this)">
+          <svg class="nav-group-chevron open" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"/></svg>
+          <span class="nav-group-label">Chapter 4</span>
+        </div>
+        <div class="nav-group-items">
+          <a class="nav-item" onclick="showPage('ch4')">Cheat Sheet</a>
+        </div>
+      </div>
+
+    </nav>
+    <div class="sidebar-footer">
+      <span style="font-size:0.72rem;color:var(--text3);">Teacher Guide</span>
+      <button class="theme-btn" id="themeBtn" title="Toggle theme">🌙</button>
+    </div>
+  </aside>
+
+  <!-- ─── MAIN ─── -->
+  <main class="main">
+
+    <!-- ═══ START PAGE ═══ -->
+    <div id="page-start" class="page active">
+      <div class="hero-page">
+        <h1 class="hero-h1">AI Safety &amp; Critical Thinking</h1>
+        <p class="hero-desc">
+          A short, practical guide for teachers &bull; Grades 1–8 &bull; Build healthy skepticism &bull; 30‑minute read
+        </p>
+        <p style="max-width:600px;color:var(--text2);margin-bottom:32px;font-size:0.95rem;line-height:1.7;">
+          AI is a brilliant assistant, but sometimes it lies. This guide gives you 3 simple rules, 3 classroom activities, and a handful of prompts to turn your students into fact‑checking detectives.
+        </p>
+        <a class="hero-btn" onclick="showPage('ch1')">Start Reading &darr;</a>
+      </div>
+    </div>
+
+    <!-- ═══ CHAPTER 1 ═══ -->
+    <div id="page-ch1" class="page">
+      <div class="content-page">
+        <h1>1 · The 3 Big Rules</h1>
+        <p class="page-desc">
+          Before you do anything else, get these three rules in your head. They are the foundation for every conversation you'll have with students about AI.
+        </p>
+
+        <div class="tool-grid">
+          <div class="tool-card-session">
+            <h4>Rule 1: AI doesn't "know" — it predicts</h4>
+            <div class="tool-best">Key idea: It's a supercharged autocomplete</div>
+            <p>AI doesn't have a brain or common sense. It looks at billions of examples and guesses the next most likely word. That's why it can sound so confident while being completely wrong.</p>
+            <div class="tool-tips">
+              <strong>Say this to students:</strong>
+              <ul>
+                <li>"AI is like a smart parrot — it repeats patterns, but it doesn't understand."</li>
+                <li>"Always ask: Does this actually make sense?"</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="tool-card-session">
+            <h4>Rule 2: AI copies human mistakes</h4>
+            <div class="tool-best">Key idea: Bias comes from the internet</div>
+            <p>AI learns from human writing, images, and conversations. If people have stereotypes (gender, race, culture), AI will repeat them. We have to actively tell AI to be fair.</p>
+            <div class="tool-tips">
+              <strong>Say this to students:</strong>
+              <ul>
+                <li>"The internet isn't always fair — AI picks up those unfair patterns."</li>
+                <li>"We can fix it by asking for diverse examples."</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="tool-card-session">
+            <h4>Rule 3: If it sounds too perfect, question it</h4>
+            <div class="tool-best">Key idea: Confidence ≠ correctness</div>
+            <p>AI is great at making fake facts sound real. It will invent sources, dates, and details with perfect grammar. The more polished the answer, the more you need to verify it.</p>
+            <div class="tool-tips">
+              <strong>Say this to students:</strong>
+              <ul>
+                <li>"Fake news often sounds very convincing."</li>
+                <li>"Our job is to be the detective and check the facts."</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="callout tip">
+          <div class="callout-label">Poster Idea</div>
+          <p><strong>"AI is the Assistant. YOU are the Boss."</strong> — Bosses always check their assistant's work.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ CHAPTER 2 ═══ -->
+    <div id="page-ch2" class="page">
+      <div class="content-page">
+        <h1>2 · 3 Classroom Activities</h1>
+        <p class="page-desc">
+          Each activity takes about 15 minutes. Pick one, try it, and watch your students become healthy skeptics.
+        </p>
+
+        <div class="tool-grid">
+          <div class="tool-card-session">
+            <h4>Activity A: Fact or Fiction?</h4>
+            <div class="tool-best">Target: Hallucinations (making things up)</div>
+            <p>Give students 3 sentences about a topic they know. Two are true (from the textbook), one is a believable lie generated by AI. Ask them to spot the lie and explain how they could check it.</p>
+            <div class="tool-tips">
+              <strong>Teacher tip:</strong>
+              <ul>
+                <li>Use a topic you just taught in class.</li>
+                <li>Ask: "Why did the AI add that fake detail?"</li>
+                <li>Takeaway: AI adds fake details to sound good.</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="tool-card-session">
+            <h4>Activity B: The Picture Test</h4>
+            <div class="tool-best">Target: Bias (unfair stereotypes)</div>
+            <p>Use an AI image generator (like Canva or ChatGPT) to create "a picture of a scientist" and "a picture of a nurse." Show the class. Ask why the AI drew mostly men for scientists and mostly women for nurses.</p>
+            <div class="tool-tips">
+              <strong>Teacher tip:</strong>
+              <ul>
+                <li>Then ask: "How can we fix this?"</li>
+                <li>Rewrite the prompt: "a female scientist" or "a male nurse."</li>
+                <li>Takeaway: We have to tell AI to be fair.</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="tool-card-session">
+            <h4>Activity C: The Source Check</h4>
+            <div class="tool-best">Target: Verification habit</div>
+            <p>Use a tool like Perplexity AI that shows sources. Ask it a question and show the sources at the bottom. Ask students to find the exact sentence in the source that proves the AI is telling the truth.</p>
+            <div class="tool-tips">
+              <strong>Teacher tip:</strong>
+              <ul>
+                <li>If the AI doesn't show sources, treat it like a rumor.</li>
+                <li>Cross-check with a second tool or a book.</li>
+                <li>Takeaway: Always ask "Where did you get that?"</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ CHAPTER 3 ═══ -->
+    <div id="page-ch3" class="page">
+      <div class="content-page">
+        <h1>3 · Golden Prompts</h1>
+        <p class="page-desc">
+          Copy-paste these prompts into any AI tool to force it to be honest and transparent. They add "safety rails" to your questions.
+        </p>
+
+        <div class="difficulty-bar" role="toolbar" aria-label="Filter prompts by difficulty">
+          <span class="difficulty-bar-label">Level:</span>
+          <button class="difficulty-btn active" data-level="all" onclick="filterPrompts('all')">All</button>
+          <button class="difficulty-btn" data-level="basic" onclick="filterPrompts('basic')">Basic</button>
+          <button class="difficulty-btn" data-level="intermediate" onclick="filterPrompts('intermediate')">Intermediate</button>
+          <button class="difficulty-btn" data-level="advanced" onclick="filterPrompts('advanced')">Advanced</button>
+          <span class="difficulty-count" id="promptCount"></span>
+        </div>
+
+        <h3 class="prompt-section" data-section>Safety Prompts</h3>
+        <div class="prompt-grid-session">
+          <div class="prompt-card-session" data-level="basic"><div class="prompt-cat">Honesty <span class="prompt-level" data-level="basic">Basic</span></div>&ldquo;Explain [Topic], but if you are not completely sure, just say 'I don't know'.&rdquo;</div>
+          <div class="prompt-card-session" data-level="basic"><div class="prompt-cat">Confidence check <span class="prompt-level" data-level="basic">Basic</span></div>&ldquo;Give me 3 facts about [Topic]. Tell me which one you are least sure about.&rdquo;</div>
+          <div class="prompt-card-session" data-level="intermediate"><div class="prompt-cat">Sources <span class="prompt-level" data-level="intermediate">Intermediate</span></div>&ldquo;Summarise [Topic] and list the specific sources you used for each claim.&rdquo;</div>
+          <div class="prompt-card-session" data-level="intermediate"><div class="prompt-cat">Multiple perspectives <span class="prompt-level" data-level="intermediate">Intermediate</span></div>&ldquo;Give me two different viewpoints on [Topic] so I don't get a one-sided answer.&rdquo;</div>
+          <div class="prompt-card-session" data-level="advanced"><div class="prompt-cat">Counterarguments <span class="prompt-level" data-level="advanced">Advanced</span></div>&ldquo;What are the strongest counterarguments to your answer about [Topic]?&rdquo;</div>
+          <div class="prompt-card-session" data-level="advanced"><div class="prompt-cat">Bias audit <span class="prompt-level" data-level="advanced">Advanced</span></div>&ldquo;Read this draft text [paste] and tell me if it contains any gender, cultural, or racial bias. Suggest a neutral rewrite.&rdquo;</div>
+        </div>
+
+        <div class="callout info">
+          <div class="callout-label">Pro tip</div>
+          <p>Add this permanent instruction to your ChatGPT or Gemini settings: <em>"Always tell me if you are guessing or unsure. Cite sources when possible."</em></p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ CHAPTER 4 ═══ -->
+    <div id="page-ch4" class="page">
+      <div class="content-page">
+        <h1>4 · Quick Reference Cheat Sheet</h1>
+        <p class="page-desc">
+          Everything in one glance. Keep this on your desk or share it with a colleague.
+        </p>
+
+        <div class="cheat-table-wrap">
+          <table class="cheat-table">
+            <thead>
+              <tr>
+                <th>What to remember</th>
+                <th>Type</th>
+                <th>Chapter</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td>AI predicts words, it doesn't "know" facts</td><td><span class="tag-badge rule">Rule</span></td><td class="ch-ref">1</td></tr>
+              <tr><td>AI repeats human biases from the internet</td><td><span class="tag-badge rule">Rule</span></td><td class="ch-ref">1</td></tr>
+              <tr><td>Confident answers can still be completely wrong</td><td><span class="tag-badge rule">Rule</span></td><td class="ch-ref">1</td></tr>
+              <tr><td>Fact or Fiction? – Spot the AI lie</td><td><span class="tag-badge activity">Activity</span></td><td class="ch-ref">2</td></tr>
+              <tr><td>The Picture Test – Uncover bias</td><td><span class="tag-badge activity">Activity</span></td><td class="ch-ref">2</td></tr>
+              <tr><td>The Source Check – Always verify</td><td><span class="tag-badge activity">Activity</span></td><td class="ch-ref">2</td></tr>
+              <tr><td>"If unsure, say 'I don't know'"</td><td><span class="tag-badge prompt">Prompt</span></td><td class="ch-ref">3</td></tr>
+              <tr><td>"Give me two different viewpoints"</td><td><span class="tag-badge prompt">Prompt</span></td><td class="ch-ref">3</td></tr>
+              <tr><td>"List your sources for each claim"</td><td><span class="tag-badge prompt">Prompt</span></td><td class="ch-ref">3</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="callout tip">
+          <div class="callout-label">Final thought</div>
+          <p>You don't need to be a tech expert to teach critical thinking. You already do this when you ask "How do you know that?" or "Where did you read that?" AI Safety is just good teaching with a new tool.</p>
+        </div>
+      </div>
+    </div>
+
   </main>
+
+  <!-- ─── SCRIPTS ─── -->
+  <script>
+    // ── navigation ──
+    const pageNames = {
+      start: 'AI Safety & Critical Thinking',
+      ch1: 'Chapter 1 · 3 Big Rules',
+      ch2: 'Chapter 2 · 3 Activities',
+      ch3: 'Chapter 3 · Golden Prompts',
+      ch4: 'Chapter 4 · Cheat Sheet'
+    };
+
+    function showPage(id) {
+      document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+      document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+      const pg = document.getElementById('page-' + id);
+      if (pg) pg.classList.add('active');
+      document.querySelectorAll('.nav-item').forEach(n => {
+        if (n.getAttribute('onclick') && n.getAttribute('onclick').includes("'" + id + "'")) {
+          n.classList.add('active');
+        }
+      });
+      document.getElementById('sidebarSubtitle').textContent = pageNames[id] || id;
+      window.scrollTo(0, 0);
+      document.getElementById('sidebar').classList.remove('open');
+      document.getElementById('overlay').classList.remove('show');
+    }
+
+    function toggleGroup(header) {
+      const chevron = header.querySelector('.nav-group-chevron');
+      const items = header.nextElementSibling;
+      chevron.classList.toggle('open');
+      if (chevron.classList.contains('open')) {
+        items.style.maxHeight = items.scrollHeight + 'px';
+        items.classList.remove('collapsed');
+      } else {
+        items.style.maxHeight = items.scrollHeight + 'px';
+        requestAnimationFrame(() => { items.style.maxHeight = '0px'; });
+        items.classList.add('collapsed');
+      }
+    }
+
+    document.querySelectorAll('.nav-group-items').forEach(el => {
+      el.style.maxHeight = 'none';
+    });
+
+    // ── prompt filter ──
+    function filterPrompts(level) {
+      const ch3 = document.getElementById('page-ch3');
+      const cards = ch3.querySelectorAll('.prompt-card-session');
+      const sections = ch3.querySelectorAll('.prompt-section');
+      let visibleCount = 0;
+
+      document.querySelectorAll('.difficulty-btn').forEach(b => b.classList.remove('active'));
+      document.querySelector('.difficulty-btn[data-level="' + level + '"]').classList.add('active');
+
+      cards.forEach(card => {
+        if (level === 'all' || card.getAttribute('data-level') === level) {
+          card.style.display = '';
+          visibleCount++;
+        } else {
+          card.style.display = 'none';
+        }
+      });
+
+      sections.forEach(sec => {
+        let grid = sec.nextElementSibling;
+        if (!grid || !grid.classList.contains('prompt-grid-session')) {
+          sec.classList.remove('hidden');
+          return;
+        }
+        const hasVisible = Array.from(grid.querySelectorAll('.prompt-card-session'))
+          .some(c => c.style.display !== 'none');
+        sec.classList.toggle('hidden', !hasVisible);
+        grid.classList.toggle('hidden', !hasVisible);
+      });
+
+      const countEl = document.getElementById('promptCount');
+      countEl.textContent = visibleCount + ' prompt' + (visibleCount === 1 ? '' : 's') + ' shown';
+    }
+
+    // mobile
+    document.getElementById('mobBtn').addEventListener('click', () => {
+      document.getElementById('sidebar').classList.toggle('open');
+      document.getElementById('overlay').classList.toggle('show');
+    });
+    document.getElementById('overlay').addEventListener('click', () => {
+      document.getElementById('sidebar').classList.remove('open');
+      document.getElementById('overlay').classList.remove('show');
+    });
+
+    // theme
+    document.getElementById('themeBtn').addEventListener('click', () => {
+      const curr = document.body.getAttribute('data-theme');
+      const next = curr === 'dark' ? 'light' : 'dark';
+      document.body.setAttribute('data-theme', next);
+      document.getElementById('themeBtn').textContent = next === 'dark' ? '☀️' : '🌙';
+      localStorage.setItem('pe-theme', next);
+    });
+    const savedTheme = localStorage.getItem('pe-theme') || 'light';
+    document.body.setAttribute('data-theme', savedTheme);
+    document.getElementById('themeBtn').textContent = savedTheme === 'dark' ? '☀️' : '🌙';
+
+    document.addEventListener('DOMContentLoaded', () => {
+      const total = document.querySelectorAll('#page-ch3 .prompt-card-session').length;
+      document.getElementById('promptCount').textContent = total + ' prompts shown';
+    });
+  </script>
 </body>
 </html>
