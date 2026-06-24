@@ -1,96 +1,871 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Upcoming Session | AI and Digital Skills</title>
-  <link rel="icon" type="image/png" href="../../assets/favicon.png">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,500;0,600;1,400&display=swap" rel="stylesheet">
-  <style>
-    :root {
-      --bg: #F9F8F6;
-      --text: #1A1A1A;
-      --text-muted: #666666;
-      --line: #E5E2DD;
-      --accent: #2C3E50;
-    }
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body {
-      font-family: 'Inter', sans-serif;
-      background-color: var(--bg);
-      color: var(--text);
-      display: flex;
-      flex-direction: column;
-      min-height: 100vh;
-    }
-    .navbar {
-      width: 100%;
-      background: var(--bg);
-      border-bottom: 1px solid var(--line);
-      padding: 1rem 2rem;
-    }
-    .nav-container {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      max-width: 1200px;
-      margin: 0 auto;
-    }
-    .nav-brand {
-      font-family: 'Playfair Display', serif;
-      font-size: 1.25rem;
-      font-weight: 500;
-    }
-    .nav-menu {
-      display: flex;
-      gap: 1.5rem;
-      list-style: none;
-    }
-    .nav-menu a {
-      text-decoration: none;
-      color: var(--text-muted);
-      font-weight: 500;
-      font-size: 0.9rem;
-      transition: color 0.2s;
-    }
-    .nav-menu a:hover { color: var(--text); }
-    .main-content {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      text-align: center;
-      padding: 2rem;
-    }
-    h1 {
-      font-family: 'Playfair Display', serif;
-      font-size: 3rem;
-      font-style: italic;
-      margin-bottom: 1rem;
-    }
-    p {
-      color: var(--text-muted);
-      font-size: 1.1rem;
-      max-width: 500px;
-    }
-  </style>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Earning Online: Tutoring & Freelancing</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+    <style>
+        /* ── reset & variables ── */
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        :root {
+            --sidebar-w: 220px;
+            --bg: #ffffff;
+            --bg2: #f8f8f8;
+            --bg3: #f0f0f0;
+            --border: #e5e5e5;
+            --border2: #d0d0d0;
+            --text: #111111;
+            --text2: #555555;
+            --text3: #888888;
+            --accent: #111111;
+            --accent-light: #f0f0f0;
+            --green: #16a34a;
+            --blue: #2563eb;
+            --orange: #d97706;
+            --red: #dc2626;
+            --badge-bg: #f5f5f5;
+            --shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+            --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        [data-theme="dark"] {
+            --bg: #0f0f0f;
+            --bg2: #1a1a1a;
+            --bg3: #222222;
+            --border: #2a2a2a;
+            --border2: #333333;
+            --text: #f5f5f5;
+            --text2: #aaaaaa;
+            --text3: #666666;
+            --accent: #f5f5f5;
+            --accent-light: #222222;
+            --badge-bg: #1e1e1e;
+            --shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+            --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.5);
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            display: flex;
+            min-height: 100vh;
+            line-height: 1.6;
+            transition: background 0.3s, color 0.3s;
+        }
+
+        .sidebar {
+            width: var(--sidebar-w);
+            min-width: var(--sidebar-w);
+            background: var(--bg);
+            border-right: 1px solid var(--border);
+            height: 100vh;
+            position: fixed;
+            top: 0;
+            left: 0;
+            overflow-y: auto;
+            z-index: 100;
+            display: flex;
+            flex-direction: column;
+        }
+        .sidebar::-webkit-scrollbar {
+            width: 4px;
+        }
+        .sidebar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .sidebar::-webkit-scrollbar-thumb {
+            background: var(--border);
+            border-radius: 2px;
+        }
+        .sidebar-top {
+            padding: 20px 16px 12px;
+            border-bottom: 1px solid var(--border);
+        }
+        .sidebar-title {
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: var(--text);
+            margin-bottom: 4px;
+        }
+        .sidebar-subtitle {
+            font-size: 0.75rem;
+            color: var(--text3);
+            line-height: 1.4;
+        }
+        .sidebar-nav {
+            flex: 1;
+            padding: 12px 0 24px;
+        }
+        .nav-group {
+            margin-bottom: 2px;
+        }
+        .nav-group-header {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 16px;
+            cursor: pointer;
+            user-select: none;
+        }
+        .nav-group-header:hover {
+            background: var(--bg2);
+        }
+        .nav-group-chevron {
+            width: 14px;
+            height: 14px;
+            transition: transform 0.2s;
+            color: var(--text3);
+            flex-shrink: 0;
+        }
+        .nav-group-chevron.open {
+            transform: rotate(90deg);
+        }
+        .nav-group-label {
+            font-size: 0.68rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            color: var(--text2);
+        }
+        .nav-group-items {
+            overflow: hidden;
+            transition: max-height 0.25s ease;
+        }
+        .nav-group-items.collapsed {
+            max-height: 0 !important;
+        }
+        .nav-item {
+            display: block;
+            padding: 5px 16px 5px 28px;
+            font-size: 0.8rem;
+            color: var(--text2);
+            text-decoration: none;
+            transition: all 0.15s;
+            border-radius: 0;
+            cursor: pointer;
+        }
+        .nav-item:hover {
+            color: var(--text);
+            background: var(--bg2);
+        }
+        .nav-item.active {
+            color: var(--text);
+            font-weight: 600;
+            background: var(--bg2);
+        }
+        .sidebar-footer {
+            padding: 12px 16px;
+            border-top: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .theme-btn {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            background: var(--bg2);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.9rem;
+            color: var(--text);
+            transition: all 0.2s;
+        }
+        .theme-btn:hover {
+            border-color: var(--border2);
+        }
+        .mobile-sidebar-btn {
+            display: none;
+            position: fixed;
+            top: 12px;
+            left: 12px;
+            z-index: 200;
+            width: 36px;
+            height: 36px;
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            cursor: pointer;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+        }
+        .sidebar-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.4);
+            z-index: 99;
+        }
+        .sidebar-overlay.show {
+            display: block;
+        }
+
+        .main {
+            margin-left: var(--sidebar-w);
+            flex: 1;
+            min-height: 100vh;
+        }
+
+        .page {
+            display: none;
+            min-height: 100vh;
+        }
+        .page.active {
+            display: block;
+        }
+
+        .content-page {
+            max-width: 820px;
+            margin: 0 auto;
+            padding: 64px 40px 120px;
+        }
+        .content-page h1 {
+            font-size: 2rem;
+            font-weight: 800;
+            margin-bottom: 12px;
+            color: var(--text);
+            line-height: 1.2;
+        }
+        .content-page .page-desc {
+            font-size: 1rem;
+            color: var(--text2);
+            margin-bottom: 40px;
+            line-height: 1.7;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 32px;
+        }
+        .content-page h2 {
+            font-size: 1.35rem;
+            font-weight: 700;
+            margin: 44px 0 16px;
+            color: var(--text);
+        }
+        .content-page h3 {
+            font-size: 1.05rem;
+            font-weight: 600;
+            margin: 28px 0 10px;
+            color: var(--text);
+        }
+        .content-page h4 {
+            font-size: 0.92rem;
+            font-weight: 600;
+            margin: 20px 0 6px;
+            color: var(--text);
+        }
+        .content-page p {
+            font-size: 0.95rem;
+            color: var(--text2);
+            margin-bottom: 14px;
+            line-height: 1.75;
+        }
+        .content-page ul,
+        .content-page ol {
+            margin: 0 0 16px 20px;
+        }
+        .content-page li {
+            font-size: 0.95rem;
+            color: var(--text2);
+            margin-bottom: 6px;
+            line-height: 1.6;
+        }
+
+        .callout {
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 16px 20px;
+            margin: 20px 0;
+            background: var(--bg2);
+        }
+        .callout.info {
+            border-left: 3px solid var(--blue);
+        }
+        .callout.tip {
+            border-left: 3px solid var(--green);
+        }
+        .callout.warn {
+            border-left: 3px solid var(--orange);
+        }
+        .callout-label {
+            font-size: 0.72rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            margin-bottom: 6px;
+        }
+        .callout.info .callout-label {
+            color: var(--blue);
+        }
+        .callout.tip .callout-label {
+            color: var(--green);
+        }
+        .callout.warn .callout-label {
+            color: var(--orange);
+        }
+        .callout p {
+            margin: 0;
+            color: var(--text2);
+            font-size: 0.9rem;
+        }
+
+        .tool-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin: 16px 0 24px;
+        }
+        .tool-card-session {
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 18px 20px 20px;
+            transition: all 0.2s;
+        }
+        .tool-card-session:hover {
+            border-color: var(--border2);
+            box-shadow: var(--shadow-md);
+            transform: translateY(-2px);
+        }
+        .tool-card-session h4 {
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--text);
+            margin: 0 0 2px;
+        }
+        .tool-card-session .tool-url {
+            font-size: 0.72rem;
+            color: var(--text3);
+            font-family: 'JetBrains Mono', monospace;
+            word-break: break-all;
+            margin-bottom: 6px;
+        }
+        .tool-card-session .tool-url a {
+            color: var(--text3);
+            text-decoration: none;
+        }
+        .tool-card-session .tool-url a:hover {
+            color: var(--text);
+            text-decoration: underline;
+        }
+        .tool-card-session .tool-best {
+            font-size: 0.78rem;
+            font-weight: 600;
+            color: var(--blue);
+            margin-bottom: 6px;
+        }
+        .tool-card-session p {
+            font-size: 0.88rem;
+            color: var(--text2);
+            margin: 0 0 8px;
+            line-height: 1.6;
+        }
+        .tool-card-session .tool-tips {
+            font-size: 0.82rem;
+            color: var(--text2);
+            border-top: 1px solid var(--border);
+            padding-top: 10px;
+            margin-top: 8px;
+        }
+        .tool-card-session .tool-tips strong {
+            color: var(--text);
+            font-weight: 600;
+        }
+        .tool-card-session .tool-tips ul {
+            margin: 4px 0 0 16px;
+        }
+        .tool-card-session .tool-tips li {
+            font-size: 0.82rem;
+            margin-bottom: 2px;
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+                transition: transform 0.3s;
+            }
+            .sidebar.open {
+                transform: translateX(0);
+            }
+            .main {
+                margin-left: 0;
+            }
+            .mobile-sidebar-btn {
+                display: flex;
+            }
+            .content-page {
+                padding: 48px 20px 80px;
+            }
+            .tool-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .hero-page {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 60px 40px;
+            text-align: center;
+        }
+        .hero-h1 {
+            font-size: clamp(2rem, 5vw, 3.5rem);
+            font-weight: 800;
+            line-height: 1.1;
+            color: var(--text);
+            max-width: 700px;
+            margin-bottom: 20px;
+        }
+        .hero-desc {
+            font-size: 1rem;
+            color: var(--text2);
+            max-width: 520px;
+            margin-bottom: 36px;
+            line-height: 1.7;
+        }
+        .hero-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 14px 28px;
+            background: var(--text);
+            color: var(--bg);
+            border: none;
+            border-radius: 50px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: opacity 0.2s, transform 0.2s;
+            text-decoration: none;
+        }
+        .hero-btn:hover {
+            opacity: 0.85;
+            transform: translateY(-1px);
+        }
+    </style>
 </head>
-<body>
-  <nav class="navbar">
-    <div class="nav-container">
-      <div class="nav-brand">Upcoming Session</div>
-      <ul class="nav-menu">
-        <li><a href="../../">Home</a></li>
-        <li><a href="../../syllabus/">Syllabus</a></li>
-      </ul>
-    </div>
-  </nav>
-  <main class="main-content">
-    <h1>Upcoming Session</h1>
-    <p>This session content is currently being prepared and will be available soon. Please check back later.</p>
-  </main>
+<body data-theme="light">
+
+    <!-- mobile toggle -->
+    <button class="mobile-sidebar-btn" id="mobBtn">☰</button>
+    <div class="sidebar-overlay" id="overlay"></div>
+
+    <!-- ─── SIDEBAR ─── -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-top">
+            <div class="sidebar-title">Earning Online</div>
+            <div class="sidebar-subtitle" id="sidebarSubtitle">Nepali Teacher Guide</div>
+        </div>
+        <nav class="sidebar-nav" id="sidebarNav">
+
+            <div class="nav-group">
+                <div class="nav-group-header" onclick="toggleGroup(this)">
+                    <svg class="nav-group-chevron open" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"/></svg>
+                    <span class="nav-group-label">Introduction</span>
+                </div>
+                <div class="nav-group-items">
+                    <a class="nav-item active" onclick="showPage('start')">Start Here</a>
+                </div>
+            </div>
+
+            <div class="nav-group">
+                <div class="nav-group-header" onclick="toggleGroup(this)">
+                    <svg class="nav-group-chevron open" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"/></svg>
+                    <span class="nav-group-label">Chapter 1</span>
+                </div>
+                <div class="nav-group-items">
+                    <a class="nav-item" onclick="showPage('ch1')">Online Tutoring</a>
+                </div>
+            </div>
+
+            <div class="nav-group">
+                <div class="nav-group-header" onclick="toggleGroup(this)">
+                    <svg class="nav-group-chevron open" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"/></svg>
+                    <span class="nav-group-label">Chapter 2</span>
+                </div>
+                <div class="nav-group-items">
+                    <a class="nav-item" onclick="showPage('ch2')">Local Freelancing</a>
+                </div>
+            </div>
+
+            <div class="nav-group">
+                <div class="nav-group-header" onclick="toggleGroup(this)">
+                    <svg class="nav-group-chevron open" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"/></svg>
+                    <span class="nav-group-label">Chapter 3</span>
+                </div>
+                <div class="nav-group-items">
+                    <a class="nav-item" onclick="showPage('ch3')">Ebooks &amp; Guides</a>
+                </div>
+            </div>
+
+            <div class="nav-group">
+                <div class="nav-group-header" onclick="toggleGroup(this)">
+                    <svg class="nav-group-chevron open" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"/></svg>
+                    <span class="nav-group-label">Chapter 4</span>
+                </div>
+                <div class="nav-group-items">
+                    <a class="nav-item" onclick="showPage('ch4')">Freelance Platforms</a>
+                </div>
+            </div>
+
+        </nav>
+        <div class="sidebar-footer">
+            <span style="font-size:0.72rem;color:var(--text3);">Teacher Guide</span>
+            <button class="theme-btn" id="themeBtn" title="Toggle theme">🌙</button>
+        </div>
+    </aside>
+
+    <!-- ─── MAIN ─── -->
+    <main class="main">
+
+        <!-- ═══ START PAGE ═══ -->
+        <div id="page-start" class="page active">
+            <div class="hero-page">
+                <h1 class="hero-h1">Earning Online:<br />Tutoring &amp; Freelancing</h1>
+                <p class="hero-desc">
+                    A practical guide for Nepali teachers (Grades 1–8) to earn extra income using your skills, internet, and simple tools.
+                </p>
+                <p style="max-width:600px;color:var(--text2);margin-bottom:32px;font-size:0.95rem;line-height:1.7;">
+                    This guide covers <strong>online tutoring</strong> via Google Meet, <strong>local freelancing</strong> with Canva, creating <strong>ebooks</strong>, and finding work on <strong>Nepali freelance platforms</strong>.
+                </p>
+                <a class="hero-btn" onclick="showPage('ch1')">Start Reading &darr;</a>
+            </div>
+        </div>
+
+        <!-- ═══ CHAPTER 1 ═══ -->
+        <div id="page-ch1" class="page">
+            <div class="content-page">
+                <h1>1 · Online Tutoring (Video Call Classes)</h1>
+                <p class="page-desc">
+                    You can teach students from Grades 1–8 online — your own students, neighbours, or anyone interested. Use your mobile or laptop, a good internet connection, and a video conferencing app.
+                </p>
+
+                <h3>What you need to start</h3>
+                <ul>
+                    <li><strong>A computer or mobile</strong> with a camera and microphone.</li>
+                    <li><strong>Reliable internet</strong> (for smooth video calls).</li>
+                    <li><strong>A quiet room</strong> with a clean background.</li>
+                    <li><strong>Video conferencing app</strong> — we recommend Google Meet (it's free and works with Gmail).</li>
+                </ul>
+
+                <h3>Google Meet (Simple &amp; Free)</h3>
+                <p>Google Meet is the most popular and reliable tool in Nepal. You just need a Gmail account. No downloads required.</p>
+                <div class="callout info">
+                    <div class="callout-label">How to use Google Meet</div>
+                    <p>
+                        <strong>1.</strong> Open your Gmail.<br />
+                        <strong>2.</strong> Click on the 9 dots (Google apps) and select "Meet".<br />
+                        <strong>3.</strong> Click "New meeting" → "Create a meeting for later".<br />
+                        <strong>4.</strong> Copy the meeting link and share it via WhatsApp or Facebook.<br />
+                        <strong>5.</strong> At class time, join the meeting, then click "Present now" to share your screen (notes, PDFs, whiteboard).<br />
+                        <strong>6.</strong> Use mute/unmute, chat for questions, and you can even record the class.
+                    </p>
+                </div>
+                <p>You can also use <strong>Zoom</strong> or <strong>Microsoft Teams</strong>, but Google Meet is the easiest for most Nepali teachers because everyone already has a Gmail.</p>
+
+                <h3>How much to charge?</h3>
+                <p>In Nepal, rates vary. For Grades 1–8, you can charge <strong>Rs. 500 – Rs. 800 per hour</strong> for one-on-one classes. For group classes (2–5 students), charge Rs. 300–400 per student per hour.</p>
+
+                <div class="callout tip">
+                    <div class="callout-label">Real idea</div>
+                    <p>Offer "exam preparation special classes" in your school's WhatsApp group. Many parents look for extra help during Dashain/Tihar holidays and before final exams.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- ═══ CHAPTER 2 ═══ -->
+        <div id="page-ch2" class="page">
+            <div class="content-page">
+                <h1>2 · Local Freelancing (Digital Services)</h1>
+                <p class="page-desc">
+                    You don't need to be a professional designer. With Canva (free) and basic computer skills, you can offer design services to local businesses — right in your neighbourhood.
+                </p>
+
+                <h3>What you can create</h3>
+                <ul>
+                    <li><strong>Posters &amp; banners</strong> for restaurants, tuition centres, or local events.</li>
+                    <li><strong>Menu cards</strong> for small eateries and cafes.</li>
+                    <li><strong>ID cards</strong> for schools, clubs, or cooperatives.</li>
+                    <li><strong>Nepali calendars</strong> with dates and festivals — businesses often sponsor these.</li>
+                    <li><strong>Invitation cards</strong> for weddings, bratabandha, or parties.</li>
+                </ul>
+
+                <div class="tool-grid">
+                    <div class="tool-card-session">
+                        <h4>Canva (Free &amp; Powerful)</h4>
+                        <div class="tool-url"><a href="https://canva.com" target="_blank">canva.com</a></div>
+                        <div class="tool-best">Best for: All kinds of designs</div>
+                        <p>Canva has thousands of templates — posters, flyers, menus, ID cards, calendars. The free version is enough. Just design, export as PDF/PNG, and share.</p>
+                        <div class="tool-tips">
+                            <strong>Tips:</strong>
+                            <ul>
+                                <li>Visit a local shop and say, "I can create a digital menu/poster for you."</li>
+                                <li>Price: Rs. 200–500 per design.</li>
+                                <li>For calendars, charge Rs. 500–1000 (even more if you get a sponsor).</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="tool-card-session">
+                        <h4>Facebook Marketplace &amp; WhatsApp Groups</h4>
+                        <div class="tool-url">—</div>
+                        <div class="tool-best">Best for: Finding clients</div>
+                        <p>Post your designs on Facebook, especially in local community groups. Share your work on WhatsApp status. Word of mouth works well in Nepal.</p>
+                        <div class="tool-tips">
+                            <strong>Real approach:</strong>
+                            <ul>
+                                <li>Walk into nearby stationery shops, tailor shops, or salons and offer your service.</li>
+                                <li>Make 1–2 free samples first to show your quality, then charge.</li>
+                                <li>Local clubs and schools often need annual calendars — offer them a deal.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="callout warn">
+                    <div class="callout-label">A genuine opportunity</div>
+                    <p><strong>Digital wedding / bratabandha invitations</strong> — there are many ceremonies in Nepal. Design a beautiful digital invite, send it via WhatsApp. Charge Rs. 300–500 per card. There's real demand for this.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- ═══ CHAPTER 3 ═══ -->
+        <div id="page-ch3" class="page">
+            <div class="content-page">
+                <h1>3 · Ebooks &amp; Guide Books</h1>
+                <p class="page-desc">
+                    You have years of teaching notes, question banks, and worksheets. Compile them into a simple, easy-to-read guide book. Students and parents will pay for it.
+                </p>
+
+                <h3>What kind of books can you make?</h3>
+                <ul>
+                    <li><strong>Subject guides:</strong> Class 8 Science, Class 5 English Grammar, Class 7 Math Shortcuts, etc.</li>
+                    <li><strong>Exam preparation books:</strong> "Final Exam Tips for Class 8" — with important questions and practice tests.</li>
+                    <li><strong>Activity books:</strong> For younger students (Grades 1–3) — fun worksheets, coloring, and puzzles.</li>
+                    <li><strong>Teacher's planner / lesson plan templates:</strong> Useful for new teachers.</li>
+                </ul>
+
+                <h3>How to create your book</h3>
+                <p><strong>Step 1:</strong> Collect your notes, worksheets, and questions from the last few years.<br />
+                   <strong>Step 2:</strong> Type everything in Google Docs or Microsoft Word. Use simple language, bullet points, and examples.<br />
+                   <strong>Step 3:</strong> Design a cover page using Canva (make it attractive).<br />
+                   <strong>Step 4:</strong> Export as PDF.<br />
+                   <strong>Step 5:</strong> Start selling — via WhatsApp, Facebook, or even your local stationery shop.</p>
+
+                <div class="callout info">
+                    <div class="callout-label">Pricing &amp; selling ideas</div>
+                    <p><strong>PDF Ebook:</strong> Rs. 100–300 per copy (sent via WhatsApp).<br />
+                       <strong>Printed book:</strong> Print 20–50 copies at a local print shop (cost around Rs. 150–200 per book). Sell for Rs. 300–500 each.<br />
+                       <strong>School tie-up:</strong> Suggest your book as a reference guide to parents in your school. They'll buy it.</p>
+                </div>
+
+                <div class="callout tip">
+                    <div class="callout-label">Real success story</div>
+                    <p>A teacher in Kathmandu made a "Class 8 Science Shortcuts" ebook — just 50 pages. She sold it for Rs. 150 on WhatsApp and has already sold over 200 copies. Students loved it because it made revision easy. You can do the same for any subject.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- ═══ CHAPTER 4 ═══ -->
+        <div id="page-ch4" class="page">
+            <div class="content-page">
+                <h1>4 · Freelance Platforms in Nepal</h1>
+                <p class="page-desc">
+                    You don't always have to knock on doors. Several Nepali websites let you find teaching and design work online. Here's how they work.
+                </p>
+
+                <div class="tool-grid">
+                    <div class="tool-card-session">
+                        <h4>PayoWork</h4>
+                        <div class="tool-url"><a href="https://payowork.com" target="_blank">payowork.com</a></div>
+                        <div class="tool-best">Best for: General freelancing &amp; tutoring in Nepal</div>
+                        <p>PayoWork is a homegrown Nepali platform where you can offer your services — from tutoring and writing to design. It connects local clients with local freelancers.</p>
+                        <div class="tool-tips">
+                            <strong>How it works:</strong>
+                            <ul>
+                                <li>Sign up and complete your profile.</li>
+                                <li>Browse available projects or post your service.</li>
+                                <li>Submit a proposal to a client.</li>
+                                <li>Get hired, do the work, and receive payment via local bank transfer.</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="tool-card-session">
+                        <h4>Swadhin</h4>
+                        <div class="tool-url"><a href="https://swadhin.com" target="_blank">swadhin.com</a></div>
+                        <div class="tool-best">Best for: Building a freelancer network</div>
+                        <p>Swadhin aims to create a freelancing culture in Nepal. It's a community where skilled individuals can find work and build their careers.</p>
+                        <div class="tool-tips">
+                            <strong>How it works:</strong>
+                            <ul>
+                                <li>Create a detailed profile highlighting your teaching or design skills.</li>
+                                <li>Businesses looking for Nepali talent will discover you.</li>
+                                <li>Clients can contact you directly for projects.</li>
+                                <li>Discuss rates and timelines directly with the client.</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="tool-card-session">
+                        <h4>OnlineKaam</h4>
+                        <div class="tool-url"><a href="https://onlinekaam.com" target="_blank">onlinekaam.com</a></div>
+                        <div class="tool-best">Best for: Verified freelancers &amp; startups</div>
+                        <p>Described as Nepal's first digital employment marketplace, OnlineKaam connects startups and businesses with verified freelancers.</p>
+                        <div class="tool-tips">
+                            <strong>How it works:</strong>
+                            <ul>
+                                <li>Register and get your skills verified.</li>
+                                <li>Browse the listed job opportunities.</li>
+                                <li>Apply for projects that match your skills.</li>
+                                <li>Complete the project and get paid via bank transfer or eSewa.</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="tool-card-session">
+                        <h4>WorkBridge</h4>
+                        <div class="tool-url"><a href="https://workbridge.com.np" target="_blank">workbridge.com.np</a></div>
+                        <div class="tool-best">Best for: Students &amp; beginners gaining experience</div>
+                        <p>WorkBridge is designed specifically for Nepali students and beginners who want to gain industry-level experience by working on real-world projects.</p>
+                        <div class="tool-tips">
+                            <strong>How it works:</strong>
+                            <ul>
+                                <li>Sign up and take a quick skill test.</li>
+                                <li>Startups post short, entry-level projects.</li>
+                                <li>Complete the project, get feedback, and build your portfolio.</li>
+                                <li>Great for building experience before taking on bigger clients.</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="tool-card-session">
+                        <h4>Kumari Job</h4>
+                        <div class="tool-url"><a href="https://kumarijob.com" target="_blank">kumarijob.com</a></div>
+                        <div class="tool-best">Best for: Regular job listings, including teaching</div>
+                        <p>Kumari Job is a well-known Nepali job portal that has a dedicated section for education. You can find full-time, part-time, and online tutoring jobs here.</p>
+                        <div class="tool-tips">
+                            <strong>How it works:</strong>
+                            <ul>
+                                <li>Search for "online tutor" or "home tuition" in the search bar.</li>
+                                <li>Filter by location (or choose "remote").</li>
+                                <li>Click "Apply" and submit your CV.</li>
+                                <li>Schools and training centres will contact you for interviews.</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="tool-card-session">
+                        <h4>MeroJob / NecoJobs</h4>
+                        <div class="tool-url"><a href="https://merojob.com" target="_blank">merojob.com</a></div>
+                        <div class="tool-best">Best for: Finding online teaching positions</div>
+                        <p>MeroJob (and similar sites like NecoJobs) regularly post online tutoring jobs from schools, colleges, and educational companies across Nepal.</p>
+                        <div class="tool-tips">
+                            <strong>How it works:</strong>
+                            <ul>
+                                <li>Create an account and upload your CV.</li>
+                                <li>Search for "tutor", "online faculty", or "teacher".</li>
+                                <li>Apply directly to job listings.</li>
+                                <li>Many of these are remote or hybrid positions.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="callout info">
+                    <div class="callout-label">International Platforms (Bonus)</div>
+                    <p>If you want to earn in dollars, you can also try international platforms like <strong>Upwork, Fiverr,</strong> and <strong>Freelancer</strong>. They accept Nepali freelancers. You'll need to set up a <strong>Payoneer</strong> or <strong>PayPal</strong> account to receive payments. Start with local platforms first to build your profile and confidence.</p>
+                </div>
+
+                <div class="callout tip">
+                    <div class="callout-label">Quick tip</div>
+                    <p>On any platform, your profile is your shop window. Add a professional photo, list your teaching experience, mention your best subjects (e.g., Math, English, Science), and include a sample of your work (like a lesson plan or a flyer you made). A good profile gets more clients.</p>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- ─── SCRIPTS ─── -->
+    <script>
+        const pageNames = {
+            start: 'Nepali Teacher Guide · Earning Online',
+            ch1: 'Chapter 1 · Online Tutoring',
+            ch2: 'Chapter 2 · Local Freelancing',
+            ch3: 'Chapter 3 · Ebooks & Guides',
+            ch4: 'Chapter 4 · Freelance Platforms'
+        };
+
+        function showPage(id) {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+            const pg = document.getElementById('page-' + id);
+            if (pg) pg.classList.add('active');
+            document.querySelectorAll('.nav-item').forEach(n => {
+                if (n.getAttribute('onclick') && n.getAttribute('onclick').includes("'" + id + "'")) {
+                    n.classList.add('active');
+                }
+            });
+            document.getElementById('sidebarSubtitle').textContent = pageNames[id] || id;
+            window.scrollTo(0, 0);
+            document.getElementById('sidebar').classList.remove('open');
+            document.getElementById('overlay').classList.remove('show');
+        }
+
+        function toggleGroup(header) {
+            const chevron = header.querySelector('.nav-group-chevron');
+            const items = header.nextElementSibling;
+            chevron.classList.toggle('open');
+            if (chevron.classList.contains('open')) {
+                items.style.maxHeight = items.scrollHeight + 'px';
+                items.classList.remove('collapsed');
+            } else {
+                items.style.maxHeight = items.scrollHeight + 'px';
+                requestAnimationFrame(() => { items.style.maxHeight = '0px'; });
+                items.classList.add('collapsed');
+            }
+        }
+
+        document.querySelectorAll('.nav-group-items').forEach(el => {
+            el.style.maxHeight = 'none';
+        });
+
+        document.getElementById('mobBtn').addEventListener('click', () => {
+            document.getElementById('sidebar').classList.toggle('open');
+            document.getElementById('overlay').classList.toggle('show');
+        });
+        document.getElementById('overlay').addEventListener('click', () => {
+            document.getElementById('sidebar').classList.remove('open');
+            document.getElementById('overlay').classList.remove('show');
+        });
+
+        document.getElementById('themeBtn').addEventListener('click', () => {
+            const curr = document.body.getAttribute('data-theme');
+            const next = curr === 'dark' ? 'light' : 'dark';
+            document.body.setAttribute('data-theme', next);
+            document.getElementById('themeBtn').textContent = next === 'dark' ? '☀️' : '🌙';
+            localStorage.setItem('pe-theme', next);
+        });
+        const savedTheme = localStorage.getItem('pe-theme') || 'light';
+        document.body.setAttribute('data-theme', savedTheme);
+        document.getElementById('themeBtn').textContent = savedTheme === 'dark' ? '☀️' : '🌙';
+    </script>
 </body>
 </html>
